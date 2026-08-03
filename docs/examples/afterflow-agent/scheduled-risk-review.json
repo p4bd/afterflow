@@ -1,0 +1,8 @@
+{
+  "context_mode": "fresh_thread_per_run",
+  "title": "AfterFlow 每日售后风险巡检",
+  "prompt": "/after-sales-risk-operations 扫描当前售后运营指标，输出 SKU、承运商、仓库异常表、调查负责人建议和下一次复核时间。",
+  "schedule_type": "cron",
+  "schedule_spec": { "cron": "0 9 * * *" },
+  "timezone": "Asia/Shanghai"
+}

@@ -1,0 +1,2152 @@
+[
+  {
+    "id": "REF-001",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 1000,
+      "shipping": 0,
+      "balance": 500,
+      "covered": false,
+      "logistics_present": false,
+      "visual": false,
+      "pod": true,
+      "claims": 3,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "ineligible",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "REF-002",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 1731,
+      "shipping": 100,
+      "balance": 1831,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 1731,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-003",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 2462,
+      "shipping": 200,
+      "balance": 2662,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 2462,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-004",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 3193,
+      "shipping": 300,
+      "balance": 3493,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 3193,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-005",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 3924,
+      "shipping": 0,
+      "balance": 3924,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 3924,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-006",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 4655,
+      "shipping": 100,
+      "balance": 4755,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 4755,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-007",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 5386,
+      "shipping": 200,
+      "balance": 5586,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 5386,
+      "risk_level": "medium",
+      "approval_required": false,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-008",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 6117,
+      "shipping": 300,
+      "balance": 3058,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 3058,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-009",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 6848,
+      "shipping": 0,
+      "balance": 6848,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 6848,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-010",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 7579,
+      "shipping": 100,
+      "balance": 7679,
+      "covered": true,
+      "logistics_present": true,
+      "visual": false,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 7579,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-011",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 8310,
+      "shipping": 200,
+      "balance": 8510,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 3,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 8510,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-012",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 9041,
+      "shipping": 300,
+      "balance": 9341,
+      "covered": true,
+      "logistics_present": false,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 9041,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-013",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 9772,
+      "shipping": 0,
+      "balance": 9772,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 9772,
+      "risk_level": "medium",
+      "approval_required": false,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-014",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 10503,
+      "shipping": 100,
+      "balance": 10603,
+      "covered": false,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "ineligible",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "REF-015",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 11234,
+      "shipping": 200,
+      "balance": 5617,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 5617,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-016",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 11965,
+      "shipping": 300,
+      "balance": 12265,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 12265,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-017",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 12696,
+      "shipping": 0,
+      "balance": 12696,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 12696,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-018",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 13427,
+      "shipping": 100,
+      "balance": 13527,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": true,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 13427,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-019",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 14158,
+      "shipping": 200,
+      "balance": 14358,
+      "covered": true,
+      "logistics_present": true,
+      "visual": false,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 14158,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-020",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 14889,
+      "shipping": 300,
+      "balance": 15189,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 14889,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-021",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 15620,
+      "shipping": 0,
+      "balance": 15620,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 3,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 15620,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-022",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 16351,
+      "shipping": 100,
+      "balance": 8175,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 8175,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-023",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 17082,
+      "shipping": 200,
+      "balance": 17282,
+      "covered": true,
+      "logistics_present": false,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 17082,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-024",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 17813,
+      "shipping": 300,
+      "balance": 18113,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 17813,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-025",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 18544,
+      "shipping": 0,
+      "balance": 18544,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 18544,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-026",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 19275,
+      "shipping": 100,
+      "balance": 19375,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 19375,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-027",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 20006,
+      "shipping": 200,
+      "balance": 20206,
+      "covered": false,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "ineligible",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "REF-028",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 20737,
+      "shipping": 300,
+      "balance": 21037,
+      "covered": true,
+      "logistics_present": true,
+      "visual": false,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "needs_evidence",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "REF-029",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 21468,
+      "shipping": 0,
+      "balance": 10734,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 10734,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-030",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 22199,
+      "shipping": 100,
+      "balance": 22299,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 22199,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-031",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 22930,
+      "shipping": 200,
+      "balance": 23130,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 3,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 23130,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-032",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 23661,
+      "shipping": 300,
+      "balance": 23961,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 23661,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-033",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 24392,
+      "shipping": 0,
+      "balance": 24392,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 24392,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-034",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 25123,
+      "shipping": 100,
+      "balance": 25223,
+      "covered": true,
+      "logistics_present": false,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 25123,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-035",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 25854,
+      "shipping": 200,
+      "balance": 26054,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": true,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 25854,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-036",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 26585,
+      "shipping": 300,
+      "balance": 13292,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 13292,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-037",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 27316,
+      "shipping": 0,
+      "balance": 27316,
+      "covered": true,
+      "logistics_present": true,
+      "visual": false,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "needs_evidence",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "REF-038",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 28047,
+      "shipping": 100,
+      "balance": 28147,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 28047,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-039",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 28778,
+      "shipping": 200,
+      "balance": 28978,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 28778,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-040",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 29509,
+      "shipping": 300,
+      "balance": 29809,
+      "covered": false,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "ineligible",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "REF-041",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 30240,
+      "shipping": 0,
+      "balance": 30240,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 3,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 30240,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-042",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 30971,
+      "shipping": 100,
+      "balance": 31071,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 30971,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-043",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 31702,
+      "shipping": 200,
+      "balance": 15851,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 15851,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-044",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 32433,
+      "shipping": 300,
+      "balance": 32733,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 32433,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-045",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 33164,
+      "shipping": 0,
+      "balance": 33164,
+      "covered": true,
+      "logistics_present": false,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 33164,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-046",
+    "kind": "refund",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 33895,
+      "shipping": 100,
+      "balance": 33995,
+      "covered": true,
+      "logistics_present": true,
+      "visual": false,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 33995,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-047",
+    "kind": "refund",
+    "input": {
+      "issue": "damaged_item",
+      "item": 34626,
+      "shipping": 200,
+      "balance": 34826,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 34626,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-048",
+    "kind": "refund",
+    "input": {
+      "issue": "wrong_item",
+      "item": 35357,
+      "shipping": 300,
+      "balance": 35657,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 35357,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "return_and_refund"
+    }
+  },
+  {
+    "id": "REF-049",
+    "kind": "refund",
+    "input": {
+      "issue": "quality_issue",
+      "item": 36088,
+      "shipping": 0,
+      "balance": 36088,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 36088,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REF-050",
+    "kind": "refund",
+    "input": {
+      "issue": "refund_amount_dispute",
+      "item": 36819,
+      "shipping": 100,
+      "balance": 18409,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 18409,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "REV-001",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 10000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 0,
+      "inventory": 0,
+      "preference": "replacement",
+      "human": false
+    },
+    "expect": {
+      "outcome": "needs_evidence",
+      "action": "manual_review",
+      "estimated_resolution_cost": 0
+    }
+  },
+  {
+    "id": "REV-002",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 10500,
+      "return_shipping": 900,
+      "handling": 400,
+      "recovery": 1000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 10500
+    }
+  },
+  {
+    "id": "REV-003",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 11000,
+      "return_shipping": 1000,
+      "handling": 400,
+      "recovery": 2000,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "replace_after_return",
+      "estimated_resolution_cost": 7000
+    }
+  },
+  {
+    "id": "REV-004",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 11500,
+      "return_shipping": 1100,
+      "handling": 400,
+      "recovery": 3000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 10000
+    }
+  },
+  {
+    "id": "REV-005",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 12000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 4000,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "replace_after_return",
+      "estimated_resolution_cost": 4800
+    }
+  },
+  {
+    "id": "REV-006",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 12500,
+      "return_shipping": 900,
+      "handling": 400,
+      "recovery": 0,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 12500
+    }
+  },
+  {
+    "id": "REV-007",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 13000,
+      "return_shipping": 1000,
+      "handling": 400,
+      "recovery": 1000,
+      "inventory": 0,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 13000
+    }
+  },
+  {
+    "id": "REV-008",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 13500,
+      "return_shipping": 1100,
+      "handling": 400,
+      "recovery": 2000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 13000
+    }
+  },
+  {
+    "id": "REV-009",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 14000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 3000,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": false
+    },
+    "expect": {
+      "outcome": "needs_evidence",
+      "action": "manual_review",
+      "estimated_resolution_cost": 0
+    }
+  },
+  {
+    "id": "REV-010",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 14500,
+      "return_shipping": 900,
+      "handling": 400,
+      "recovery": 4000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 11800
+    }
+  },
+  {
+    "id": "REV-011",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 15000,
+      "return_shipping": 1000,
+      "handling": 400,
+      "recovery": 0,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "replace_after_return",
+      "estimated_resolution_cost": 9000
+    }
+  },
+  {
+    "id": "REV-012",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 15500,
+      "return_shipping": 1100,
+      "handling": 400,
+      "recovery": 1000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 15500
+    }
+  },
+  {
+    "id": "REV-013",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 16000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 2000,
+      "inventory": 0,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 15200
+    }
+  },
+  {
+    "id": "REV-014",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 16500,
+      "return_shipping": 900,
+      "handling": 400,
+      "recovery": 3000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 14800
+    }
+  },
+  {
+    "id": "REV-015",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 17000,
+      "return_shipping": 1000,
+      "handling": 400,
+      "recovery": 4000,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "replace_after_return",
+      "estimated_resolution_cost": 5000
+    }
+  },
+  {
+    "id": "REV-016",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 17500,
+      "return_shipping": 1100,
+      "handling": 400,
+      "recovery": 0,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 17500
+    }
+  },
+  {
+    "id": "REV-017",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 18000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 1000,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": false
+    },
+    "expect": {
+      "outcome": "needs_evidence",
+      "action": "manual_review",
+      "estimated_resolution_cost": 0
+    }
+  },
+  {
+    "id": "REV-018",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 18500,
+      "return_shipping": 900,
+      "handling": 400,
+      "recovery": 2000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 17800
+    }
+  },
+  {
+    "id": "REV-019",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 19000,
+      "return_shipping": 1000,
+      "handling": 400,
+      "recovery": 3000,
+      "inventory": 0,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 17400
+    }
+  },
+  {
+    "id": "REV-020",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 19500,
+      "return_shipping": 1100,
+      "handling": 400,
+      "recovery": 4000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 17000
+    }
+  },
+  {
+    "id": "REV-021",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 20000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 0,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "replace_after_return",
+      "estimated_resolution_cost": 8800
+    }
+  },
+  {
+    "id": "REV-022",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 20500,
+      "return_shipping": 900,
+      "handling": 400,
+      "recovery": 1000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 20500
+    }
+  },
+  {
+    "id": "REV-023",
+    "kind": "reverse",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 21000,
+      "return_shipping": 1000,
+      "handling": 400,
+      "recovery": 2000,
+      "inventory": 5,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "replace_after_return",
+      "estimated_resolution_cost": 7000
+    }
+  },
+  {
+    "id": "REV-024",
+    "kind": "reverse",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 21500,
+      "return_shipping": 1100,
+      "handling": 400,
+      "recovery": 3000,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 20000
+    }
+  },
+  {
+    "id": "REV-025",
+    "kind": "reverse",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 22000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 4000,
+      "inventory": 0,
+      "preference": "replacement",
+      "human": false
+    },
+    "expect": {
+      "outcome": "needs_evidence",
+      "action": "manual_review",
+      "estimated_resolution_cost": 0
+    }
+  },
+  {
+    "id": "OPS-001",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-1",
+      "orders": 20,
+      "issue_cases": 2,
+      "prev_orders": 20,
+      "prev_cases": 0,
+      "loss": 1200000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-002",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-2",
+      "orders": 110,
+      "issue_cases": 3,
+      "prev_orders": 110,
+      "prev_cases": 1,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-003",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-3",
+      "orders": 120,
+      "issue_cases": 4,
+      "prev_orders": 120,
+      "prev_cases": 2,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-004",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-4",
+      "orders": 130,
+      "issue_cases": 5,
+      "prev_orders": 130,
+      "prev_cases": 2,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-005",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-5",
+      "orders": 140,
+      "issue_cases": 6,
+      "prev_orders": 140,
+      "prev_cases": 0,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-006",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-6",
+      "orders": 150,
+      "issue_cases": 7,
+      "prev_orders": 150,
+      "prev_cases": 3,
+      "loss": 600000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-007",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-7",
+      "orders": 160,
+      "issue_cases": 8,
+      "prev_orders": 160,
+      "prev_cases": 4,
+      "loss": 1200000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "high"
+    }
+  },
+  {
+    "id": "OPS-008",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-8",
+      "orders": 20,
+      "issue_cases": 9,
+      "prev_orders": 20,
+      "prev_cases": 4,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-009",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-9",
+      "orders": 180,
+      "issue_cases": 10,
+      "prev_orders": 180,
+      "prev_cases": 0,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-010",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-10",
+      "orders": 190,
+      "issue_cases": 11,
+      "prev_orders": 190,
+      "prev_cases": 5,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-011",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-11",
+      "orders": 200,
+      "issue_cases": 12,
+      "prev_orders": 200,
+      "prev_cases": 6,
+      "loss": 600000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-012",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-12",
+      "orders": 210,
+      "issue_cases": 13,
+      "prev_orders": 210,
+      "prev_cases": 6,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-013",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-13",
+      "orders": 220,
+      "issue_cases": 14,
+      "prev_orders": 220,
+      "prev_cases": 0,
+      "loss": 1200000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "high"
+    }
+  },
+  {
+    "id": "OPS-014",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-14",
+      "orders": 230,
+      "issue_cases": 15,
+      "prev_orders": 230,
+      "prev_cases": 7,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-015",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-15",
+      "orders": 20,
+      "issue_cases": 16,
+      "prev_orders": 20,
+      "prev_cases": 8,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-016",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-16",
+      "orders": 250,
+      "issue_cases": 2,
+      "prev_orders": 250,
+      "prev_cases": 1,
+      "loss": 600000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-017",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-17",
+      "orders": 260,
+      "issue_cases": 3,
+      "prev_orders": 260,
+      "prev_cases": 0,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-018",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-18",
+      "orders": 270,
+      "issue_cases": 4,
+      "prev_orders": 270,
+      "prev_cases": 2,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-019",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-19",
+      "orders": 280,
+      "issue_cases": 5,
+      "prev_orders": 280,
+      "prev_cases": 2,
+      "loss": 1200000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "high"
+    }
+  },
+  {
+    "id": "OPS-020",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-20",
+      "orders": 290,
+      "issue_cases": 6,
+      "prev_orders": 290,
+      "prev_cases": 3,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-021",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-21",
+      "orders": 300,
+      "issue_cases": 7,
+      "prev_orders": 300,
+      "prev_cases": 0,
+      "loss": 600000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "OPS-022",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-22",
+      "orders": 20,
+      "issue_cases": 8,
+      "prev_orders": 20,
+      "prev_cases": 4,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-023",
+    "kind": "operations",
+    "input": {
+      "dimension": "carrier",
+      "value": "ENTITY-23",
+      "orders": 320,
+      "issue_cases": 9,
+      "prev_orders": 320,
+      "prev_cases": 4,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-024",
+    "kind": "operations",
+    "input": {
+      "dimension": "warehouse",
+      "value": "ENTITY-24",
+      "orders": 330,
+      "issue_cases": 10,
+      "prev_orders": 330,
+      "prev_cases": 5,
+      "loss": 100000
+    },
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
+  },
+  {
+    "id": "OPS-025",
+    "kind": "operations",
+    "input": {
+      "dimension": "sku",
+      "value": "ENTITY-25",
+      "orders": 340,
+      "issue_cases": 11,
+      "prev_orders": 340,
+      "prev_cases": 0,
+      "loss": 1200000
+    },
+    "expect": {
+      "alert": true,
+      "severity": "high"
+    }
+  }
+]

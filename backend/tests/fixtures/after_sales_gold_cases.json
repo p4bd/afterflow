@@ -1,0 +1,36 @@
+[
+  {"id":"DNR-01","issue":"delivery_not_received","expect":{"eligibility":"eligible","refund_amount":10000,"risk_level":"low","action":"refund_original_payment"}},
+  {"id":"DNR-02","issue":"delivery_not_received","refund_shipping":true,"expect":{"eligibility":"eligible","refund_amount":10500,"risk_level":"low"}},
+  {"id":"DNR-03","issue":"delivery_not_received","logistics_present":false,"expect":{"eligibility":"needs_evidence","refund_amount":0,"reason_code":"REQUIRED_EVIDENCE_MISSING"}},
+  {"id":"DNR-04","issue":"delivery_not_received","pod":true,"expect":{"eligibility":"eligible_with_approval","risk_level":"high"}},
+  {"id":"DNR-05","issue":"delivery_not_received","claim_count":3,"expect":{"eligibility":"eligible_with_approval","risk_level":"high"}},
+  {"id":"DNR-06","issue":"delivery_not_received","claim_count":2,"expect":{"eligibility":"eligible","risk_level":"medium"}},
+  {"id":"DNR-07","issue":"delivery_not_received","item_paid":60000,"refundable_balance":60000,"operator_limit":100000,"expect":{"eligibility":"eligible","risk_level":"medium","refund_amount":60000}},
+  {"id":"DNR-08","issue":"delivery_not_received","item_paid":20000,"refundable_balance":20000,"operator_limit":20000,"expect":{"eligibility":"eligible","approval_required":false}},
+  {"id":"DNR-09","issue":"delivery_not_received","item_paid":100000,"refundable_balance":100000,"operator_limit":200000,"expect":{"eligibility":"eligible_with_approval","approval_required":true}},
+  {"id":"DNR-10","issue":"delivery_not_received","refundable_balance":3000,"expect":{"eligibility":"eligible","refund_amount":3000}},
+
+  {"id":"DAM-01","issue":"damaged_item","visual":false,"expect":{"eligibility":"needs_evidence","reason_code":"REQUIRED_EVIDENCE_MISSING"}},
+  {"id":"DAM-02","issue":"damaged_item","return_required":true,"expect":{"eligibility":"eligible","action":"return_and_refund"}},
+  {"id":"DAM-03","issue":"damaged_item","covered":false,"expect":{"eligibility":"ineligible","reason_code":"ISSUE_NOT_COVERED"}},
+  {"id":"DAM-04","issue":"damaged_item","item_paid":60000,"refundable_balance":60000,"expect":{"eligibility":"eligible_with_approval","risk_level":"medium"}},
+  {"id":"DAM-05","issue":"damaged_item","claim_count":3,"expect":{"eligibility":"eligible_with_approval","risk_level":"high"}},
+  {"id":"DAM-06","issue":"damaged_item","refundable_balance":0,"expect":{"eligibility":"ineligible","refund_amount":0,"reason_code":"NO_REFUNDABLE_BALANCE"}},
+
+  {"id":"WRONG-01","issue":"wrong_item","visual":false,"expect":{"eligibility":"needs_evidence"}},
+  {"id":"WRONG-02","issue":"wrong_item","return_required":true,"expect":{"eligibility":"eligible","action":"return_and_refund"}},
+  {"id":"WRONG-03","issue":"wrong_item","expect":{"eligibility":"eligible","refund_amount":10000}},
+  {"id":"WRONG-04","issue":"wrong_item","refundable_balance":4500,"expect":{"eligibility":"eligible","refund_amount":4500}},
+
+  {"id":"QUALITY-01","issue":"quality_issue","expect":{"eligibility":"eligible","action":"refund_original_payment"}},
+  {"id":"QUALITY-02","issue":"quality_issue","covered":false,"expect":{"eligibility":"ineligible"}},
+  {"id":"QUALITY-03","issue":"quality_issue","item_paid":60000,"refundable_balance":60000,"expect":{"eligibility":"eligible_with_approval","risk_level":"medium"}},
+  {"id":"QUALITY-04","issue":"quality_issue","claim_count":3,"expect":{"eligibility":"eligible_with_approval","risk_level":"high"}},
+
+  {"id":"AMOUNT-01","issue":"refund_amount_dispute","expect":{"eligibility":"eligible","refund_amount":10000}},
+  {"id":"AMOUNT-02","issue":"refund_amount_dispute","refundable_balance":1000,"expect":{"eligibility":"eligible","refund_amount":1000}},
+  {"id":"AMOUNT-03","issue":"refund_amount_dispute","refundable_balance":0,"expect":{"eligibility":"ineligible","reason_code":"NO_REFUNDABLE_BALANCE"}},
+  {"id":"AMOUNT-04","issue":"refund_amount_dispute","operator_limit":9999,"expect":{"eligibility":"eligible_with_approval","approval_required":true}},
+  {"id":"AMOUNT-05","issue":"refund_amount_dispute","item_paid":100000,"refundable_balance":100000,"operator_limit":200000,"expect":{"eligibility":"eligible_with_approval","approval_required":true}},
+  {"id":"AMOUNT-06","issue":"refund_amount_dispute","covered":false,"expect":{"eligibility":"ineligible","reason_code":"ISSUE_NOT_COVERED"}}
+]
