@@ -149,9 +149,20 @@ flowchart LR
 cd backend && uv run python scripts/evaluate_after_sales_predictions.py predictions.json
 ```
 
+**Baseline 实测对比（2026-08，详见 [docs/EVALUATION.md](docs/EVALUATION.md)）**——同一个 100 条评测集、同一评分器：
+
+| 指标 | AfterFlow 决策引擎 | 纯 LLM (deepseek-v4-flash) |
+| --- | --- | --- |
+| 整案准确率 | **100% (100/100)** | **14% (14/100)** |
+| 字段准确率 | 100% | 60.3% |
+| 退款金额精确率 | 100% | 52% |
+| 逆向履约成本 | 100% | **0%** |
+
+> 这就是「为什么 LLM 不碰钱」的量化证据：同一份案件事实，纯 LLM 只有 14% 整案正确、金额精确率 52%、逆向成本 0%。
+
 设计目标指标（详见《垂直业务Agent_售后退款决策与执行设计.md》）：退款金额精确匹配率 **100%**、政策版本命中率 **100%**、无授权副作用 **0**、重复退款 **0**、审批载荷篡改 **0**、高风险升级召回率 ≥95%。
 
-> 测试：售后域 + SkillScan 共 **189 个测试通过**（`pytest tests/test_after_sales_*.py tests/test_skillscan_native.py`）。
+> 测试：售后域 + SkillScan 共 **189 个测试通过**（`pytest tests/test_after_sales_*.py tests/test_skillscan_native.py`）；baseline 可复现：`cd backend && PYTHONPATH=.:packages/harness uv run python scripts/evaluate_afterflow_baseline.py`。
 
 ---
 
