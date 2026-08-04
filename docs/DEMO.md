@@ -72,6 +72,27 @@ uv run --no-sync python scripts/demo_afterflow_failures.py
 
 ---
 
+## Demo 2.5（可选加分）：多用户 RBAC
+
+```bash
+cd E:\X\deer-flow-main\backend
+AF_ADMIN_EMAIL=admin@gmail.com AF_ADMIN_PASSWORD=AfterFlow@2026 \
+uv run --no-sync python scripts/demo_afterflow_rbac.py
+```
+
+一键演示三类用户边界：
+| 步骤 | 结果 |
+| --- | --- |
+| 客服创建高风险案件 + Action | ✅ |
+| 客服尝试审批/执行 | 403 `supervisor role required`（角色门禁） |
+| 主管审批客服的动作 | ✅ 跨角色成功 |
+| 主管执行退款 | ✅ completed + 交易号 |
+| 主管自审批自己发起的高风险动作 | 403 `requester cannot approve own high-risk action` |
+
+> **讲述点**：权限不是写在 Prompt 里，而是服务端 RBAC + 状态机强制；「客服提、主管批」是人机协同的授权模型。
+
+---
+
 ## Demo 3（可选）：逆向履约与运营预警
 
 新对话，让 Agent 分析处置方案：

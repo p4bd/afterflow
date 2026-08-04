@@ -16,6 +16,8 @@
 | └ reverse（25 条） | 25/25 | **0/25** |
 | └ operations（25 条） | 25/25 | 5/25 |
 
+![AfterFlow vs 纯 LLM 评测对比](images/eval-comparison.svg)
+
 ## 字段级：LLM 到底错在哪
 
 | 字段 | LLM 准确率 | 说明 |
