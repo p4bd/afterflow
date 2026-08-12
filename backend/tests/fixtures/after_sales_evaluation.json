@@ -2148,5 +2148,787 @@
       "alert": true,
       "severity": "high"
     }
+  },
+  {
+    "id": "BND-REF-001",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["operator_limit_below"],
+    "rationale": "退款金额比操作员限额低 1 分，不应触发审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 9999,
+      "shipping": 0,
+      "balance": 9999,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 9999,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-002",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["operator_limit_exact"],
+    "rationale": "退款金额恰好等于操作员限额，规则使用大于号，不应审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 10000,
+      "shipping": 0,
+      "balance": 10000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 10000,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-003",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["operator_limit_above"],
+    "rationale": "退款金额超过操作员限额 1 分，必须审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 10001,
+      "shipping": 0,
+      "balance": 10001,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 10001,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-004",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["high_value_below"],
+    "rationale": "退款金额比高价值阈值低 1 分，风险保持低。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 19999,
+      "shipping": 0,
+      "balance": 19999,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 50000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 19999,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-005",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["high_value_exact"],
+    "rationale": "退款金额恰好达到高价值阈值，风险升为中但不单独要求审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 20000,
+      "shipping": 0,
+      "balance": 20000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 50000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 20000,
+      "risk_level": "medium",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-006",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["manual_review_below"],
+    "rationale": "退款金额比政策人工审核阈值低 1 分，不触发政策审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 39999,
+      "shipping": 0,
+      "balance": 39999,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 50000,
+      "manual": 40000,
+      "high": 100000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 39999,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-007",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["manual_review_exact"],
+    "rationale": "退款金额恰好达到政策人工审核阈值，必须审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 40000,
+      "shipping": 0,
+      "balance": 40000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 50000,
+      "manual": 40000,
+      "high": 100000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 40000,
+      "risk_level": "low",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-008",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["balance_cap"],
+    "rationale": "未收到货应包含运费，但结果必须受支付可退余额封顶。",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 10000,
+      "shipping": 1000,
+      "balance": 7000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 7000,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-009",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["zero_balance"],
+    "rationale": "政策覆盖且证据充分，但可退余额为零时仍不可退款。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 0,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "ineligible",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "BND-REF-010",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["uncovered_precedence", "missing_visual"],
+    "rationale": "问题不在政策范围且图片缺失时，应先返回政策不覆盖而不是索要证据。",
+    "input": {
+      "issue": "damaged_item",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": false,
+      "logistics_present": true,
+      "visual": false,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "ineligible",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "BND-REF-011",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["missing_logistics"],
+    "rationale": "未收到货但完全缺少物流证据时必须补证。",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 5000,
+      "shipping": 500,
+      "balance": 5500,
+      "covered": true,
+      "logistics_present": false,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "needs_evidence",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "BND-REF-012",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["missing_visual"],
+    "rationale": "破损问题缺少人工确认图片时必须补证。",
+    "input": {
+      "issue": "damaged_item",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": false,
+      "pod": false,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "needs_evidence",
+      "refund_amount": 0,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "manual_review"
+    }
+  },
+  {
+    "id": "BND-REF-013",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["pod_high_risk"],
+    "rationale": "客户称未收到货但承运商有签收凭证时应判高风险并审批。",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 5000,
+      "shipping": 500,
+      "balance": 5500,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": true,
+      "claims": 0,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5500,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-014",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["claims_medium"],
+    "rationale": "近 180 天两次未收到货索赔应提升为中风险，但不自动要求审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 5000,
+      "risk_level": "medium",
+      "approval_required": false,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REF-015",
+    "kind": "refund",
+    "source": "curated_boundary_v2",
+    "tags": ["claims_high"],
+    "rationale": "近 180 天三次未收到货索赔达到高风险并强制审批。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 3,
+      "operator": 10000,
+      "manual": 40000,
+      "high": 20000
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment"
+    }
+  },
+  {
+    "id": "BND-REV-001",
+    "kind": "reverse",
+    "source": "curated_boundary_v2",
+    "tags": ["unsupported_issue"],
+    "rationale": "未收到货不属于逆向履约支持的问题类型。",
+    "input": {
+      "issue": "delivery_not_received",
+      "refund": 10000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 1200,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "unsupported",
+      "action": "manual_review",
+      "estimated_resolution_cost": 0
+    }
+  },
+  {
+    "id": "BND-REV-002",
+    "kind": "reverse",
+    "source": "curated_boundary_v2",
+    "tags": ["missing_human_confirmation"],
+    "rationale": "图片未经人工确认时不能自动决定逆向履约。",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 10000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 1200,
+      "inventory": 5,
+      "preference": "refund",
+      "human": false
+    },
+    "expect": {
+      "outcome": "needs_evidence",
+      "action": "manual_review",
+      "estimated_resolution_cost": 0
+    }
+  },
+  {
+    "id": "BND-REV-003",
+    "kind": "reverse",
+    "source": "curated_boundary_v2",
+    "tags": ["recovery_below_reverse_cost"],
+    "rationale": "预期残值比逆向成本低 1 分时，应免退直接退款。",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 10000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 1199,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 10000
+    }
+  },
+  {
+    "id": "BND-REV-004",
+    "kind": "reverse",
+    "source": "curated_boundary_v2",
+    "tags": ["recovery_exact_reverse_cost"],
+    "rationale": "预期残值恰好覆盖逆向成本时，应退货退款。",
+    "input": {
+      "issue": "damaged_item",
+      "refund": 10000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 1200,
+      "inventory": 5,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 10000
+    }
+  },
+  {
+    "id": "BND-REV-005",
+    "kind": "reverse",
+    "source": "curated_boundary_v2",
+    "tags": ["replacement_in_stock"],
+    "rationale": "客户偏好换货且库存存在时选择退回后换货，并按成本模型计算。",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 10001,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 1000,
+      "inventory": 1,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "replace_after_return",
+      "estimated_resolution_cost": 7800
+    }
+  },
+  {
+    "id": "BND-REV-006",
+    "kind": "reverse",
+    "source": "curated_boundary_v2",
+    "tags": ["replacement_out_of_stock"],
+    "rationale": "客户偏好换货但无库存时回退到退货退款。",
+    "input": {
+      "issue": "wrong_item",
+      "refund": 10000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 1200,
+      "inventory": 0,
+      "preference": "replacement",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 10000
+    }
+  },
+  {
+    "id": "BND-REV-007",
+    "kind": "reverse",
+    "source": "curated_boundary_v2",
+    "tags": ["cost_floor_zero"],
+    "rationale": "残值大于退款与逆向成本时，估算成本必须封底为零。",
+    "input": {
+      "issue": "quality_issue",
+      "refund": 5000,
+      "return_shipping": 800,
+      "handling": 400,
+      "recovery": 10000,
+      "inventory": 0,
+      "preference": "refund",
+      "human": true
+    },
+    "expect": {
+      "outcome": "decided",
+      "action": "return_and_refund",
+      "estimated_resolution_cost": 0
+    }
+  },
+  {
+    "id": "BND-OPS-001",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["minimum_orders_below"],
+    "rationale": "当前订单量比最小样本少 1，即使异常率很高也不告警。",
+    "input": {
+      "dimension": "sku",
+      "value": "BOUNDARY-ORDERS-49",
+      "orders": 49,
+      "issue_cases": 20,
+      "prev_orders": 49,
+      "prev_cases": 0,
+      "loss": 0
+    },
+    "expect": { "alert": false, "severity": null }
+  },
+  {
+    "id": "BND-OPS-002",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": [
+      "minimum_orders_exact",
+      "minimum_cases_exact",
+      "high_severity_rate_exact"
+    ],
+    "rationale": "订单量和案件数恰好达门槛且问题率为 10%，应产生高等级告警。",
+    "input": {
+      "dimension": "sku",
+      "value": "BOUNDARY-ORDERS-50",
+      "orders": 50,
+      "issue_cases": 5,
+      "prev_orders": 50,
+      "prev_cases": 0,
+      "loss": 0
+    },
+    "expect": { "alert": true, "severity": "high" }
+  },
+  {
+    "id": "BND-OPS-003",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["minimum_cases_below"],
+    "rationale": "案件数比最小门槛少 1 且无损失越线，不告警。",
+    "input": {
+      "dimension": "carrier",
+      "value": "BOUNDARY-CASES-4",
+      "orders": 80,
+      "issue_cases": 4,
+      "prev_orders": 80,
+      "prev_cases": 0,
+      "loss": 0
+    },
+    "expect": { "alert": false, "severity": null }
+  },
+  {
+    "id": "BND-OPS-004",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["minimum_cases_exact"],
+    "rationale": "案件数恰好达到门槛且问题率与 uplift 都满足时告警。",
+    "input": {
+      "dimension": "carrier",
+      "value": "BOUNDARY-CASES-5",
+      "orders": 80,
+      "issue_cases": 5,
+      "prev_orders": 80,
+      "prev_cases": 0,
+      "loss": 0
+    },
+    "expect": { "alert": true, "severity": "medium" }
+  },
+  {
+    "id": "BND-OPS-005",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["issue_rate_below"],
+    "rationale": "问题率比 5% 门槛低，即使案件数达到要求也不告警。",
+    "input": {
+      "dimension": "warehouse",
+      "value": "BOUNDARY-RATE-BELOW",
+      "orders": 200,
+      "issue_cases": 9,
+      "prev_orders": 200,
+      "prev_cases": 0,
+      "loss": 0
+    },
+    "expect": { "alert": false, "severity": null }
+  },
+  {
+    "id": "BND-OPS-006",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["issue_rate_exact"],
+    "rationale": "问题率恰好为 5% 且历史为零时产生中等级告警。",
+    "input": {
+      "dimension": "warehouse",
+      "value": "BOUNDARY-RATE-EXACT",
+      "orders": 200,
+      "issue_cases": 10,
+      "prev_orders": 200,
+      "prev_cases": 0,
+      "loss": 0
+    },
+    "expect": { "alert": true, "severity": "medium" }
+  },
+  {
+    "id": "BND-OPS-007",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["uplift_below"],
+    "rationale": "当前问题率未达到历史的 1.5 倍时不告警。",
+    "input": {
+      "dimension": "sku",
+      "value": "BOUNDARY-UPLIFT-BELOW",
+      "orders": 100,
+      "issue_cases": 9,
+      "prev_orders": 100,
+      "prev_cases": 7,
+      "loss": 0
+    },
+    "expect": { "alert": false, "severity": null }
+  },
+  {
+    "id": "BND-OPS-008",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["uplift_exact"],
+    "rationale": "当前问题率恰好达到历史的 1.5 倍时产生中等级告警。",
+    "input": {
+      "dimension": "sku",
+      "value": "BOUNDARY-UPLIFT-EXACT",
+      "orders": 100,
+      "issue_cases": 9,
+      "prev_orders": 100,
+      "prev_cases": 6,
+      "loss": 0
+    },
+    "expect": { "alert": true, "severity": "medium" }
+  },
+  {
+    "id": "BND-OPS-009",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["loss_below"],
+    "rationale": "损失比 50 万分门槛低 1 分且无比率异常时不告警。",
+    "input": {
+      "dimension": "carrier",
+      "value": "BOUNDARY-LOSS-BELOW",
+      "orders": 100,
+      "issue_cases": 0,
+      "prev_orders": 100,
+      "prev_cases": 0,
+      "loss": 499999
+    },
+    "expect": { "alert": false, "severity": null }
+  },
+  {
+    "id": "BND-OPS-010",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["loss_exact"],
+    "rationale": "损失恰好达到 50 万分门槛时产生中等级告警。",
+    "input": {
+      "dimension": "carrier",
+      "value": "BOUNDARY-LOSS-EXACT",
+      "orders": 100,
+      "issue_cases": 0,
+      "prev_orders": 100,
+      "prev_cases": 0,
+      "loss": 500000
+    },
+    "expect": { "alert": true, "severity": "medium" }
+  },
+  {
+    "id": "BND-OPS-011",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["high_severity_loss_exact"],
+    "rationale": "损失恰好达到高等级门槛 100 万分时产生高等级告警。",
+    "input": {
+      "dimension": "warehouse",
+      "value": "BOUNDARY-HIGH-LOSS",
+      "orders": 100,
+      "issue_cases": 0,
+      "prev_orders": 100,
+      "prev_cases": 0,
+      "loss": 1000000
+    },
+    "expect": { "alert": true, "severity": "high" }
+  },
+  {
+    "id": "BND-OPS-012",
+    "kind": "operations",
+    "source": "curated_boundary_v2",
+    "tags": ["previous_period_zero"],
+    "rationale": "历史期订单数为零时，满足当前绝对门槛即可告警且不能除零。",
+    "input": {
+      "dimension": "warehouse",
+      "value": "BOUNDARY-PREV-ZERO",
+      "orders": 100,
+      "issue_cases": 5,
+      "prev_orders": 0,
+      "prev_cases": 0,
+      "loss": 0
+    },
+    "expect": { "alert": true, "severity": "medium" }
   }
 ]

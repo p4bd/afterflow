@@ -1,7 +1,7 @@
-"""AfterFlow baseline: deterministic engine vs a raw LLM on the 100-case suite.
+"""AfterFlow baseline: deterministic engine vs a raw LLM on the fixed evaluation suite.
 
 Scores the AfterFlow decision engine and a plain DeepSeek chat model against
-the SAME fixed 100-case evaluation set, using the same model-agnostic scorer.
+the same fixed evaluation set, using the same model-agnostic scorer.
 
 Run (from backend/, with DEEPSEEK_API_KEY set):
     PYTHONPATH=.:packages/harness uv run python scripts/evaluate_afterflow_baseline.py
@@ -17,6 +17,7 @@ import json
 import os
 import re
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 from app.after_sales.decision import decide_resolution
@@ -26,7 +27,7 @@ from app.after_sales.risk_ops import MetricBucket, detect_after_sales_anomalies
 from app.after_sales.schemas import DecisionInput
 from deerflow.models.factory import create_chat_model
 
-FIXTURE = Path(__file__).parents[1] / "tests" / "fixtures" / "after_sales_evaluation_100.json"
+FIXTURE = Path(__file__).parents[1] / "tests" / "fixtures" / "after_sales_evaluation.json"
 OUT_DIR = Path(__file__).parents[1] / ".deer-flow" / "eval"
 
 REFUND_ISSUE_NAMES = {
@@ -43,7 +44,7 @@ def load_cases() -> list[dict]:
 
 
 # --------------------------------------------------------------------------- #
-# 1) Deterministic engine predictions (mirrors tests/test_after_sales_evaluation_100.py)
+# 1) Deterministic engine predictions (mirrors the evaluation-suite test)
 # --------------------------------------------------------------------------- #
 def engine_prediction(case: dict) -> dict:
     v = case["input"]
@@ -54,10 +55,14 @@ def engine_prediction(case: dict) -> dict:
                 issue_type=v["issue"],
                 order={"order_id": case["id"], "item_paid": v["item"], "shipping_paid": v["shipping"]},
                 payment={"refundable_balance": v["balance"]},
-                logistics=({
-                    "status": "delivered" if v["pod"] else "in_transit",
-                    "proof_of_delivery": v["pod"],
-                } if v["logistics_present"] else None),
+                logistics=(
+                    {
+                        "status": "delivered" if v["pod"] else "in_transit",
+                        "proof_of_delivery": v["pod"],
+                    }
+                    if v["logistics_present"]
+                    else None
+                ),
                 customer_risk={"not_received_claims_180d": v["claims"], "refund_cases_180d": 0},
                 policy={
                     "policy_id": "EVAL",
@@ -88,18 +93,20 @@ def engine_prediction(case: dict) -> dict:
                 visual_evidence=VisualEvidence(damage_level="major", human_confirmed=v["human"]),
             )
         ).model_dump(mode="json")
-    alerts = detect_after_sales_anomalies([
-        MetricBucket(
-            dimension=v["dimension"],
-            value=v["value"],
-            issue_type="quality_issue",
-            current_orders=v["orders"],
-            current_issue_cases=v["issue_cases"],
-            previous_orders=v["prev_orders"],
-            previous_issue_cases=v["prev_cases"],
-            current_loss_amount=v["loss"],
-        )
-    ])
+    alerts = detect_after_sales_anomalies(
+        [
+            MetricBucket(
+                dimension=v["dimension"],
+                value=v["value"],
+                issue_type="quality_issue",
+                current_orders=v["orders"],
+                current_issue_cases=v["issue_cases"],
+                previous_orders=v["prev_orders"],
+                previous_issue_cases=v["prev_cases"],
+                current_loss_amount=v["loss"],
+            )
+        ]
+    )
     return {"alert": bool(alerts), "severity": alerts[0].severity if alerts else None}
 
 
@@ -107,11 +114,7 @@ def engine_prediction(case: dict) -> dict:
 # 2) Raw-LLM baseline prompts
 # --------------------------------------------------------------------------- #
 def _refund_prompt(case_id: str, v: dict) -> str:
-    logistics = (
-        f"有物流证据，承运商签收凭证：{'有' if v['pod'] else '无'}"
-        if v["logistics_present"]
-        else "无物流证据"
-    )
+    logistics = f"有物流证据，承运商签收凭证：{'有' if v['pod'] else '无'}" if v["logistics_present"] else "无物流证据"
     return (
         "你是一名电商售后退款审核员。请仅凭以下案件事实做出判断，只输出一个 JSON 对象，不要任何解释或代码块标记。\n"
         f"案件 ID：{case_id}\n"
@@ -239,35 +242,50 @@ def main() -> int:
     for case in cases:
         engine_preds[case["id"]] = engine_prediction(case)
 
-    print("调用 LLM 逐条预测…", flush=True)
-    model = create_chat_model(model_name)
-    llm_preds: dict[str, dict] = {}
     failures = []
-    for i, case in enumerate(cases, 1):
-        prompt = build_prompt(case)
-        try:
-            resp = model.invoke(prompt)
-            text = getattr(resp, "content", None)
-            text = str(text) if text is not None else ""
-            pred = _coerce(_extract_json(text), case["kind"])
-            if not pred:
+    reuse_llm = os.environ.get("AF_EVAL_REUSE_LLM", "").strip().lower() in {"1", "true", "yes"}
+    saved_llm_path = OUT_DIR / "predictions_llm.json"
+    if reuse_llm and saved_llm_path.exists():
+        print(f"复用已保存的 LLM 预测: {saved_llm_path}", flush=True)
+        llm_preds = json.loads(saved_llm_path.read_text(encoding="utf-8"))
+        failures = [case["id"] for case in cases if not llm_preds.get(case["id"])]
+    else:
+        print("调用 LLM 逐条预测…", flush=True)
+        model = create_chat_model(model_name)
+        llm_preds: dict[str, dict] = {}
+        for i, case in enumerate(cases, 1):
+            prompt = build_prompt(case)
+            try:
+                resp = model.invoke(prompt)
+                text = getattr(resp, "content", None)
+                text = str(text) if text is not None else ""
+                pred = _coerce(_extract_json(text), case["kind"])
+                if not pred:
+                    failures.append(case["id"])
+                llm_preds[case["id"]] = pred
+            except Exception as exc:  # noqa: BLE001 - report and continue
+                print(f"  [warn] {case['id']} 调用失败: {exc}", file=sys.stderr)
                 failures.append(case["id"])
-            llm_preds[case["id"]] = pred
-        except Exception as exc:  # noqa: BLE001 - report and continue
-            print(f"  [warn] {case['id']} 调用失败: {exc}", file=sys.stderr)
-            failures.append(case["id"])
-            llm_preds[case["id"]] = {}
-        if i % 10 == 0:
-            print(f"  … {i}/{len(cases)}", flush=True)
+                llm_preds[case["id"]] = {}
+            if i % 10 == 0:
+                print(f"  … {i}/{len(cases)}", flush=True)
 
     engine_score = score_predictions(cases, engine_preds)
     llm_score = score_predictions(cases, llm_preds)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUT_DIR / "predictions_engine.json").write_text(
-        json.dumps(engine_preds, ensure_ascii=False, indent=2), encoding="utf-8")
-    (OUT_DIR / "predictions_llm.json").write_text(
-        json.dumps(llm_preds, ensure_ascii=False, indent=2), encoding="utf-8")
+    (OUT_DIR / "predictions_engine.json").write_text(json.dumps(engine_preds, ensure_ascii=False, indent=2), encoding="utf-8")
+    (OUT_DIR / "predictions_llm.json").write_text(json.dumps(llm_preds, ensure_ascii=False, indent=2), encoding="utf-8")
+    report = {
+        "generated_at": datetime.now(UTC).isoformat(),
+        "model": model_name,
+        "fixture": FIXTURE.name,
+        "case_count": len(cases),
+        "engine": engine_score,
+        "llm": llm_score,
+        "parse_failures": failures,
+    }
+    (OUT_DIR / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print("\n================ 对比结果 ================")
     for name, score in (("AfterFlow 决策引擎", engine_score), ("纯 LLM (deepseek-v4-flash)", llm_score)):
@@ -281,7 +299,16 @@ def main() -> int:
     if failures:
         print(f"\nLLM 无法解析的 case: {failures}")
 
-    print(f"\n预测已保存: {OUT_DIR / 'predictions_engine.json'}, {OUT_DIR / 'predictions_llm.json'}")
+    print("\n【纯 LLM 字段准确率】")
+    for field, stats in sorted(llm_score["by_field"].items(), key=lambda item: item[1]["accuracy"]):
+        print(f"  {field:<28}: {stats['accuracy']:.1%} ({stats['matched']}/{stats['total']})")
+
+    curated = [case for case in cases if case.get("source") == "curated_boundary_v2"]
+    if curated:
+        curated_score = score_predictions(curated, llm_preds)
+        print(f"\n人工边界集 ({len(curated)} 条): field {curated_score['field_accuracy']:.1%}, exact {curated_score['exact_case_accuracy']:.1%}")
+
+    print(f"\n预测与报告已保存: {OUT_DIR}")
     return 0
 
 

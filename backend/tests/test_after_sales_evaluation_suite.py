@@ -1,4 +1,4 @@
-"""Fixed 100-case evaluation spanning refund, reverse, and operations decisions."""
+"""Fixed evaluation spanning refund, reverse, and operations decisions."""
 
 import json
 from pathlib import Path
@@ -10,7 +10,7 @@ from app.after_sales.reverse import ReverseInput, VisualEvidence, decide_reverse
 from app.after_sales.risk_ops import MetricBucket, detect_after_sales_anomalies
 from app.after_sales.schemas import DecisionInput
 
-CASES = json.loads((Path(__file__).parent / "fixtures" / "after_sales_evaluation_100.json").read_text(encoding="utf-8"))
+CASES = json.loads((Path(__file__).parent / "fixtures" / "after_sales_evaluation.json").read_text(encoding="utf-8"))
 
 
 def _evaluate(case):
@@ -78,9 +78,9 @@ def test_evaluation_case(case):
         assert actual[field] == expected
 
 
-def test_evaluation_suite_has_100_unique_cross_domain_cases():
+def test_evaluation_suite_has_at_least_130_unique_cross_domain_cases():
     ids = [case["id"] for case in CASES]
 
-    assert len(ids) == 100
-    assert len(set(ids)) == 100
+    assert len(ids) >= 130
+    assert len(set(ids)) == len(ids)
     assert {case["kind"] for case in CASES} == {"refund", "reverse", "operations"}

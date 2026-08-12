@@ -14,7 +14,7 @@ from pathlib import Path
 
 from app.after_sales.evaluation import score_predictions
 
-GOLD = Path("tests/fixtures/after_sales_evaluation_100.json")
+GOLD = Path("tests/fixtures/after_sales_evaluation.json")
 PREDS_DIR = Path(".deer-flow/eval")
 OUT = Path("../docs/images/eval-comparison.svg")
 
@@ -50,17 +50,11 @@ def main() -> None:
     bar_w, gap = 58, 14
 
     parts: list[str] = []
-    parts.append(
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" '
-        f'font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">'
-    )
+    parts.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">')
     # background
     parts.append(f'<rect x="0" y="0" width="{W}" height="{H}" fill="#ffffff"/>')
     # title
-    parts.append(
-        f'<text x="{margin_l}" y="34" font-size="20" font-weight="700" fill="#0f172a">'
-        "AfterFlow 决策引擎 vs 纯 LLM — 整案准确率（100 条评测集）</text>"
-    )
+    parts.append(f'<text x="{margin_l}" y="34" font-size="20" font-weight="700" fill="#0f172a">AfterFlow 决策引擎 vs 纯 LLM — 整案准确率（{len(cases)} 条评测集）</text>')
     # gridlines + y labels
     for tick in (0, 20, 40, 60, 80, 100):
         y = baseline_y - (tick / 100) * plot_h
@@ -76,23 +70,13 @@ def main() -> None:
         h_eng = (eng / 100) * plot_h
         h_llm = (llm / 100) * plot_h
 
-        parts.append(
-            f'<rect x="{x_eng:.1f}" y="{baseline_y - h_eng:.1f}" width="{bar_w}" height="{max(h_eng, 0):.1f}" rx="4" fill="{ENGINE_COLOR}"/>'
-        )
-        parts.append(
-            f'<rect x="{x_llm:.1f}" y="{baseline_y - h_llm:.1f}" width="{bar_w}" height="{max(h_llm, 0):.1f}" rx="4" fill="{LLM_COLOR}"/>'
-        )
+        parts.append(f'<rect x="{x_eng:.1f}" y="{baseline_y - h_eng:.1f}" width="{bar_w}" height="{max(h_eng, 0):.1f}" rx="4" fill="{ENGINE_COLOR}"/>')
+        parts.append(f'<rect x="{x_llm:.1f}" y="{baseline_y - h_llm:.1f}" width="{bar_w}" height="{max(h_llm, 0):.1f}" rx="4" fill="{LLM_COLOR}"/>')
         # value labels
-        parts.append(
-            f'<text x="{x_eng + bar_w / 2:.1f}" y="{baseline_y - h_eng - 6:.1f}" font-size="13" font-weight="600" fill="{ENGINE_COLOR}" text-anchor="middle">{eng:.0f}%</text>'
-        )
-        parts.append(
-            f'<text x="{x_llm + bar_w / 2:.1f}" y="{baseline_y - h_llm - 6:.1f}" font-size="13" font-weight="600" fill="{LLM_COLOR}" text-anchor="middle">{llm:.0f}%</text>'
-        )
+        parts.append(f'<text x="{x_eng + bar_w / 2:.1f}" y="{baseline_y - h_eng - 6:.1f}" font-size="13" font-weight="600" fill="{ENGINE_COLOR}" text-anchor="middle">{eng:.0f}%</text>')
+        parts.append(f'<text x="{x_llm + bar_w / 2:.1f}" y="{baseline_y - h_llm - 6:.1f}" font-size="13" font-weight="600" fill="{LLM_COLOR}" text-anchor="middle">{llm:.0f}%</text>')
         # group label
-        parts.append(
-            f'<text x="{cx:.1f}" y="{baseline_y + 24}" font-size="14" fill="#0f172a" text-anchor="middle">{KIND_LABELS[i][1]}</text>'
-        )
+        parts.append(f'<text x="{cx:.1f}" y="{baseline_y + 24}" font-size="14" fill="#0f172a" text-anchor="middle">{KIND_LABELS[i][1]}</text>')
 
     # legend
     lx = margin_l

@@ -13,7 +13,7 @@ def main() -> None:
     parser.add_argument(
         "--gold",
         type=Path,
-        default=Path(__file__).parents[1] / "tests" / "fixtures" / "after_sales_evaluation_100.json",
+        default=Path(__file__).parents[1] / "tests" / "fixtures" / "after_sales_evaluation.json",
     )
     args = parser.parse_args()
     gold = json.loads(args.gold.read_text(encoding="utf-8"))

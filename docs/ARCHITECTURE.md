@@ -94,7 +94,7 @@ intake
 
 ## 9. 评测
 
-固定 100 条合同评测：50 条退款、25 条逆向履约、25 条运营预警。指标包括 coverage、field accuracy 和 exact case accuracy。详见 [EVALUATION.md](EVALUATION.md)。
+固定 134 条合同评测：65 条退款、32 条逆向履约、37 条运营预警。其中保留原 100 条回归样本，并加入 34 条带覆盖标签和设计理由的人工边界样本。指标包括 coverage、field accuracy、exact case accuracy、字段切片和边界标签切片。详见 [EVALUATION.md](EVALUATION.md)。
 
 ## 10. 生产化边界
 
