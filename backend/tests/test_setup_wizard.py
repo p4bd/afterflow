@@ -1,5 +1,4 @@
 """Unit tests for the Setup Wizard (scripts/wizard/).
-
 Run from repo root:
     cd backend && uv run pytest tests/test_setup_wizard.py -v
 """
@@ -8,10 +7,8 @@ from __future__ import annotations
 
 import yaml
 from wizard import ui as wizard_ui
-from wizard.providers import LLM_PROVIDERS, SEARCH_PROVIDERS, WEB_FETCH_PROVIDERS, LLMProvider, with_thinking_support
-from wizard.steps import channels as channels_step
+from wizard.providers import LLM_PROVIDERS, LLMProvider, with_thinking_support
 from wizard.steps import llm as llm_step
-from wizard.steps import search as search_step
 from wizard.writer import (
     build_minimal_config,
     read_env_file,
@@ -87,35 +84,6 @@ class TestProviders:
             assert ":" in p.use, f"Provider '{p.name}' use path must contain ':'"
             assert p.models
             assert p.default_model in p.models
-
-    def test_search_providers_have_required_fields(self):
-        for sp in SEARCH_PROVIDERS:
-            assert sp.name
-            assert sp.display_name
-            assert sp.use
-            assert ":" in sp.use
-
-    def test_search_and_fetch_include_firecrawl(self):
-        assert any(provider.name == "firecrawl" for provider in SEARCH_PROVIDERS)
-        assert any(provider.name == "firecrawl" for provider in WEB_FETCH_PROVIDERS)
-
-    def test_web_fetch_providers_have_required_fields(self):
-        for provider in WEB_FETCH_PROVIDERS:
-            assert provider.name
-            assert provider.display_name
-            assert provider.use
-            assert ":" in provider.use
-            assert provider.tool_name == "web_fetch"
-
-    def test_at_least_one_free_search_provider(self):
-        """At least one search provider needs no API key."""
-        free = [sp for sp in SEARCH_PROVIDERS if sp.env_var is None]
-        assert free, "Expected at least one free (no-key) search provider"
-
-    def test_at_least_one_free_web_fetch_provider(self):
-        free = [provider for provider in WEB_FETCH_PROVIDERS if provider.env_var is None]
-        assert free, "Expected at least one free (no-key) web fetch provider"
-
 
 class TestBuildMinimalConfig:
     def test_produces_valid_yaml(self):
@@ -329,45 +297,6 @@ class TestBuildMinimalConfig:
         assert model["when_thinking_enabled"]["extra_body"]["thinking"]["type"] == "enabled"
         assert model["when_thinking_disabled"]["extra_body"]["thinking"]["type"] == "disabled"
 
-    def test_can_enable_selected_channel_connections(self):
-        content = build_minimal_config(
-            provider_use="langchain_openai:ChatOpenAI",
-            model_name="gpt-4o",
-            display_name="OpenAI",
-            api_key_field="api_key",
-            env_var="OPENAI_API_KEY",
-            channel_connection_providers=["feishu", "slack"],
-        )
-
-        data = yaml.safe_load(content)
-        channel_connections = data["channel_connections"]
-
-        assert channel_connections["enabled"] is True
-        assert channel_connections["feishu"]["enabled"] is True
-        assert channel_connections["slack"]["enabled"] is True
-        assert channel_connections["telegram"]["enabled"] is False
-        assert channel_connections["discord"]["enabled"] is False
-        assert channel_connections["dingtalk"]["enabled"] is False
-        assert channel_connections["wechat"]["enabled"] is False
-        assert channel_connections["wecom"]["enabled"] is False
-
-    def test_channel_connections_disabled_when_no_channels_selected(self):
-        content = build_minimal_config(
-            provider_use="langchain_openai:ChatOpenAI",
-            model_name="gpt-4o",
-            display_name="OpenAI",
-            api_key_field="api_key",
-            env_var="OPENAI_API_KEY",
-            channel_connection_providers=[],
-        )
-
-        data = yaml.safe_load(content)
-        channel_connections = data["channel_connections"]
-
-        assert channel_connections["enabled"] is False
-        assert all(not config["enabled"] for provider, config in channel_connections.items() if provider != "enabled")
-
-
 class TestThinkingSupport:
     def test_other_provider_requests_thinking_prompt(self):
         other = next(p for p in LLM_PROVIDERS if p.name == "other")
@@ -507,28 +436,6 @@ class TestLLMStep:
 
         assert result.provider.extra_config["supports_thinking"] is False
         assert "when_thinking_enabled" not in result.provider.extra_config
-
-
-class TestChannelsStep:
-    def test_returns_selected_channel_keys(self, monkeypatch):
-        monkeypatch.setattr(channels_step, "print_header", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(channels_step, "print_info", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(channels_step, "print_success", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(channels_step, "ask_multi_choice", lambda *_args, **_kwargs: [0, 3, 6])
-
-        result = channels_step.run_channels_step()
-
-        assert result.enabled_providers == ["telegram", "feishu", "wecom"]
-
-    def test_empty_selection_disables_channel_connections(self, monkeypatch):
-        monkeypatch.setattr(channels_step, "print_header", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(channels_step, "print_info", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(channels_step, "print_success", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(channels_step, "ask_multi_choice", lambda *_args, **_kwargs: [])
-
-        result = channels_step.run_channels_step()
-
-        assert result.enabled_providers == []
 
 
 class TestWizardUi:
@@ -706,33 +613,3 @@ class TestWriteConfigYaml:
         with open(config_path) as f:
             data = yaml.safe_load(f)
         assert data["models"][0]["base_url"] == "https://openrouter.ai/api/v1"
-
-
-class TestSearchStep:
-    def test_reuses_api_key_for_same_provider(self, monkeypatch):
-        monkeypatch.setattr(search_step, "print_header", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(search_step, "print_success", lambda *_args, **_kwargs: None)
-        monkeypatch.setattr(search_step, "print_info", lambda *_args, **_kwargs: None)
-
-        choices = iter([3, 1])
-        prompts: list[str] = []
-
-        def fake_choice(_prompt, _options, default=0):
-            return next(choices)
-
-        def fake_secret(prompt):
-            prompts.append(prompt)
-            return "shared-api-key"
-
-        monkeypatch.setattr(search_step, "ask_choice", fake_choice)
-        monkeypatch.setattr(search_step, "ask_secret", fake_secret)
-
-        result = search_step.run_search_step()
-
-        assert result.search_provider is not None
-        assert result.fetch_provider is not None
-        assert result.search_provider.name == "exa"
-        assert result.fetch_provider.name == "exa"
-        assert result.search_api_key == "shared-api-key"
-        assert result.fetch_api_key == "shared-api-key"
-        assert prompts == ["EXA_API_KEY"]

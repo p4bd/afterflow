@@ -51,7 +51,7 @@ export default defineConfig({
         SKIP_ENV_VALIDATION: "1",
         DEER_FLOW_AUTH_DISABLED: "1",
         BETTER_AUTH_SECRET: "local-dev-secret",
-        DEER_FLOW_INTERNAL_GATEWAY_BASE_URL: "http://127.0.0.1:8012",
+        AFTERFLOW_INTERNAL_GATEWAY_BASE_URL: "http://127.0.0.1:8012",
       },
     },
   ],

@@ -261,7 +261,7 @@ def merge_run_context_overrides(config: dict[str, Any], context: Mapping[str, An
 
 
 async def resolve_trusted_internal_owner_for_attribution(request: Request, owner_user_id: str | None) -> Any | None:
-    """Resolve the DeerFlow user used only for trusted internal attribution."""
+    """Resolve the AfterFlow user used only for trusted internal attribution."""
 
     if not owner_user_id:
         return None

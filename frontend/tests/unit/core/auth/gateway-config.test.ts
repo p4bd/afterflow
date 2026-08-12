@@ -9,7 +9,7 @@ import {
 
 const ENV_KEYS = [
   "NODE_ENV",
-  "DEER_FLOW_INTERNAL_GATEWAY_BASE_URL",
+  "AFTERFLOW_INTERNAL_GATEWAY_BASE_URL",
   "DEER_FLOW_TRUSTED_ORIGINS",
 ] as const;
 
@@ -52,7 +52,7 @@ describe("getGatewayConfig", () => {
 
   beforeEach(() => {
     saved = snapshotEnv();
-    setEnv("DEER_FLOW_INTERNAL_GATEWAY_BASE_URL", undefined);
+    setEnv("AFTERFLOW_INTERNAL_GATEWAY_BASE_URL", undefined);
     setEnv("DEER_FLOW_TRUSTED_ORIGINS", undefined);
   });
 
@@ -83,7 +83,7 @@ describe("getGatewayConfig", () => {
 
   test("uses env values verbatim when set, regardless of NODE_ENV", async () => {
     setEnv("NODE_ENV", "production");
-    setEnv("DEER_FLOW_INTERNAL_GATEWAY_BASE_URL", "https://gw.example.com/");
+    setEnv("AFTERFLOW_INTERNAL_GATEWAY_BASE_URL", "https://gw.example.com/");
     setEnv(
       "DEER_FLOW_TRUSTED_ORIGINS",
       "https://app.example.com, https://admin.example.com",
@@ -101,7 +101,7 @@ describe("getGatewayConfig", () => {
 
   test("trims and filters empty entries in trustedOrigins", async () => {
     setEnv("NODE_ENV", "production");
-    setEnv("DEER_FLOW_INTERNAL_GATEWAY_BASE_URL", "https://gw.example.com");
+    setEnv("AFTERFLOW_INTERNAL_GATEWAY_BASE_URL", "https://gw.example.com");
     setEnv(
       "DEER_FLOW_TRUSTED_ORIGINS",
       " https://a.example , ,https://b.example ",

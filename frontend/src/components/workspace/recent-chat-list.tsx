@@ -56,25 +56,17 @@ import {
   useRenameThread,
 } from "@/core/threads/hooks";
 import type { AgentThread, AgentThreadState } from "@/core/threads/types";
-import {
-  channelSourceOfThread,
-  pathOfThread,
-  titleOfThread,
-} from "@/core/threads/utils";
+import { pathOfThread, titleOfThread } from "@/core/threads/utils";
 import { env } from "@/env";
 import { isIMEComposing } from "@/lib/ime";
-
-import { ThreadChannelIcon } from "./thread-channel-source";
 
 export function RecentChatList() {
   const { t } = useI18n();
   const router = useRouter();
   const pathname = usePathname();
-  const { thread_id: threadIdFromPath, agent_name: agentNameFromPath } =
-    useParams<{
-      thread_id: string;
-      agent_name?: string;
-    }>();
+  const { thread_id: threadIdFromPath } = useParams<{
+    thread_id: string;
+  }>();
   const {
     data: infiniteThreads,
     fetchNextPage,
@@ -117,9 +109,7 @@ export function RecentChatList() {
       const currentPathname =
         typeof window === "undefined" ? pathname : window.location.pathname;
       const threadPath = pathOfThread(thread);
-      const nextThreadPath = pathOfThread("new", {
-        agent_name: agentNameFromPath,
-      });
+      const nextThreadPath = pathOfThread("new");
       const isNewThreadPath = currentPathname === nextThreadPath;
       const isCurrentThread =
         thread.thread_id === threadIdFromPath ||
@@ -141,7 +131,6 @@ export function RecentChatList() {
       });
     },
     [
-      agentNameFromPath,
       deleteThread,
       pathname,
       router,
@@ -170,14 +159,7 @@ export function RecentChatList() {
 
   const handleShare = useCallback(
     async (thread: AgentThread) => {
-      // Always use Vercel URL for sharing so others can access
-      const VERCEL_URL = "https://deer-flow-v2.vercel.app";
-      const isLocalhost =
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1";
-      // On localhost: use Vercel URL; On production: use current origin
-      const baseUrl = isLocalhost ? VERCEL_URL : window.location.origin;
-      const shareUrl = `${baseUrl}${pathOfThread(thread)}`;
+      const shareUrl = `${window.location.origin}${pathOfThread(thread)}`;
       try {
         const didCopy = await writeTextToClipboard(shareUrl);
         if (!didCopy) {
@@ -234,7 +216,6 @@ export function RecentChatList() {
             <div className="flex w-full flex-col gap-1">
               {threads.map((thread) => {
                 const isActive = pathOfThread(thread) === pathname;
-                const channelSource = channelSourceOfThread(thread);
                 return (
                   <SidebarMenuItem
                     key={thread.thread_id}
@@ -245,20 +226,9 @@ export function RecentChatList() {
                         className="text-muted-foreground min-w-0 whitespace-nowrap group-hover/side-menu-item:overflow-hidden"
                         href={pathOfThread(thread)}
                       >
-                        <ThreadChannelIcon source={channelSource} />
                         <span className="min-w-0 truncate">
                           {titleOfThread(thread)}
                         </span>
-                        {channelSource && (
-                          <span
-                            className="bg-muted text-muted-foreground ml-auto inline-flex h-5 max-w-14 shrink-0 items-center rounded-md px-1.5 text-[10px] font-medium"
-                            title={`${channelSource.label} channel`}
-                          >
-                            <span className="truncate">
-                              {channelSource.label}
-                            </span>
-                          </span>
-                        )}
                       </Link>
                     </SidebarMenuButton>
                     {env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY !== "true" && (

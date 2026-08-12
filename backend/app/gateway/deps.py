@@ -175,7 +175,7 @@ def get_config() -> AppConfig:
     ``startup_config`` variable inside ``lifespan()`` and is passed
     explicitly into :func:`langgraph_runtime` for the engines that are
     restart-required by design. Routing every request through
-    :func:`get_app_config` closes the bytedance/deer-flow issue #3107 BUG-001
+    :func:`get_app_config` keeps runtime configuration resolution centralized
     split-brain where the worker / lead-agent thread saw a stale startup
     snapshot.
 

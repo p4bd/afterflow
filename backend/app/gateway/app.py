@@ -13,16 +13,12 @@ from app.gateway.csrf_middleware import CSRFMiddleware, get_configured_cors_orig
 from app.gateway.deps import langgraph_runtime
 from app.gateway.routers import (
     after_sales,
-    agents,
     artifacts,
     assistants_compat,
     auth,
-    channel_connections,
-    channels,
     console,
     features,
     feedback,
-    github_webhooks,
     input_polish,
     mcp,
     memory,
@@ -63,7 +59,7 @@ async def _ensure_admin_user(app: FastAPI) -> None:
 
     After admin creation, migrate orphan threads from the LangGraph
     store (metadata.user_id unset) to the admin account. This is the
-    "no-auth → with-auth" upgrade path: users who ran DeerFlow without
+    "no-auth → with-auth" upgrade path: users who ran AfterFlow without
     authentication have existing LangGraph thread data that needs an
     owner assigned.
         First boot (no admin exists):
@@ -230,15 +226,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         # Must run AFTER langgraph_runtime so app.state.store is available for thread migration
         await _ensure_admin_user(app)
 
-        # Start IM channel service if any channels are configured
-        try:
-            from app.channels.service import start_channel_service
-
-            channel_service = await start_channel_service(startup_config)
-            logger.info("Channel service started: %s", channel_service.get_status())
-        except Exception:
-            logger.exception("No IM channels configured or channel service failed to start")
-
         try:
             from app.gateway.services import launch_scheduled_thread_run
             from app.scheduler import ScheduledTaskService
@@ -265,22 +252,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         except Exception:
             logger.exception("Failed to close OIDC service")
 
-        # Stop channel service on shutdown (bounded to prevent worker hang)
-        try:
-            from app.channels.service import stop_channel_service
-
-            await asyncio.wait_for(
-                stop_channel_service(),
-                timeout=_SHUTDOWN_HOOK_TIMEOUT_SECONDS,
-            )
-        except TimeoutError:
-            logger.warning(
-                "Channel service shutdown exceeded %.1fs; proceeding with worker exit.",
-                _SHUTDOWN_HOOK_TIMEOUT_SECONDS,
-            )
-        except Exception:
-            logger.exception("Failed to stop channel service")
-
         if getattr(app.state, "scheduled_task_service", None) is not None:
             try:
                 await app.state.scheduled_task_service.stop()
@@ -302,11 +273,11 @@ def create_app() -> FastAPI:
     openapi_url = "/openapi.json" if config.enable_docs else None
 
     app = FastAPI(
-        title="DeerFlow API Gateway",
+        title="AfterFlow API Gateway",
         description="""
-## DeerFlow API Gateway
+## AfterFlow API Gateway
 
-API Gateway for DeerFlow - A LangGraph-based AI agent backend with sandbox execution capabilities.
+API Gateway for evidence-driven after-sales decisions, approvals, and execution.
 
 ### Features
 
@@ -354,7 +325,7 @@ This gateway provides runtime endpoints for agent runs plus custom endpoints for
             },
             {
                 "name": "threads",
-                "description": "Manage DeerFlow thread-local filesystem data",
+                "description": "Manage AfterFlow case conversation data",
             },
             {
                 "name": "agents",
@@ -367,10 +338,6 @@ This gateway provides runtime endpoints for agent runs plus custom endpoints for
             {
                 "name": "input-polish",
                 "description": "Polish composer draft input before sending",
-            },
-            {
-                "name": "channels",
-                "description": "Manage IM channel integrations (Feishu, Slack, Telegram)",
             },
             {
                 "name": "assistants-compat",
@@ -448,20 +415,11 @@ This gateway provides runtime endpoints for agent runs plus custom endpoints for
     # Scheduled tasks API is mounted at /api/scheduled-tasks
     app.include_router(scheduled_tasks.router)
 
-    # Agents API is mounted at /api/agents
-    app.include_router(agents.router)
-
     # Suggestions API is mounted at /api/threads/{thread_id}/suggestions
     app.include_router(suggestions.router)
 
     # Input polishing API is mounted at /api/input-polish
     app.include_router(input_polish.router)
-
-    # User-facing IM channel connection API is mounted at /api/channels
-    app.include_router(channel_connections.router)
-
-    # Channels API is mounted at /api/channels
-    app.include_router(channels.router)
 
     # Assistants compatibility API (LangGraph Platform stub)
     app.include_router(assistants_compat.router)
@@ -478,24 +436,6 @@ This gateway provides runtime endpoints for agent runs plus custom endpoints for
     # Stateless Runs API (stream/wait without a pre-existing thread)
     app.include_router(runs.router)
 
-    # GitHub webhooks API is mounted at /api/webhooks/github
-    # Exempt from auth and CSRF middleware (see auth_middleware._PUBLIC_PATH_PREFIXES
-    # and csrf_middleware.should_check_csrf); authenticity is enforced via the
-    # X-Hub-Signature-256 HMAC against GITHUB_WEBHOOK_SECRET.
-    # Including this router transitively imports app.gateway.github, which
-    # registers the GitHub channel's ChannelRunPolicy as an import side-effect.
-    #
-    # Fail-closed: only mount the route when a webhook secret is configured
-    # (or when the explicit DEER_FLOW_ALLOW_UNVERIFIED_GITHUB_WEBHOOKS=1
-    # dev opt-in is set). A misconfigured deployment without a secret cannot
-    # serve forged deliveries because the URL responds 404 — there is no
-    # handler to reach.
-    if github_webhooks.is_route_enabled():
-        app.include_router(github_webhooks.router)
-        logger.info("GitHub webhooks route mounted at /api/webhooks/github")
-    else:
-        logger.warning("GitHub webhooks route NOT mounted: GITHUB_WEBHOOK_SECRET unset and DEER_FLOW_ALLOW_UNVERIFIED_GITHUB_WEBHOOKS not set. /api/webhooks/github will respond 404. Configure either env var to enable the route.")
-
     @app.get("/health", tags=["health"])
     async def health_check() -> dict[str, str]:
         """Health check endpoint.
@@ -503,7 +443,7 @@ This gateway provides runtime endpoints for agent runs plus custom endpoints for
         Returns:
             Service health status information.
         """
-        return {"status": "healthy", "service": "deer-flow-gateway"}
+        return {"status": "healthy", "service": "afterflow-gateway"}
 
     return app
 

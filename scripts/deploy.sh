@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# deploy.sh - Build, start, or stop DeerFlow production services
+# deploy.sh - Build, start, or stop AfterFlow production services
 #
 # Commands:
 #   deploy.sh                    — build + start
@@ -293,7 +293,7 @@ fi
 
 if [ "$CMD" = "build" ]; then
     echo "=========================================="
-    echo "  DeerFlow — Building Images"
+    echo "  AfterFlow — Building Images"
     echo "=========================================="
     echo ""
 
@@ -312,7 +312,7 @@ fi
 # ── Banner ────────────────────────────────────────────────────────────────────
 
 echo "=========================================="
-echo "  DeerFlow Production Deployment"
+echo "  AfterFlow Production Deployment"
 echo "=========================================="
 echo ""
 
@@ -370,7 +370,7 @@ fi
 
 echo ""
 echo "=========================================="
-echo "  DeerFlow is running!"
+echo "  AfterFlow is running!"
 echo "=========================================="
 echo ""
 echo "  🌐 Application: http://localhost:${PORT:-2026}"

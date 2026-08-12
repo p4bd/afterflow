@@ -1,12 +1,5 @@
 # Security Policy
 
-## Supported Versions
+AfterFlow is an interview and demonstration project. Do not connect the Mock payment executor to real funds.
 
-As deer-flow doesn't provide an official release yet, please use the latest version to receive security updates.
-Currently, we have two branches to maintain:
-* main branch for deer-flow 2.x
-* main-1.x branch for deer-flow 1.x
-
-## Reporting a Vulnerability
-
-Please go to https://github.com/bytedance/deer-flow/security to report the vulnerability you find.
+If you find an authorization bypass, duplicate-execution path, payload-integrity issue, or secret exposure, report it privately to the repository owner instead of opening a public issue with exploit details.

@@ -1,128 +1,37 @@
-# AGENTS.md
+# AfterFlow repository guide
 
-This file provides guidance to AI coding agents (Claude Code, Codex, and others) when working with code in this repository. It is the source of truth; the sibling `CLAUDE.md` imports it via `@AGENTS.md`.
+AfterFlow 是电商售后决策与执行系统。仓库是 Python + Next.js monorepo：Gateway 在 `8001`，前端在 `3000`，Nginx 统一入口在 `2026`。
 
-It is the **monorepo orientation layer**: it maps the whole repo and points to the
-module guides that own the depth. For anything inside a module, read that module's
-guide rather than expecting full detail here:
+## 重点模块
 
-- **[backend/AGENTS.md](backend/AGENTS.md)** — backend depth: harness/app split, agent &
-  middleware chain, sandbox, MCP, skills, memory, IM channels, persistence/migrations,
-  config system, test layout.
-- **[frontend/AGENTS.md](frontend/AGENTS.md)** — frontend depth: Next.js App Router layout,
-  thread/streaming data flow, code style, commands.
+- `backend/app/after_sales/`：领域合同、确定性退款、逆向履约、风险运营、审批状态机、Guardrail、持久化和业务 Tools。
+- `backend/app/gateway/routers/after_sales.py`：案件、审批和执行 API。
+- `frontend/src/app/workspace/after-sales/`：审批台。
+- `skills/public/after-sales-*` 与 `reverse-fulfillment/`：领域 SOP。
+- `backend/tests/test_after_sales_*.py`：领域、安全、API 和迁移测试。
+- `docs/`：架构、评测和演示。
 
-## What is DeerFlow
+模块细则见 `backend/AGENTS.md` 和 `frontend/AGENTS.md`。
 
-DeerFlow is a LangGraph-based AI super-agent system with a full-stack architecture. The
-backend runs a "super agent" with sandboxed execution, persistent memory, subagent
-delegation, and extensible tools (built-in, MCP, community), all per-thread isolated. The
-frontend is a Next.js chat UI. External IM platforms (Feishu, Slack, Telegram, Discord,
-DingTalk) bridge into the same agent through the Gateway.
-
-## Service Topology
-
-A single `make dev` / Docker stack runs four cooperating services:
-
-| Service         | Port   | Role                                                                 |
-| --------------- | ------ | ------------------------------------------------------------------- |
-| **Nginx**       | `2026` | Unified reverse-proxy entry point — open this in the browser        |
-| **Gateway API** | `8001` | FastAPI REST API + embedded LangGraph-compatible agent runtime      |
-| **Frontend**    | `3000` | Next.js web interface                                               |
-| **Provisioner** | `8002` | Optional — only when sandbox is configured for provisioner/K8s mode |
-
-Nginx is the single public entry: it serves the frontend and proxies `/api/langgraph/*`
-to the Gateway's LangGraph runtime, rewriting it to Gateway's native `/api/*` routes; all
-other `/api/*` go straight to the Gateway REST routers. See
-[backend/AGENTS.md](backend/AGENTS.md) for the runtime and router detail.
-
-## Repository Map
-
-```
-deer-flow/
-├── Makefile                        # Root orchestration: drives the full stack (dev/start/stop, docker, setup)
-├── config.example.yaml             # Template → copy to config.yaml (gitignored) at repo root
-├── extensions_config.example.json  # Template → copy to extensions_config.json (gitignored): MCP servers + skills
-├── backend/                        # Python backend — see backend/AGENTS.md
-│   ├── Makefile                    # Per-module backend commands (dev, gateway, test, lint, migrate-rev)
-│   ├── packages/harness/           # deerflow-harness package (import: deerflow.*) — agent framework
-│   └── app/                        # FastAPI Gateway + IM channels (import: app.*)
-├── frontend/                       # Next.js frontend (pnpm) — see frontend/AGENTS.md
-├── docker/                         # docker-compose files, nginx config, provisioner
-├── skills/                         # Agent skills: public/ (committed), custom/ (gitignored)
-├── contracts/                      # Cross-component JSON contracts (e.g. subagent status)
-├── scripts/                        # Root orchestration scripts invoked by the Makefile (check, configure, doctor, support_bundle, serve, nginx, docker, deploy, setup_wizard)
-├── tests/                          # Root-level tests (currently tests/skills/ — public skill tests)
-└── docs/                           # Cross-cutting docs, plans, and design notes
-```
-
-Runtime config lives at the **repo root**: copy `config.example.yaml` → `config.yaml`
-(main app config) and `extensions_config.example.json` → `extensions_config.json` (MCP
-servers + skills). Both real files are gitignored and may be edited at runtime via the
-Gateway API. Config schema and resolution order are documented in
-[backend/AGENTS.md](backend/AGENTS.md).
-
-Scheduled-task note:
-- The scheduled-task MVP adds a workspace page at `/workspace/scheduled-tasks` plus a background scheduler service gated by `config.yaml -> scheduler.enabled`.
-- Scheduled background runs are intentionally non-interactive: they execute through the normal run lifecycle, but the lead-agent toolset excludes `ask_clarification` when `context.non_interactive=true`. The key is honored only for internally-authenticated callers (the scheduler launch path); client-supplied `context.non_interactive` is dropped.
-
-## Commands: Root vs. Module
-
-**Root `make` targets drive the whole stack** (run from the repo root):
+## 命令
 
 ```bash
-make setup       # Interactive setup wizard (recommended for new users)
-make doctor      # Check configuration and system requirements
-make support-bundle  # Generate redacted troubleshooting summary, AI issue draft, and optional zip
-make config      # Generate local config files from the examples
-make check       # Check that required tools are installed
-make install     # Install all dependencies (frontend + backend + pre-commit hooks)
-make dev         # Start all services with hot-reload (Gateway + Frontend + Nginx)
-make start       # Start all services in production mode (local, optimized)
-make stop        # Stop all running services
-make up / down   # Build/stop the production Docker stack (browser at localhost:2026)
-make docker-start / docker-stop / docker-logs   # Docker development environment
+make config
+make install
+make dev
+make stop
+
+cd backend && make test
+cd backend && make lint
+cd frontend && pnpm check
+cd frontend && pnpm test
 ```
 
-Run `make help` for the full list.
+## 跨模块约束
 
-**Per-module commands drive a single module** (run inside that module):
-
-```bash
-# Backend (see backend/AGENTS.md for the full set)
-cd backend && make dev        # Gateway API with reload (port 8001)
-cd backend && make test       # Backend test suite
-cd backend && make lint       # ruff check
-cd backend && make format     # ruff format
-
-# Frontend (see frontend/AGENTS.md for the full set)
-cd frontend && pnpm dev       # Dev server with Turbopack (port 3000)
-cd frontend && pnpm check     # Lint + type check (run before committing)
-cd frontend && pnpm test      # Unit tests
-```
-
-Rule of thumb: **root `make` = the full application**; **`backend/Makefile` and `frontend/`
-(`pnpm`) = per-module work.**
-
-## Where to Go Next
-
-- Backend work → **[backend/AGENTS.md](backend/AGENTS.md)**
-- Frontend work → **[frontend/AGENTS.md](frontend/AGENTS.md)**
-- Setup & install → **[Install.md](Install.md)**, **[CONTRIBUTING.md](CONTRIBUTING.md)**
-- Project overview & usage → **[README.md](README.md)**
-- Security policy → **[SECURITY.md](SECURITY.md)**
-- Changes → **[CHANGELOG.md](CHANGELOG.md)**
-- Cutting a release → **[RELEASING.md](RELEASING.md)**
-
-## Cross-Cutting Conventions
-
-These apply repo-wide; module guides own the module-specific detail.
-
-- **Documentation update policy** — keep docs in sync with code: update `README.md` for
-  user-facing changes and the relevant `AGENTS.md` for development/architecture changes in
-  the same change set.
-- **Test-driven development** — features and bug fixes ship with tests. Backend tests live
-  in `backend/tests/` (TDD is mandatory there; see [backend/AGENTS.md](backend/AGENTS.md));
-  frontend tests live in `frontend/tests/`.
-- **Format before pushing** — run `make format` (backend) / `pnpm check` (frontend). Backend
-  CI enforces `ruff format --check`, so formatting must be clean before a push.
+- 金额使用最小货币单位整数；LLM 不计算金额。
+- 授权、状态转换、版本、过期、余额和幂等必须由服务端重复校验。
+- 产品业务代码放在 `backend/app/after_sales`，不要污染通用运行包。
+- 功能和修复必须带测试；后端遵循 TDD。
+- 用户可见文案只使用 AfterFlow 品牌。
+- 用户功能变化同步更新 README；架构变化同步更新对应 AGENTS。

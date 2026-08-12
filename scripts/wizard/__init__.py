@@ -1,1 +1,1 @@
-# DeerFlow Setup Wizard package
+# AfterFlow setup wizard package

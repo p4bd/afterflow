@@ -10,25 +10,17 @@ function getInternalServiceURL(envKey, fallbackURL) {
     ? configured.replace(/\/+$/, "")
     : fallbackURL;
 }
-import nextra from "nextra";
-
-const withNextra = nextra({});
-
 /** @type {import("next").NextConfig} */
 const config = {
   output:
     process.env.NEXT_CONFIG_BUILD_OUTPUT === "standalone"
       ? "standalone"
       : undefined,
-  i18n: {
-    locales: ["en", "zh"],
-    defaultLocale: "en",
-  },
   devIndicators: false,
   async rewrites() {
     const rewrites = [];
     const gatewayURL = getInternalServiceURL(
-      "DEER_FLOW_INTERNAL_GATEWAY_BASE_URL",
+      "AFTERFLOW_INTERNAL_GATEWAY_BASE_URL",
       "http://127.0.0.1:8001",
     );
 
@@ -44,14 +36,6 @@ const config = {
     }
 
     if (!process.env.NEXT_PUBLIC_BACKEND_BASE_URL) {
-      rewrites.push({
-        source: "/api/agents",
-        destination: `${gatewayURL}/api/agents`,
-      });
-      rewrites.push({
-        source: "/api/agents/:path*",
-        destination: `${gatewayURL}/api/agents/:path*`,
-      });
       rewrites.push({
         source: "/api/skills",
         destination: `${gatewayURL}/api/skills`,
@@ -78,4 +62,4 @@ const config = {
   },
 };
 
-export default withNextra(config);
+export default config;

@@ -113,7 +113,7 @@ docker_available() {
 # Initialize: pre-pull the sandbox image so first Pod startup is fast
 init() {
     echo "=========================================="
-    echo "  DeerFlow Init — Pull Sandbox Image"
+    echo "  AfterFlow Init — Pull Sandbox Image"
     echo "=========================================="
     echo ""
 
@@ -185,7 +185,7 @@ start() {
     fi
 
     echo "=========================================="
-    echo "  Starting DeerFlow Docker Development"
+    echo "  Starting AfterFlow Docker Development"
     echo "=========================================="
     echo ""
 
@@ -266,7 +266,7 @@ start() {
     cd "$DOCKER_DIR" && $COMPOSE_CMD up --build -d --remove-orphans $services
     echo ""
     echo "=========================================="
-    echo "  DeerFlow Docker is starting!"
+    echo "  AfterFlow Docker is starting!"
     echo "=========================================="
     echo ""
     echo "  🌐 Application: http://localhost:2026"
@@ -334,7 +334,7 @@ stop() {
 # Restart Docker development environment
 restart() {
     echo "========================================"
-    echo "  Restarting DeerFlow Docker Services"
+    echo "  Restarting AfterFlow Docker Services"
     echo "========================================"
     echo ""
     echo -e "${BLUE}Restarting containers...${NC}"
@@ -349,7 +349,7 @@ restart() {
 
 # Show help
 help() {
-    echo "DeerFlow Docker Management Script"
+    echo "AfterFlow Docker Management Script"
     echo ""
     echo "Usage: $0 <command> [options]"
     echo ""

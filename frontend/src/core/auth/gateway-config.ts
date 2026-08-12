@@ -12,7 +12,7 @@ let _cached: GatewayConfig | null = null;
 export function getGatewayConfig(): GatewayConfig {
   if (_cached) return _cached;
 
-  const rawUrl = process.env.DEER_FLOW_INTERNAL_GATEWAY_BASE_URL?.trim();
+  const rawUrl = process.env.AFTERFLOW_INTERNAL_GATEWAY_BASE_URL?.trim();
   const internalGatewayUrl =
     rawUrl && rawUrl.length > 0
       ? rawUrl.replace(/\/+$/, "")

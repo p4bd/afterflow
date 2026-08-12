@@ -64,7 +64,7 @@ export default defineConfig({
         // next.config rewrites (same-origin proxy) instead of talking to the
         // gateway cross-origin — cross-origin fetches drop the auth cookies.
         // Just point that proxy at the replay gateway.
-        DEER_FLOW_INTERNAL_GATEWAY_BASE_URL: gatewayInternalUrl,
+        AFTERFLOW_INTERNAL_GATEWAY_BASE_URL: gatewayInternalUrl,
       },
     },
   ],

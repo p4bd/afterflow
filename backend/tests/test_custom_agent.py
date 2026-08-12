@@ -444,12 +444,11 @@ class TestMemoryFilePath:
 
 
 # ===========================================================================
-# 8. Gateway API – Agents endpoints
+# Gateway API compatibility tests (router remains internal and unmounted)
 # ===========================================================================
 
 
 def _make_test_app(tmp_path: Path):
-    """Create a FastAPI app with the agents router, patching paths to tmp_path."""
     from fastapi import FastAPI
 
     from app.gateway.routers.agents import router
@@ -461,12 +460,10 @@ def _make_test_app(tmp_path: Path):
 
 @pytest.fixture()
 def agent_client(tmp_path):
-    """TestClient with agents router, using tmp_path as base_dir."""
     import app.gateway.routers.agents as agents_router
 
     paths_instance = _make_paths(tmp_path)
     previous_config = AgentsApiConfig(**get_agents_api_config().model_dump())
-
     with patch("deerflow.config.agents_config.get_paths", return_value=paths_instance), patch.object(agents_router, "get_paths", return_value=paths_instance):
         set_agents_api_config(AgentsApiConfig(enabled=True))
         try:
@@ -480,12 +477,10 @@ def agent_client(tmp_path):
 
 @pytest.fixture()
 def disabled_agent_client(tmp_path):
-    """TestClient with agents router while the management API is disabled."""
     import app.gateway.routers.agents as agents_router
 
     paths_instance = _make_paths(tmp_path)
     previous_config = AgentsApiConfig(**get_agents_api_config().model_dump())
-
     with patch("deerflow.config.agents_config.get_paths", return_value=paths_instance), patch.object(agents_router, "get_paths", return_value=paths_instance):
         set_agents_api_config(AgentsApiConfig(enabled=False))
         try:
