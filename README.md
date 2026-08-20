@@ -21,6 +21,7 @@ LLM 不计算金额、不判断授权，也不能通过对话中的“已经批�
 
 - 订单、支付、物流、客户历史和政策版本的跨系统取证
 - LangGraph 确定性编排：案件评估 StateGraph（取证→决策→按问题/风险路由）+ 退货处置生命周期 StateGraph（按残值分级路由 settle/dispose）
+- MCP client 知识检索：通过 MCP 调用外部 RAG 知识库（`search_after_sales_knowledge`）提供政策引用——inform 层，金额决策仍由确定性引擎 validate
 - 确定性退款金额与政策决策；操作员可批限额来自服务端角色，不接受客户端/对话传值
 - 退货、换货、补发和仅退款的成本比较与处置执行状态机
 - 服务端 RBAC、禁止自审批（maker-checker）和 fail-closed Guardrail

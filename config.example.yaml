@@ -30,6 +30,9 @@ tools:
   - name: get_after_sales_policy
     group: after-sales
     use: app.after_sales.tools:get_policy_snapshot_tool
+  - name: search_after_sales_knowledge
+    group: after-sales
+    use: app.after_sales.knowledge:search_after_sales_knowledge_tool
   - name: evaluate_after_sales_case
     group: after-sales
     use: app.after_sales.tools:evaluate_after_sales_case_tool

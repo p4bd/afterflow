@@ -116,11 +116,11 @@ def test_operations_scan_returns_ranked_traceable_alerts():
     assert {alert["dimension"] for alert in result["alerts"]} == {"sku", "carrier", "warehouse"}
 
 
-def test_example_config_registers_twelve_loadable_after_sales_tools():
+def test_example_config_registers_thirteen_loadable_after_sales_tools():
     config = yaml.safe_load((Path(__file__).parents[2] / "config.example.yaml").read_text(encoding="utf-8"))
     tools = [item for item in config["tools"] if item.get("group") == "after-sales"]
 
-    assert len(tools) == 12
+    assert len(tools) == 13
     assert "after-sales" in {group["name"] for group in config["tool_groups"]}
     for item in tools:
         resolved = resolve_variable(item["use"])

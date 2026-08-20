@@ -1,5 +1,17 @@
 {
   "mcpInterceptors": [],
-  "mcpServers": {},
+  "mcpServers": {
+    "afterflow-rag": {
+      "enabled": false,
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "rag_mcp_server.py"
+      ],
+      "env": {},
+      "description": "External RAG knowledge base (MCP server) used by AfterFlow's search_after_sales_knowledge tool for policy citations (inform layer). Disabled by default; enable it and point at a real server to use live retrieval."
+    }
+  },
   "skills": {}
 }
