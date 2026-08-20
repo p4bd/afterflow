@@ -12,7 +12,7 @@ from deerflow.trace_context import get_current_trace_id
 
 from .actions import create_refund_action, execute_approved_action, get_mock_refund_executor
 from .decision import decide_resolution
-from .mock_data import CUSTOMER_RISK, INVENTORY, LOGISTICS, OPERATIONS_METRICS, ORDERS, PAYMENTS, POLICIES, REVERSE_COSTS
+from .mock_data import CUSTOMER_PROFILES, CUSTOMER_RISK, INVENTORY, LOGISTICS, OPERATIONS_METRICS, ORDERS, PAYMENTS, POLICIES, REVERSE_COSTS, SIGN_RECEIPT_HOURS, resolve_operator_refund_limit
 from .repository import AfterSalesRepository, ConcurrentActionError
 from .reverse import CustomerPreference, ReverseInput, VisualEvidence, decide_reverse_fulfillment
 from .risk_ops import MetricBucket, detect_after_sales_anomalies
@@ -143,14 +143,20 @@ def scan_after_sales_operations_tool(
 def evaluate_after_sales_case_tool(
     order_id: str,
     issue_type: str,
-    operator_refund_limit: int,
     visual_evidence_confirmed: bool = False,
 ) -> str:
-    """Calculate eligibility, refund amount, risk, and approval using deterministic rules."""
+    """Calculate eligibility, refund amount, risk, and approval using deterministic rules.
+
+    The operator refund limit is resolved server-side from the authenticated
+    user's role — it is NOT a tool argument, so the LLM cannot influence the
+    approval threshold by passing a large value.
+    """
+    user = get_current_user()
+    system_role = getattr(user, "system_role", None)
     result = evaluate_mock_case(
         order_id=order_id,
         issue_type=issue_type,
-        operator_refund_limit=operator_refund_limit,
+        operator_refund_limit=resolve_operator_refund_limit(system_role),
         visual_evidence_confirmed=visual_evidence_confirmed,
     )
     if isinstance(result, dict):
@@ -182,6 +188,7 @@ def evaluate_mock_case(
 
     logistics_data = LOGISTICS.get(order_id)
     risk_data = CUSTOMER_RISK.get(order["customer_id"], {})
+    profile = CUSTOMER_PROFILES.get(order["customer_id"], {})
     case = DecisionInput(
         issue_type=IssueType(issue_type),
         order=OrderContext(**order),
@@ -191,6 +198,11 @@ def evaluate_mock_case(
         policy=PolicySnapshot(**policy_data),
         operator_refund_limit=operator_refund_limit,
         visual_evidence_confirmed=visual_evidence_confirmed,
+        sign_receipt_hours=SIGN_RECEIPT_HOURS.get(order_id),
+        account_age_days=profile.get("account_age_days"),
+        historical_refund_rate=profile.get("historical_refund_rate"),
+        address_changes_30d=profile.get("address_changes_30d", 0),
+        device_reuse=profile.get("device_reuse", False),
     )
     evidence = {
         "order": order,
@@ -238,6 +250,10 @@ async def create_after_sales_action_tool(runtime: Runtime, case_id: str) -> str:
         action = await repo.create_action(action, user_id=user_id)
     except (ValueError, ConcurrentActionError) as error:
         return _json({"error": "ACTION_NOT_CREATED", "detail": str(error)})
+    if action.status == "approved":
+        # Auto-approved actions freeze the funds immediately (authorize-capture).
+        if not get_mock_refund_executor().reserve(order_id=case["order_id"], amount=action.payload["amount"]):
+            return _json({"error": "INSUFFICIENT_BALANCE", "detail": "cannot fund auto-approved refund"})
     await repo.append_event(
         case_id=case_id,
         user_id=user_id,
@@ -274,13 +290,15 @@ async def execute_approved_action_tool(
     payment = PAYMENTS.get(case["order_id"]) if case else None
     if case is None or payment is None:
         return _json({"error": "PAYMENT_STATE_UNAVAILABLE"})
+    executor = get_mock_refund_executor()
     try:
         updated = execute_approved_action(
             action,
             payload=payload,
             expected_version=expected_version,
-            current_refundable_balance=payment["refundable_balance"],
-            executor=get_mock_refund_executor(),
+            # Capture from the reservation frozen at approval time.
+            current_refundable_balance=executor.reserved_of(case["order_id"]),
+            executor=executor,
         )
         updated = await repo.save_action(updated, user_id=None, expected_version=expected_version)
     except (ValueError, PermissionError, ConcurrentActionError) as error:

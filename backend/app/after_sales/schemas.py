@@ -26,6 +26,13 @@ class RiskLevel(StrEnum):
     HIGH = "high"
 
 
+class RiskTier(StrEnum):
+    AUTO = "auto"                        # no human sign-off (subject to operator limit)
+    REVIEW = "review"                    # one reviewer
+    SUPERVISOR = "supervisor"            # supervisor; self-approval forbidden
+    FOUR_EYES = "four_eyes"              # two distinct approvers
+
+
 class ResolutionAction(StrEnum):
     REFUND_ORIGINAL_PAYMENT = "refund_original_payment"
     RETURN_AND_REFUND = "return_and_refund"
@@ -71,6 +78,12 @@ class DecisionInput(BaseModel):
     policy: PolicySnapshot
     operator_refund_limit: int = Field(ge=0)
     visual_evidence_confirmed: bool = False
+    # Additional risk-scorecard signals (all optional; absent = neutral).
+    sign_receipt_hours: int | None = None
+    account_age_days: int | None = None
+    historical_refund_rate: float | None = None
+    address_changes_30d: int = 0
+    device_reuse: bool = False
 
 
 class DecisionResult(BaseModel):
@@ -84,3 +97,8 @@ class DecisionResult(BaseModel):
     signals: list[str] = Field(default_factory=list)
     missing_evidence: list[str] = Field(default_factory=list)
     policy_refs: list[str] = Field(default_factory=list)
+    # Transparent risk-scorecard output: a 0-100 score, an intervention tier,
+    # and the per-signal point breakdown (explainable to reviewers/customers).
+    risk_score: int = Field(default=0, ge=0, le=100)
+    risk_tier: RiskTier = RiskTier.AUTO
+    risk_signals: list[dict] = Field(default_factory=list)

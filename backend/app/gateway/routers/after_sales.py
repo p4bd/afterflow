@@ -15,8 +15,8 @@ from app.after_sales.actions import (
     execute_approved_action,
     reject_action,
 )
-from app.after_sales.mock_data import PAYMENTS
-from app.after_sales.repository import AfterSalesRepository, ConcurrentActionError
+from app.after_sales.mock_data import PAYMENTS, resolve_operator_refund_limit
+from app.after_sales.repository import AfterSalesRepository, ConcurrentActionError, release_expired_reservations
 from app.after_sales.schemas import DecisionResult, IssueType
 from app.after_sales.tools import evaluate_mock_case
 from deerflow.trace_context import get_current_trace_id
@@ -27,7 +27,6 @@ router = APIRouter(prefix="/api/after-sales", tags=["after-sales"])
 class CaseCreateRequest(BaseModel):
     order_id: str = Field(min_length=1)
     issue_type: IssueType
-    operator_refund_limit: int = Field(ge=0)
     visual_evidence_confirmed: bool = False
     thread_id: str | None = None
 
@@ -80,11 +79,13 @@ def _raise_action_error(error: Exception) -> None:
 
 @router.post("/cases", status_code=status.HTTP_201_CREATED)
 async def create_case(body: CaseCreateRequest, request: Request) -> dict:
-    actor_id, _ = _actor(request)
+    actor_id, role = _actor(request)
+    # The operator refund limit is server-authoritative: derived from the
+    # authenticated role, never from the request body or the LLM.
     evaluated = evaluate_mock_case(
         order_id=body.order_id,
         issue_type=body.issue_type.value,
-        operator_refund_limit=body.operator_refund_limit,
+        operator_refund_limit=resolve_operator_refund_limit(role),
         visual_evidence_confirmed=body.visual_evidence_confirmed,
     )
     if isinstance(evaluated, dict):
@@ -133,7 +134,19 @@ async def create_action(case_id: str, request: Request) -> dict:
             requested_by=actor_id,
             decision=DecisionResult.model_validate(case["decision_json"]),
         )
-        action = await repo.create_action(action, user_id=actor_id)
+        # Auto-approved (low risk, within limit) actions freeze the funds before
+        # persisting, and roll back the reservation if the DB insert fails.
+        if action.status == "approved":
+            executor: MockRefundExecutor = request.app.state.after_sales_refund_executor
+            if not executor.reserve(order_id=case["order_id"], amount=action.payload["amount"]):
+                raise HTTPException(status_code=409, detail="Insufficient available balance to fund this refund")
+            action = action.model_copy(update={"reserved": True})
+        try:
+            action = await repo.create_action(action, user_id=actor_id)
+        except Exception:
+            if action.reserved:
+                request.app.state.after_sales_refund_executor.release(order_id=case["order_id"], amount=action.payload["amount"])
+            raise
     except (ValueError, ConcurrentActionError) as error:
         _raise_action_error(error)
     await repo.append_event(
@@ -147,8 +160,10 @@ async def create_action(case_id: str, request: Request) -> dict:
     return action.model_dump(mode="json")
 
 
-async def _admin_action(request: Request, action_id: str) -> tuple[str, AfterSalesRepository, ActionRequest, dict]:
-    actor_id = _require_admin(request)
+async def _admin_action(request: Request, action_id: str) -> tuple[str, str, AfterSalesRepository, ActionRequest, dict]:
+    actor_id, role = _actor(request)
+    if role != "admin":
+        raise HTTPException(status_code=403, detail="After-sales supervisor role required")
     repo = _repo(request)
     action = await repo.get_action(action_id, user_id=None)
     if action is None:
@@ -156,21 +171,33 @@ async def _admin_action(request: Request, action_id: str) -> tuple[str, AfterSal
     case = await repo.get_case(action.case_id, user_id=None)
     if case is None:
         raise HTTPException(status_code=404, detail="Case not found")
-    return actor_id, repo, action, case
+    return actor_id, role, repo, action, case
 
 
 @router.post("/actions/{action_id}/approve")
 async def approve(action_id: str, body: ApprovalRequest, request: Request) -> dict:
-    actor_id, repo, action, case = await _admin_action(request, action_id)
+    actor_id, role, repo, action, case = await _admin_action(request, action_id)
     try:
         updated = approve_action(
             action,
             approver_id=actor_id,
-            approver_roles={"after_sales_supervisor"},
+            approver_roles={role},
             expected_version=body.expected_version,
             comment=body.comment,
         )
-        updated = await repo.save_action(updated, user_id=None, expected_version=body.expected_version)
+        # Authorize-then-capture: freeze the funds BEFORE persisting the
+        # approval, so we never end up APPROVED-but-unfunded. Roll back the
+        # reservation if the DB save fails.
+        executor: MockRefundExecutor = request.app.state.after_sales_refund_executor
+        if not action.reserved:
+            if not executor.reserve(order_id=case["order_id"], amount=updated.payload["amount"]):
+                raise HTTPException(status_code=409, detail="Insufficient available balance to fund this refund")
+            updated = updated.model_copy(update={"reserved": True})
+        try:
+            updated = await repo.save_action(updated, user_id=None, expected_version=body.expected_version)
+        except Exception:
+            executor.release(order_id=case["order_id"], amount=updated.payload["amount"])
+            raise
     except (ActionConflict, ActionForbidden, ConcurrentActionError, ValueError) as error:
         _raise_action_error(error)
     await repo.append_event(
@@ -188,6 +215,11 @@ async def approve(action_id: str, body: ApprovalRequest, request: Request) -> di
 async def list_actions(request: Request, action_status: str | None = None) -> list[dict]:
     _require_admin(request)
     repo = _repo(request)
+    executor: MockRefundExecutor = request.app.state.after_sales_refund_executor
+    # Release reservations on expired approvals. In production this runs as a
+    # periodic reaper; on the approval-desk load it keeps the demo honest so
+    # expired approvals don't leak the frozen funds.
+    await release_expired_reservations(repo, executor)
     actions = await repo.list_actions(status=action_status)
     result = []
     # ponytail: queue is capped at 100; replace with one joined query if approval volume grows.
@@ -199,15 +231,20 @@ async def list_actions(request: Request, action_status: str | None = None) -> li
 
 @router.post("/actions/{action_id}/reject")
 async def reject(action_id: str, body: RejectionRequest, request: Request) -> dict:
-    actor_id, repo, action, case = await _admin_action(request, action_id)
+    actor_id, role, repo, action, case = await _admin_action(request, action_id)
     try:
         updated = reject_action(
             action,
             approver_id=actor_id,
-            approver_roles={"after_sales_supervisor"},
+            approver_roles={role},
             expected_version=body.expected_version,
             comment=body.comment,
         )
+        # A rejected action releases the reservation only if it had one.
+        executor: MockRefundExecutor = request.app.state.after_sales_refund_executor
+        if action.reserved:
+            executor.release(order_id=case["order_id"], amount=updated.payload["amount"])
+            updated = updated.model_copy(update={"reserved": False})
         updated = await repo.save_action(updated, user_id=None, expected_version=body.expected_version)
     except (ActionConflict, ActionForbidden, ConcurrentActionError, ValueError) as error:
         _raise_action_error(error)
@@ -224,7 +261,7 @@ async def reject(action_id: str, body: RejectionRequest, request: Request) -> di
 
 @router.post("/actions/{action_id}/execute")
 async def execute(action_id: str, body: ExecutionRequest, request: Request) -> dict:
-    actor_id, repo, action, case = await _admin_action(request, action_id)
+    actor_id, _role, repo, action, case = await _admin_action(request, action_id)
     payment = PAYMENTS.get(case["order_id"])
     if payment is None:
         raise HTTPException(status_code=409, detail="Payment state is unavailable")
@@ -234,9 +271,13 @@ async def execute(action_id: str, body: ExecutionRequest, request: Request) -> d
             action,
             payload=body.payload,
             expected_version=body.expected_version,
-            current_refundable_balance=payment["refundable_balance"],
+            # Capture from the reservation, not the available pool: the money
+            # was frozen at approval time and can only be consumed here.
+            current_refundable_balance=executor.reserved_of(case["order_id"]),
             executor=executor,
         )
+        # The reservation is consumed by the capture; record it as released.
+        updated = updated.model_copy(update={"reserved": False})
         updated = await repo.save_action(updated, user_id=None, expected_version=body.expected_version)
     except (ActionConflict, ActionForbidden, ConcurrentActionError, ValueError) as error:
         _raise_action_error(error)
@@ -248,4 +289,10 @@ async def execute(action_id: str, body: ExecutionRequest, request: Request) -> d
         trace_id=get_current_trace_id(),
         metadata={"action_id": action_id, "transaction_id": updated.external_transaction_id},
     )
-    return updated.model_dump(mode="json")
+    result = updated.model_dump(mode="json")
+    # Refund settlement metadata: funds go back to the original payment channel
+    # and are reported as "processing" with an ETA (demo bank confirmation).
+    result["refund_status"] = "processing"
+    result["refund_channel"] = executor.REFUND_CHANNEL
+    result["refund_eta_hours"] = executor.REFUND_ETA_HOURS
+    return result

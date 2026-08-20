@@ -1,5 +1,6 @@
 """Pure, auditable rules for after-sales eligibility and refund amounts."""
 
+from .risk_scoring import RiskSignals, assess_risk
 from .schemas import (
     DecisionInput,
     DecisionResult,
@@ -7,6 +8,7 @@ from .schemas import (
     IssueType,
     ResolutionAction,
     RiskLevel,
+    RiskTier,
 )
 
 
@@ -58,14 +60,46 @@ def decide_resolution(case: DecisionInput) -> DecisionResult:
     if refund_amount < requested_amount:
         signals.append("refund_capped_by_payment_balance")
 
-    risk_level = _assess_risk(case, refund_amount, signals)
+    # Risk scorecard: transparent 0-100 score + intervention tier from
+    # multiple signals. The coarse `signals` list is kept for backward-compat
+    # and for the approval desk's quick glance.
+    if case.customer_risk.not_received_claims_180d >= 3:
+        signals.append("repeat_not_received_claims")
+    elif case.customer_risk.not_received_claims_180d == 2:
+        signals.append("elevated_not_received_claims")
+    if case.issue_type is IssueType.DELIVERY_NOT_RECEIVED and case.logistics:
+        if case.logistics.proof_of_delivery:
+            signals.append("carrier_has_proof_of_delivery")
+        else:
+            signals.append("carrier_no_proof_of_delivery")
+    if refund_amount >= case.policy.high_value_amount:
+        signals.append("high_value_refund")
+
+    assessment = assess_risk(
+        RiskSignals(
+            not_received_claims_180d=case.customer_risk.not_received_claims_180d,
+            refund_cases_180d=case.customer_risk.refund_cases_180d,
+            carrier_has_proof_of_delivery=bool(case.logistics and case.logistics.proof_of_delivery),
+            is_delivery_not_received=case.issue_type is IssueType.DELIVERY_NOT_RECEIVED,
+            high_value_refund=refund_amount >= case.policy.high_value_amount,
+            sign_receipt_hours=case.sign_receipt_hours,
+            account_age_days=case.account_age_days,
+            historical_refund_rate=case.historical_refund_rate,
+            address_changes_30d=case.address_changes_30d,
+            device_reuse=case.device_reuse,
+        ),
+        refund_amount=refund_amount,
+    )
+
     approval_reasons: list[str] = []
     if refund_amount > case.operator_refund_limit:
         approval_reasons.append("exceeds_operator_limit")
     if refund_amount >= case.policy.manual_review_amount:
         approval_reasons.append("policy_manual_review_threshold")
-    if risk_level is RiskLevel.HIGH:
+    if assessment.level is RiskLevel.HIGH:
         approval_reasons.append("high_risk_case")
+    if assessment.tier is not RiskTier.AUTO:
+        approval_reasons.append("risk_score_requires_review")
 
     approval_required = bool(approval_reasons)
     action = ResolutionAction.RETURN_AND_REFUND if case.issue_type in case.policy.return_required_issues else ResolutionAction.REFUND_ORIGINAL_PAYMENT
@@ -73,12 +107,15 @@ def decide_resolution(case: DecisionInput) -> DecisionResult:
         eligibility=Eligibility.ELIGIBLE_WITH_APPROVAL if approval_required else Eligibility.ELIGIBLE,
         action=action,
         refund_amount=refund_amount,
-        risk_level=risk_level,
+        risk_level=assessment.level,
         reason_code="POLICY_MATCHED",
         approval_required=approval_required,
         approval_reasons=approval_reasons,
         signals=signals,
         policy_refs=[policy_ref],
+        risk_score=assessment.score,
+        risk_tier=assessment.tier,
+        risk_signals=[c.model_dump() for c in assessment.contributions],
     )
 
 
@@ -88,32 +125,3 @@ def _missing_evidence(case: DecisionInput) -> list[str]:
     if case.issue_type in {IssueType.DAMAGED_ITEM, IssueType.WRONG_ITEM} and not case.visual_evidence_confirmed:
         return ["visual_evidence"]
     return []
-
-
-def _assess_risk(case: DecisionInput, refund_amount: int, signals: list[str]) -> RiskLevel:
-    high_risk = False
-    medium_risk = False
-
-    if case.customer_risk.not_received_claims_180d >= 3:
-        signals.append("repeat_not_received_claims")
-        high_risk = True
-    elif case.customer_risk.not_received_claims_180d == 2:
-        signals.append("elevated_not_received_claims")
-        medium_risk = True
-
-    if case.issue_type is IssueType.DELIVERY_NOT_RECEIVED and case.logistics:
-        if case.logistics.proof_of_delivery:
-            signals.append("carrier_has_proof_of_delivery")
-            high_risk = True
-        else:
-            signals.append("carrier_no_proof_of_delivery")
-
-    if refund_amount >= case.policy.high_value_amount:
-        signals.append("high_value_refund")
-        medium_risk = True
-
-    if high_risk:
-        return RiskLevel.HIGH
-    if medium_risk:
-        return RiskLevel.MEDIUM
-    return RiskLevel.LOW
