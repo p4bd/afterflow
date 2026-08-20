@@ -16,6 +16,18 @@ Web 工作台
 
 API 与 Agent Tool 必须复用同一领域函数。
 
+## 1.5 LangGraph 编排（两张 StateGraph）
+
+文件：`backend/app/after_sales/workflow.py`
+
+AfterFlow 用 LangGraph 做**确定性编排层**（不是把 ReAct 包一层）：两张显式 StateGraph，图节点调用领域纯函数，资金安全层（actions.py）是图调用的对象、不被改写。
+
+- **`after_sales_case_graph`**（案件评估编排）：`build_context → decide_refund`，条件边按 issue 类型 + 是否带逆向上下文路由到 `reverse_decision`；`route` 字段记录实际路径（refund/reverse/error），可审计可测试。
+- **`reverse_disposition_graph`**（退货处置生命周期）：`start → (returnless? settle | receive → inspect → {settle|dispose by grade})`，把 `build_disposition`/`advance_disposition`/`mark_received` 串成显式图；destroyed（grade d）走 dispose 写损路由。
+- `evaluate_mock_case` 委托 `run_case_evaluation`（图），150 条评测直调纯函数、不经图，逐字段等价。
+
+**为什么用图而不是 if/else**：① 状态转移拓扑可 `get_graph()` 渲染、可测试；② 条件路由是数据（`add_conditional_edges`），`route` 可审计；③ `needs_evidence` 是未来 `interrupt()` HITL 的预留位；④ 未来可接 Langfuse 节点级 span。不 checkpoint、不写库、图内无副作用——纯编排。
+
 ## 2. 退款决策
 
 文件：`backend/app/after_sales/schemas.py`、`decision.py`

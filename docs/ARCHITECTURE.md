@@ -16,6 +16,10 @@ Gateway API / Auth / RBAC
         ↓
 Agent 编排 + 领域 Skills + Guardrail
         ↓
+LangGraph 编排层（workflow.py）
+  ├─ after_sales_case_graph（取证→决策→按问题/风险路由）
+  └─ reverse_disposition_graph（退货处置生命周期，按残值分级路由）
+        ↓
 AfterFlow 领域服务
   ├─ refund decision
   ├─ reverse fulfillment
