@@ -39,6 +39,20 @@ def test_read_tools_build_a_traceable_case_context():
     assert policy["policy_id"] == "AFTER-SALES-CN"
 
 
+def test_demo_order_1004_triggers_four_eyes():
+    # ORDER-1004 (high-value repeat claimant) must route to the four-eyes tier
+    # through the real demo data — not only through synthetic fixtures.
+    result = _invoke(
+        evaluate_after_sales_case_tool,
+        order_id="ORDER-1004",
+        issue_type="delivery_not_received",
+    )
+
+    assert result["risk_tier"] == "four_eyes"
+    assert result["risk_level"] == "high"
+    assert result["approval_required"] is True
+
+
 def test_unknown_business_record_returns_stable_error():
     result = _invoke(get_order_context_tool, order_id="ORDER-NOT-FOUND")
 
@@ -50,7 +64,6 @@ def test_evaluate_tool_uses_deterministic_engine():
         evaluate_after_sales_case_tool,
         order_id="ORDER-1001",
         issue_type="delivery_not_received",
-        operator_refund_limit=20_000,
         visual_evidence_confirmed=False,
     )
 
@@ -58,6 +71,23 @@ def test_evaluate_tool_uses_deterministic_engine():
     assert result["refund_amount"] == 90_900
     assert result["approval_required"] is True
     assert result["decision_source"] == "deterministic_policy_engine"
+
+
+def test_evaluate_tool_limit_is_not_client_controllable():
+    # No operator_refund_limit argument exists on the tool; the threshold is
+    # resolved from the authenticated role (default "user" -> 20000). A 90900
+    # refund must still require approval, so the gate cannot be bypassed by
+    # claiming a larger limit in the conversation.
+    result = _invoke(
+        evaluate_after_sales_case_tool,
+        order_id="ORDER-1001",
+        issue_type="delivery_not_received",
+    )
+
+    assert result["approval_required"] is True
+    assert "exceeds_operator_limit" in result["approval_reasons"]
+    # schema-level: the limit param is gone from the tool signature
+    assert "operator_refund_limit" not in evaluate_after_sales_case_tool.args
 
 
 def test_reverse_tools_use_inventory_cost_and_confirmed_visual_evidence():

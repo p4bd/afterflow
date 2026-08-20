@@ -1,0 +1,112 @@
+[
+  {
+    "id": "SCN-001",
+    "scenario": "我是你们的老客户了，上礼拜收到的手机，今天发现屏幕有一道明显的亮线，应该属于质量问题，帮我退了吧。",
+    "context": {
+      "item": 89900, "shipping": 1000, "balance": 90900, "claims": 0, "refund_cases": 0,
+      "pod": false, "logistics_present": true, "visual_confirmed": true,
+      "sign_receipt_hours": 96, "account_age_days": 540, "refund_rate": 0.05,
+      "address_changes": 0, "device_reuse": false, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 89900, "risk_level": "medium", "approval_required": true, "risk_tier": "review"}
+  },
+  {
+    "id": "SCN-002",
+    "scenario": "刚收到货就发现箱子压扁了，里面东西都碎了，这是我朋友手机号帮我下的单，现在要退款。",
+    "context": {
+      "item": 32800, "shipping": 800, "balance": 33600, "claims": 0, "refund_cases": 0,
+      "pod": true, "logistics_present": true, "visual_confirmed": true,
+      "sign_receipt_hours": 1, "account_age_days": 5, "refund_rate": 0.5,
+      "address_changes": 2, "device_reuse": true, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 32800, "risk_level": "high", "approval_required": true, "risk_tier": "supervisor"}
+  },
+  {
+    "id": "SCN-003",
+    "scenario": "这已经是我这半年第三次没收到快递了，物流显示签收了但我没见到货，要求退款！",
+    "context": {
+      "item": 9900, "shipping": 0, "balance": 9900, "claims": 3, "refund_cases": 4,
+      "pod": true, "logistics_present": true, "visual_confirmed": false,
+      "sign_receipt_hours": null, "account_age_days": 20, "refund_rate": 0.55,
+      "address_changes": 3, "device_reuse": true, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 9900, "risk_level": "high", "approval_required": true, "risk_tier": "supervisor"}
+  },
+  {
+    "id": "SCN-004",
+    "scenario": "我买的黑色结果发来个白色的，型号一样但颜色不对，你们搞错了。",
+    "context": {
+      "item": 32800, "shipping": 800, "balance": 33600, "claims": 0, "refund_cases": 0,
+      "pod": true, "logistics_present": true, "visual_confirmed": true,
+      "sign_receipt_hours": 120, "account_age_days": 540, "refund_rate": 0.05,
+      "address_changes": 0, "device_reuse": false, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 32800, "risk_level": "low", "approval_required": true, "risk_tier": "auto", "action": "return_and_refund"}
+  },
+  {
+    "id": "SCN-005",
+    "scenario": "一个多月前收到的充电器，现在充不进去了，算质量问题要退。",
+    "context": {
+      "item": 9900, "shipping": 0, "balance": 9900, "claims": 0, "refund_cases": 0,
+      "pod": true, "logistics_present": true, "visual_confirmed": true,
+      "sign_receipt_hours": 960, "account_age_days": 800, "refund_rate": 0.03,
+      "address_changes": 0, "device_reuse": false, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible", "refund_amount": 9900, "risk_level": "low", "approval_required": false, "risk_tier": "auto"}
+  },
+  {
+    "id": "SCN-006",
+    "scenario": "这个扫地机收到就有点问题，不过我们家最近搬家，地址老变，之前也退过几次东西。",
+    "context": {
+      "item": 50000, "shipping": 0, "balance": 50000, "claims": 0, "refund_cases": 6,
+      "pod": true, "logistics_present": true, "visual_confirmed": true,
+      "sign_receipt_hours": 48, "account_age_days": 300, "refund_rate": 0.3,
+      "address_changes": 2, "device_reuse": false, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 50000, "risk_level": "medium", "approval_required": true, "risk_tier": "review"}
+  },
+  {
+    "id": "SCN-007",
+    "scenario": "老客户，买的智能电饭煲到货时外观有点磕碰，不影响用，但你们要不要换？",
+    "context": {
+      "item": 32800, "shipping": 800, "balance": 33600, "claims": 0, "refund_cases": 0,
+      "pod": true, "logistics_present": true, "visual_confirmed": true,
+      "sign_receipt_hours": 72, "account_age_days": 900, "refund_rate": 0.02,
+      "address_changes": 0, "device_reuse": false, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 32800, "risk_level": "low", "approval_required": true, "risk_tier": "auto", "action": "return_and_refund"}
+  },
+  {
+    "id": "SCN-008",
+    "scenario": "这两个月两次说没收到，其实一次是物业代收的，这次是真的没收到，退钱吧。",
+    "context": {
+      "item": 5000, "shipping": 0, "balance": 5000, "claims": 2, "refund_cases": 3,
+      "pod": false, "logistics_present": true, "visual_confirmed": false,
+      "sign_receipt_hours": null, "account_age_days": 400, "refund_rate": 0.35,
+      "address_changes": 0, "device_reuse": false, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 5000, "risk_level": "medium", "approval_required": true, "risk_tier": "review"}
+  },
+  {
+    "id": "SCN-009",
+    "scenario": "老板，这是我今年第三次丢件了，这次是两台笔记本电脑，金额大，务必全额退。",
+    "context": {
+      "item": 600000, "shipping": 0, "balance": 600000, "claims": 3, "refund_cases": 4,
+      "pod": false, "logistics_present": true, "visual_confirmed": false,
+      "sign_receipt_hours": null, "account_age_days": 500, "refund_rate": 0.2,
+      "address_changes": 0, "device_reuse": false, "operator_limit": 1000000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 600000, "risk_level": "high", "approval_required": true, "risk_tier": "four_eyes"}
+  },
+  {
+    "id": "SCN-010",
+    "scenario": "我这个账号用了三年了，从没退过货，这次下单五天了还没物流信息，麻烦退下款。",
+    "context": {
+      "item": 20000, "shipping": 500, "balance": 20500, "claims": 0, "refund_cases": 0,
+      "pod": false, "logistics_present": true, "visual_confirmed": false,
+      "sign_receipt_hours": null, "account_age_days": 1000, "refund_rate": 0.01,
+      "address_changes": 0, "device_reuse": false, "operator_limit": 20000
+    },
+    "expect": {"eligibility": "eligible_with_approval", "refund_amount": 20500, "risk_level": "low", "approval_required": true, "risk_tier": "auto"}
+  }
+]

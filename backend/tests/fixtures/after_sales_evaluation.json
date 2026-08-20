@@ -167,10 +167,10 @@
       "high": 20000
     },
     "expect": {
-      "eligibility": "eligible",
+      "eligibility": "eligible_with_approval",
       "refund_amount": 5386,
       "risk_level": "medium",
-      "approval_required": false,
+      "approval_required": true,
       "action": "return_and_refund"
     }
   },
@@ -317,10 +317,10 @@
       "high": 20000
     },
     "expect": {
-      "eligibility": "eligible",
+      "eligibility": "eligible_with_approval",
       "refund_amount": 9772,
       "risk_level": "medium",
-      "approval_required": false,
+      "approval_required": true,
       "action": "return_and_refund"
     }
   },
@@ -1260,12 +1260,15 @@
       "recovery": 0,
       "inventory": 0,
       "preference": "replacement",
-      "human": false
+      "human": false,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "needs_evidence",
       "action": "manual_review",
-      "estimated_resolution_cost": 0
+      "estimated_resolution_cost": 0,
+      "requires_return": false
     }
   },
   {
@@ -1279,12 +1282,15 @@
       "recovery": 1000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "refund_without_return",
-      "estimated_resolution_cost": 10500
+      "estimated_resolution_cost": 10500,
+      "requires_return": false
     }
   },
   {
@@ -1298,12 +1304,15 @@
       "recovery": 2000,
       "inventory": 5,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "replace_after_return",
-      "estimated_resolution_cost": 7000
+      "action": "resend_without_return",
+      "estimated_resolution_cost": 7600,
+      "requires_return": false
     }
   },
   {
@@ -1317,12 +1326,15 @@
       "recovery": 3000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 10000
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 11500,
+      "requires_return": false
     }
   },
   {
@@ -1336,12 +1348,15 @@
       "recovery": 4000,
       "inventory": 5,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "replace_after_return",
-      "estimated_resolution_cost": 4800
+      "estimated_resolution_cost": 7200,
+      "requires_return": true
     }
   },
   {
@@ -1355,12 +1370,15 @@
       "recovery": 0,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "refund_without_return",
-      "estimated_resolution_cost": 12500
+      "estimated_resolution_cost": 12500,
+      "requires_return": false
     }
   },
   {
@@ -1374,12 +1392,15 @@
       "recovery": 1000,
       "inventory": 0,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "refund_without_return",
-      "estimated_resolution_cost": 13000
+      "estimated_resolution_cost": 13000,
+      "requires_return": false
     }
   },
   {
@@ -1393,12 +1414,15 @@
       "recovery": 2000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 13000
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 13500,
+      "requires_return": false
     }
   },
   {
@@ -1412,12 +1436,15 @@
       "recovery": 3000,
       "inventory": 5,
       "preference": "replacement",
-      "human": false
+      "human": false,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "needs_evidence",
       "action": "manual_review",
-      "estimated_resolution_cost": 0
+      "estimated_resolution_cost": 0,
+      "requires_return": false
     }
   },
   {
@@ -1431,12 +1458,15 @@
       "recovery": 4000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "return_and_refund",
-      "estimated_resolution_cost": 11800
+      "estimated_resolution_cost": 14200,
+      "requires_return": true
     }
   },
   {
@@ -1450,12 +1480,15 @@
       "recovery": 0,
       "inventory": 5,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "replace_after_return",
-      "estimated_resolution_cost": 9000
+      "action": "resend_without_return",
+      "estimated_resolution_cost": 7600,
+      "requires_return": false
     }
   },
   {
@@ -1469,12 +1502,15 @@
       "recovery": 1000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "refund_without_return",
-      "estimated_resolution_cost": 15500
+      "estimated_resolution_cost": 15500,
+      "requires_return": false
     }
   },
   {
@@ -1488,12 +1524,15 @@
       "recovery": 2000,
       "inventory": 0,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 15200
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 16000,
+      "requires_return": false
     }
   },
   {
@@ -1507,12 +1546,15 @@
       "recovery": 3000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 14800
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 16500,
+      "requires_return": false
     }
   },
   {
@@ -1526,12 +1568,15 @@
       "recovery": 4000,
       "inventory": 5,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "replace_after_return",
-      "estimated_resolution_cost": 5000
+      "estimated_resolution_cost": 7400,
+      "requires_return": true
     }
   },
   {
@@ -1545,12 +1590,15 @@
       "recovery": 0,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "refund_without_return",
-      "estimated_resolution_cost": 17500
+      "estimated_resolution_cost": 17500,
+      "requires_return": false
     }
   },
   {
@@ -1564,12 +1612,15 @@
       "recovery": 1000,
       "inventory": 5,
       "preference": "replacement",
-      "human": false
+      "human": false,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "needs_evidence",
       "action": "manual_review",
-      "estimated_resolution_cost": 0
+      "estimated_resolution_cost": 0,
+      "requires_return": false
     }
   },
   {
@@ -1583,12 +1634,15 @@
       "recovery": 2000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 17800
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 18500,
+      "requires_return": false
     }
   },
   {
@@ -1602,12 +1656,15 @@
       "recovery": 3000,
       "inventory": 0,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 17400
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 19000,
+      "requires_return": false
     }
   },
   {
@@ -1621,12 +1678,15 @@
       "recovery": 4000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "return_and_refund",
-      "estimated_resolution_cost": 17000
+      "estimated_resolution_cost": 19400,
+      "requires_return": true
     }
   },
   {
@@ -1640,12 +1700,15 @@
       "recovery": 0,
       "inventory": 5,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "replace_after_return",
-      "estimated_resolution_cost": 8800
+      "action": "resend_without_return",
+      "estimated_resolution_cost": 7600,
+      "requires_return": false
     }
   },
   {
@@ -1659,12 +1722,15 @@
       "recovery": 1000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "refund_without_return",
-      "estimated_resolution_cost": 20500
+      "estimated_resolution_cost": 20500,
+      "requires_return": false
     }
   },
   {
@@ -1678,12 +1744,15 @@
       "recovery": 2000,
       "inventory": 5,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "replace_after_return",
-      "estimated_resolution_cost": 7000
+      "action": "resend_without_return",
+      "estimated_resolution_cost": 7600,
+      "requires_return": false
     }
   },
   {
@@ -1697,12 +1766,15 @@
       "recovery": 3000,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 20000
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 21500,
+      "requires_return": false
     }
   },
   {
@@ -1716,12 +1788,15 @@
       "recovery": 4000,
       "inventory": 0,
       "preference": "replacement",
-      "human": false
+      "human": false,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "needs_evidence",
       "action": "manual_review",
-      "estimated_resolution_cost": 0
+      "estimated_resolution_cost": 0,
+      "requires_return": false
     }
   },
   {
@@ -2153,7 +2228,9 @@
     "id": "BND-REF-001",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["operator_limit_below"],
+    "tags": [
+      "operator_limit_below"
+    ],
     "rationale": "退款金额比操作员限额低 1 分，不应触发审批。",
     "input": {
       "issue": "quality_issue",
@@ -2181,7 +2258,9 @@
     "id": "BND-REF-002",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["operator_limit_exact"],
+    "tags": [
+      "operator_limit_exact"
+    ],
     "rationale": "退款金额恰好等于操作员限额，规则使用大于号，不应审批。",
     "input": {
       "issue": "quality_issue",
@@ -2209,7 +2288,9 @@
     "id": "BND-REF-003",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["operator_limit_above"],
+    "tags": [
+      "operator_limit_above"
+    ],
     "rationale": "退款金额超过操作员限额 1 分，必须审批。",
     "input": {
       "issue": "quality_issue",
@@ -2237,7 +2318,9 @@
     "id": "BND-REF-004",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["high_value_below"],
+    "tags": [
+      "high_value_below"
+    ],
     "rationale": "退款金额比高价值阈值低 1 分，风险保持低。",
     "input": {
       "issue": "quality_issue",
@@ -2265,8 +2348,10 @@
     "id": "BND-REF-005",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["high_value_exact"],
-    "rationale": "退款金额恰好达到高价值阈值，风险升为中但不单独要求审批。",
+    "tags": [
+      "high_value_exact"
+    ],
+    "rationale": "退款金额恰好达到高价值阈值，风险升为中，中风险触发 review 分级介入需审批。",
     "input": {
       "issue": "quality_issue",
       "item": 20000,
@@ -2282,10 +2367,10 @@
       "high": 20000
     },
     "expect": {
-      "eligibility": "eligible",
+      "eligibility": "eligible_with_approval",
       "refund_amount": 20000,
       "risk_level": "medium",
-      "approval_required": false,
+      "approval_required": true,
       "action": "refund_original_payment"
     }
   },
@@ -2293,7 +2378,9 @@
     "id": "BND-REF-006",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["manual_review_below"],
+    "tags": [
+      "manual_review_below"
+    ],
     "rationale": "退款金额比政策人工审核阈值低 1 分，不触发政策审批。",
     "input": {
       "issue": "quality_issue",
@@ -2321,7 +2408,9 @@
     "id": "BND-REF-007",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["manual_review_exact"],
+    "tags": [
+      "manual_review_exact"
+    ],
     "rationale": "退款金额恰好达到政策人工审核阈值，必须审批。",
     "input": {
       "issue": "quality_issue",
@@ -2349,7 +2438,9 @@
     "id": "BND-REF-008",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["balance_cap"],
+    "tags": [
+      "balance_cap"
+    ],
     "rationale": "未收到货应包含运费，但结果必须受支付可退余额封顶。",
     "input": {
       "issue": "delivery_not_received",
@@ -2377,7 +2468,9 @@
     "id": "BND-REF-009",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["zero_balance"],
+    "tags": [
+      "zero_balance"
+    ],
     "rationale": "政策覆盖且证据充分，但可退余额为零时仍不可退款。",
     "input": {
       "issue": "quality_issue",
@@ -2405,7 +2498,10 @@
     "id": "BND-REF-010",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["uncovered_precedence", "missing_visual"],
+    "tags": [
+      "uncovered_precedence",
+      "missing_visual"
+    ],
     "rationale": "问题不在政策范围且图片缺失时，应先返回政策不覆盖而不是索要证据。",
     "input": {
       "issue": "damaged_item",
@@ -2433,7 +2529,9 @@
     "id": "BND-REF-011",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["missing_logistics"],
+    "tags": [
+      "missing_logistics"
+    ],
     "rationale": "未收到货但完全缺少物流证据时必须补证。",
     "input": {
       "issue": "delivery_not_received",
@@ -2461,7 +2559,9 @@
     "id": "BND-REF-012",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["missing_visual"],
+    "tags": [
+      "missing_visual"
+    ],
     "rationale": "破损问题缺少人工确认图片时必须补证。",
     "input": {
       "issue": "damaged_item",
@@ -2489,7 +2589,9 @@
     "id": "BND-REF-013",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["pod_high_risk"],
+    "tags": [
+      "pod_high_risk"
+    ],
     "rationale": "客户称未收到货但承运商有签收凭证时应判高风险并审批。",
     "input": {
       "issue": "delivery_not_received",
@@ -2517,8 +2619,10 @@
     "id": "BND-REF-014",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["claims_medium"],
-    "rationale": "近 180 天两次未收到货索赔应提升为中风险，但不自动要求审批。",
+    "tags": [
+      "claims_medium"
+    ],
+    "rationale": "近 180 天两次未收到货索赔提升为中风险，中风险触发 review 分级介入，需人工审批。",
     "input": {
       "issue": "quality_issue",
       "item": 5000,
@@ -2534,10 +2638,10 @@
       "high": 20000
     },
     "expect": {
-      "eligibility": "eligible",
+      "eligibility": "eligible_with_approval",
       "refund_amount": 5000,
       "risk_level": "medium",
-      "approval_required": false,
+      "approval_required": true,
       "action": "refund_original_payment"
     }
   },
@@ -2545,7 +2649,9 @@
     "id": "BND-REF-015",
     "kind": "refund",
     "source": "curated_boundary_v2",
-    "tags": ["claims_high"],
+    "tags": [
+      "claims_high"
+    ],
     "rationale": "近 180 天三次未收到货索赔达到高风险并强制审批。",
     "input": {
       "issue": "quality_issue",
@@ -2573,7 +2679,9 @@
     "id": "BND-REV-001",
     "kind": "reverse",
     "source": "curated_boundary_v2",
-    "tags": ["unsupported_issue"],
+    "tags": [
+      "unsupported_issue"
+    ],
     "rationale": "未收到货不属于逆向履约支持的问题类型。",
     "input": {
       "issue": "delivery_not_received",
@@ -2583,19 +2691,24 @@
       "recovery": 1200,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "unsupported",
       "action": "manual_review",
-      "estimated_resolution_cost": 0
+      "estimated_resolution_cost": 0,
+      "requires_return": false
     }
   },
   {
     "id": "BND-REV-002",
     "kind": "reverse",
     "source": "curated_boundary_v2",
-    "tags": ["missing_human_confirmation"],
+    "tags": [
+      "missing_human_confirmation"
+    ],
     "rationale": "图片未经人工确认时不能自动决定逆向履约。",
     "input": {
       "issue": "damaged_item",
@@ -2605,19 +2718,24 @@
       "recovery": 1200,
       "inventory": 5,
       "preference": "refund",
-      "human": false
+      "human": false,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "needs_evidence",
       "action": "manual_review",
-      "estimated_resolution_cost": 0
+      "estimated_resolution_cost": 0,
+      "requires_return": false
     }
   },
   {
     "id": "BND-REV-003",
     "kind": "reverse",
     "source": "curated_boundary_v2",
-    "tags": ["recovery_below_reverse_cost"],
+    "tags": [
+      "recovery_below_reverse_cost"
+    ],
     "rationale": "预期残值比逆向成本低 1 分时，应免退直接退款。",
     "input": {
       "issue": "damaged_item",
@@ -2627,19 +2745,24 @@
       "recovery": 1199,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "refund_without_return",
-      "estimated_resolution_cost": 10000
+      "estimated_resolution_cost": 10000,
+      "requires_return": false
     }
   },
   {
     "id": "BND-REV-004",
     "kind": "reverse",
     "source": "curated_boundary_v2",
-    "tags": ["recovery_exact_reverse_cost"],
+    "tags": [
+      "recovery_exact_reverse_cost"
+    ],
     "rationale": "预期残值恰好覆盖逆向成本时，应退货退款。",
     "input": {
       "issue": "damaged_item",
@@ -2649,20 +2772,25 @@
       "recovery": 1200,
       "inventory": 5,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 10000
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 10000,
+      "requires_return": false
     }
   },
   {
     "id": "BND-REV-005",
     "kind": "reverse",
     "source": "curated_boundary_v2",
-    "tags": ["replacement_in_stock"],
-    "rationale": "客户偏好换货且库存存在时选择退回后换货，并按成本模型计算。",
+    "tags": [
+      "replacement_in_stock"
+    ],
+    "rationale": "客户偏好换货且库存存在，残值不足以覆盖逆向成本，选择免退补发。",
     "input": {
       "issue": "wrong_item",
       "refund": 10001,
@@ -2671,19 +2799,24 @@
       "recovery": 1000,
       "inventory": 1,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "replace_after_return",
-      "estimated_resolution_cost": 7800
+      "action": "resend_without_return",
+      "estimated_resolution_cost": 7600,
+      "requires_return": false
     }
   },
   {
     "id": "BND-REV-006",
     "kind": "reverse",
     "source": "curated_boundary_v2",
-    "tags": ["replacement_out_of_stock"],
+    "tags": [
+      "replacement_out_of_stock"
+    ],
     "rationale": "客户偏好换货但无库存时回退到退货退款。",
     "input": {
       "issue": "wrong_item",
@@ -2693,19 +2826,24 @@
       "recovery": 1200,
       "inventory": 0,
       "preference": "replacement",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
-      "action": "return_and_refund",
-      "estimated_resolution_cost": 10000
+      "action": "refund_without_return",
+      "estimated_resolution_cost": 10000,
+      "requires_return": false
     }
   },
   {
     "id": "BND-REV-007",
     "kind": "reverse",
     "source": "curated_boundary_v2",
-    "tags": ["cost_floor_zero"],
+    "tags": [
+      "cost_floor_zero"
+    ],
     "rationale": "残值大于退款与逆向成本时，估算成本必须封底为零。",
     "input": {
       "issue": "quality_issue",
@@ -2715,19 +2853,24 @@
       "recovery": 10000,
       "inventory": 0,
       "preference": "refund",
-      "human": true
+      "human": true,
+      "replacement_unit_cost": 7000,
+      "replacement_shipping_cost": 600
     },
     "expect": {
       "outcome": "decided",
       "action": "return_and_refund",
-      "estimated_resolution_cost": 0
+      "estimated_resolution_cost": 2200,
+      "requires_return": true
     }
   },
   {
     "id": "BND-OPS-001",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["minimum_orders_below"],
+    "tags": [
+      "minimum_orders_below"
+    ],
     "rationale": "当前订单量比最小样本少 1，即使异常率很高也不告警。",
     "input": {
       "dimension": "sku",
@@ -2738,7 +2881,10 @@
       "prev_cases": 0,
       "loss": 0
     },
-    "expect": { "alert": false, "severity": null }
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
   },
   {
     "id": "BND-OPS-002",
@@ -2759,13 +2905,18 @@
       "prev_cases": 0,
       "loss": 0
     },
-    "expect": { "alert": true, "severity": "high" }
+    "expect": {
+      "alert": true,
+      "severity": "high"
+    }
   },
   {
     "id": "BND-OPS-003",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["minimum_cases_below"],
+    "tags": [
+      "minimum_cases_below"
+    ],
     "rationale": "案件数比最小门槛少 1 且无损失越线，不告警。",
     "input": {
       "dimension": "carrier",
@@ -2776,13 +2927,18 @@
       "prev_cases": 0,
       "loss": 0
     },
-    "expect": { "alert": false, "severity": null }
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
   },
   {
     "id": "BND-OPS-004",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["minimum_cases_exact"],
+    "tags": [
+      "minimum_cases_exact"
+    ],
     "rationale": "案件数恰好达到门槛且问题率与 uplift 都满足时告警。",
     "input": {
       "dimension": "carrier",
@@ -2793,13 +2949,18 @@
       "prev_cases": 0,
       "loss": 0
     },
-    "expect": { "alert": true, "severity": "medium" }
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
   },
   {
     "id": "BND-OPS-005",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["issue_rate_below"],
+    "tags": [
+      "issue_rate_below"
+    ],
     "rationale": "问题率比 5% 门槛低，即使案件数达到要求也不告警。",
     "input": {
       "dimension": "warehouse",
@@ -2810,13 +2971,18 @@
       "prev_cases": 0,
       "loss": 0
     },
-    "expect": { "alert": false, "severity": null }
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
   },
   {
     "id": "BND-OPS-006",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["issue_rate_exact"],
+    "tags": [
+      "issue_rate_exact"
+    ],
     "rationale": "问题率恰好为 5% 且历史为零时产生中等级告警。",
     "input": {
       "dimension": "warehouse",
@@ -2827,13 +2993,18 @@
       "prev_cases": 0,
       "loss": 0
     },
-    "expect": { "alert": true, "severity": "medium" }
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
   },
   {
     "id": "BND-OPS-007",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["uplift_below"],
+    "tags": [
+      "uplift_below"
+    ],
     "rationale": "当前问题率未达到历史的 1.5 倍时不告警。",
     "input": {
       "dimension": "sku",
@@ -2844,13 +3015,18 @@
       "prev_cases": 7,
       "loss": 0
     },
-    "expect": { "alert": false, "severity": null }
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
   },
   {
     "id": "BND-OPS-008",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["uplift_exact"],
+    "tags": [
+      "uplift_exact"
+    ],
     "rationale": "当前问题率恰好达到历史的 1.5 倍时产生中等级告警。",
     "input": {
       "dimension": "sku",
@@ -2861,13 +3037,18 @@
       "prev_cases": 6,
       "loss": 0
     },
-    "expect": { "alert": true, "severity": "medium" }
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
   },
   {
     "id": "BND-OPS-009",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["loss_below"],
+    "tags": [
+      "loss_below"
+    ],
     "rationale": "损失比 50 万分门槛低 1 分且无比率异常时不告警。",
     "input": {
       "dimension": "carrier",
@@ -2878,13 +3059,18 @@
       "prev_cases": 0,
       "loss": 499999
     },
-    "expect": { "alert": false, "severity": null }
+    "expect": {
+      "alert": false,
+      "severity": null
+    }
   },
   {
     "id": "BND-OPS-010",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["loss_exact"],
+    "tags": [
+      "loss_exact"
+    ],
     "rationale": "损失恰好达到 50 万分门槛时产生中等级告警。",
     "input": {
       "dimension": "carrier",
@@ -2895,13 +3081,18 @@
       "prev_cases": 0,
       "loss": 500000
     },
-    "expect": { "alert": true, "severity": "medium" }
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
   },
   {
     "id": "BND-OPS-011",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["high_severity_loss_exact"],
+    "tags": [
+      "high_severity_loss_exact"
+    ],
     "rationale": "损失恰好达到高等级门槛 100 万分时产生高等级告警。",
     "input": {
       "dimension": "warehouse",
@@ -2912,13 +3103,18 @@
       "prev_cases": 0,
       "loss": 1000000
     },
-    "expect": { "alert": true, "severity": "high" }
+    "expect": {
+      "alert": true,
+      "severity": "high"
+    }
   },
   {
     "id": "BND-OPS-012",
     "kind": "operations",
     "source": "curated_boundary_v2",
-    "tags": ["previous_period_zero"],
+    "tags": [
+      "previous_period_zero"
+    ],
     "rationale": "历史期订单数为零时，满足当前绝对门槛即可告警且不能除零。",
     "input": {
       "dimension": "warehouse",
@@ -2929,6 +3125,609 @@
       "prev_cases": 0,
       "loss": 0
     },
-    "expect": { "alert": true, "severity": "medium" }
+    "expect": {
+      "alert": true,
+      "severity": "medium"
+    }
+  },
+  {
+    "id": "RKS-001",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "device_reuse",
+      "immediate_claim"
+    ],
+    "rationale": "设备关联多账号+签收1小时即投诉，低风险基线被推至中风险review。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "sign_receipt_hours": 1,
+      "device_reuse": true,
+      "account_age_days": 500,
+      "refund_rate": 0.05,
+      "address_changes": 0,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
+  },
+  {
+    "id": "RKS-002",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "claims_medium",
+      "high_refund_rate",
+      "device_reuse",
+      "address_change"
+    ],
+    "rationale": "2次未收到索赔+高退款率+设备复用+地址频繁变更，信号堆叠升至高风险supervisor。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 400,
+      "refund_rate": 0.35,
+      "address_changes": 2,
+      "device_reuse": true,
+      "refund_cases": 2
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "supervisor"
+    }
+  },
+  {
+    "id": "RKS-003",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "late_claim"
+    ],
+    "rationale": "签收30天后才投诉，单一时间信号加分但不足以升级。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "sign_receipt_hours": 721,
+      "account_age_days": 800,
+      "refund_rate": 0.03,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 5000,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment",
+      "risk_tier": "auto"
+    }
+  },
+  {
+    "id": "RKS-004",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "young_account",
+      "high_refund_rate",
+      "address_change"
+    ],
+    "rationale": "新账号+高退款率+地址频繁变更，升至中风险review。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 5,
+      "refund_rate": 0.5,
+      "address_changes": 3,
+      "device_reuse": false,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
+  },
+  {
+    "id": "RKS-005",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "claims_high",
+      "four_eyes"
+    ],
+    "rationale": "3次未收到索赔且金额达大额线，触发four-eyes双人审批。",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 500000,
+      "shipping": 0,
+      "balance": 500000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 3,
+      "operator": 1000000,
+      "manual": 1000000,
+      "high": 20000,
+      "account_age_days": 30,
+      "refund_rate": 0.1,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 4
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 500000,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "four_eyes"
+    }
+  },
+  {
+    "id": "RKS-006",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "trusted_customer"
+    ],
+    "rationale": "老账号低退款率正常签收时长无索赔，良好客户不被误伤，自动放行。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "sign_receipt_hours": 96,
+      "account_age_days": 900,
+      "refund_rate": 0.02,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 5000,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment",
+      "risk_tier": "auto",
+      "risk_score": 0
+    }
+  },
+  {
+    "id": "RKS-007",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "high_value",
+      "device_reuse"
+    ],
+    "rationale": "高价值+设备复用，双中风险信号叠加仍为review。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 60000,
+      "shipping": 0,
+      "balance": 60000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 1000000,
+      "manual": 1000000,
+      "high": 20000,
+      "account_age_days": 300,
+      "refund_rate": 0.08,
+      "address_changes": 0,
+      "device_reuse": true,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 60000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
+  },
+  {
+    "id": "RKS-008",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "high_refund_volume",
+      "young_account",
+      "high_refund_rate"
+    ],
+    "rationale": "180天退款6次+新账号+高退款率，中风险review。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 10,
+      "refund_rate": 0.3,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 6
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
+  },
+  {
+    "id": "RKS-009",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "immediate_claim",
+      "high_value",
+      "young_account"
+    ],
+    "rationale": "签收即投诉+高价值+新账号，中风险review。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 60000,
+      "shipping": 0,
+      "balance": 60000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 1000000,
+      "manual": 1000000,
+      "high": 20000,
+      "sign_receipt_hours": 1,
+      "account_age_days": 8,
+      "refund_rate": 0.05,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 60000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
+  },
+  {
+    "id": "RKS-010",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "single_weak_signal"
+    ],
+    "rationale": "仅签收1小时即投诉这一个弱信号，不足以升级，验证不打草惊蛇。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "sign_receipt_hours": 1,
+      "account_age_days": 700,
+      "refund_rate": 0.05,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 5000,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment",
+      "risk_tier": "auto"
+    }
+  },
+  {
+    "id": "RKS-011",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "pod_conflict",
+      "device_reuse"
+    ],
+    "rationale": "承运商有签收凭证但称未收到（决定性高）+设备复用，supervisor。",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": true,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 400,
+      "refund_rate": 0.05,
+      "address_changes": 0,
+      "device_reuse": true,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "supervisor"
+    }
+  },
+  {
+    "id": "RKS-012",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "claims_high"
+    ],
+    "rationale": "3次未收到索赔决定性高，但金额未达大额线，supervisor而非four-eyes。",
+    "input": {
+      "issue": "delivery_not_received",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 3,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 400,
+      "refund_rate": 0.05,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 4
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "high",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "supervisor"
+    }
+  },
+  {
+    "id": "RKS-013",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "elevated_volume_boundary"
+    ],
+    "rationale": "180天退款恰为5次的边界，仅+10不足以升级。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 600,
+      "refund_rate": 0.05,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 5
+    },
+    "expect": {
+      "eligibility": "eligible",
+      "refund_amount": 5000,
+      "risk_level": "low",
+      "approval_required": false,
+      "action": "refund_original_payment",
+      "risk_tier": "auto"
+    }
+  },
+  {
+    "id": "RKS-014",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "claims_medium",
+      "elevated_refund_rate"
+    ],
+    "rationale": "2次未收到索赔+退款率0.15边界，中风险review。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 2,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 400,
+      "refund_rate": 0.15,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 2
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
+  },
+  {
+    "id": "RKS-015",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "device_reuse",
+      "address_change",
+      "high_refund_rate"
+    ],
+    "rationale": "设备复用+地址变更+高退款率，无claims无高价值也升至中风险review。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 5000,
+      "shipping": 0,
+      "balance": 5000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 100000,
+      "manual": 100000,
+      "high": 20000,
+      "account_age_days": 300,
+      "refund_rate": 0.3,
+      "address_changes": 2,
+      "device_reuse": true,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 5000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
+  },
+  {
+    "id": "RKS-016",
+    "kind": "refund",
+    "source": "curated_risk_signals_v1",
+    "tags": [
+      "high_value",
+      "trusted_customer"
+    ],
+    "rationale": "诚信老客户但金额达高价值线，仍需review——金额维度不看信用分。",
+    "input": {
+      "issue": "quality_issue",
+      "item": 60000,
+      "shipping": 0,
+      "balance": 60000,
+      "covered": true,
+      "logistics_present": true,
+      "visual": true,
+      "pod": false,
+      "claims": 0,
+      "operator": 1000000,
+      "manual": 1000000,
+      "high": 20000,
+      "sign_receipt_hours": 96,
+      "account_age_days": 900,
+      "refund_rate": 0.02,
+      "address_changes": 0,
+      "device_reuse": false,
+      "refund_cases": 0
+    },
+    "expect": {
+      "eligibility": "eligible_with_approval",
+      "refund_amount": 60000,
+      "risk_level": "medium",
+      "approval_required": true,
+      "action": "refund_original_payment",
+      "risk_tier": "review"
+    }
   }
 ]

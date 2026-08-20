@@ -76,6 +76,21 @@ def test_each_domain_has_positive_and_negative_or_fallback_outcomes():
     assert {True, False} <= operations.keys()
 
 
+def test_risk_signal_cases_are_explainable_and_discriminative():
+    signal_cases = [case for case in CASES if case.get("source") == "curated_risk_signals_v1"]
+
+    assert len(signal_cases) >= 15
+    assert all(case.get("rationale", "").strip() for case in signal_cases)
+    assert all(case.get("tags") for case in signal_cases)
+    # Every risk-signal case carries the new scorecard signals and the output tier.
+    for case in signal_cases:
+        assert "sign_receipt_hours" in case["input"] or "device_reuse" in case["input"] or "refund_rate" in case["input"]
+        assert "risk_tier" in case["expect"]
+    # They must be discriminative: both auto and elevated tiers must be present.
+    tiers = {case["expect"]["risk_tier"] for case in signal_cases}
+    assert tiers >= {"auto", "review", "supervisor"}
+
+
 def test_boundary_tags_match_the_values_they_claim_to_cover():
     def tagged(name: str) -> dict:
         matches = [case for case in CASES if name in case.get("tags", [])]

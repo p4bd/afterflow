@@ -23,7 +23,7 @@ def _evaluate(case):
                 order={"order_id": case["id"], "item_paid": values["item"], "shipping_paid": values["shipping"]},
                 payment={"refundable_balance": values["balance"]},
                 logistics=({"status": "delivered" if values["pod"] else "in_transit", "proof_of_delivery": values["pod"]} if values["logistics_present"] else None),
-                customer_risk={"not_received_claims_180d": values["claims"], "refund_cases_180d": 0},
+                customer_risk={"not_received_claims_180d": values["claims"], "refund_cases_180d": values.get("refund_cases", 0)},
                 policy={
                     "policy_id": "EVAL",
                     "version": "1",
@@ -35,6 +35,12 @@ def _evaluate(case):
                 },
                 operator_refund_limit=values["operator"],
                 visual_evidence_confirmed=values["visual"],
+                # Risk-scorecard signals (optional per case; absent = neutral).
+                sign_receipt_hours=values.get("sign_receipt_hours"),
+                account_age_days=values.get("account_age_days"),
+                historical_refund_rate=values.get("refund_rate"),
+                address_changes_30d=values.get("address_changes", 0),
+                device_reuse=values.get("device_reuse", False),
             )
         ).model_dump(mode="json")
     if case["kind"] == "reverse":
@@ -46,8 +52,8 @@ def _evaluate(case):
                 return_shipping_cost=values["return_shipping"],
                 handling_cost=values["handling"],
                 expected_recovery_value=values["recovery"],
-                replacement_unit_cost=7_000,
-                replacement_shipping_cost=600,
+                replacement_unit_cost=values.get("replacement_unit_cost", 7_000),
+                replacement_shipping_cost=values.get("replacement_shipping_cost", 600),
                 replacement_inventory=values["inventory"],
                 customer_preference=values["preference"],
                 visual_evidence=VisualEvidence(damage_level="major", human_confirmed=values["human"]),

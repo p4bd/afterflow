@@ -104,3 +104,29 @@ def test_repeat_not_received_claims_force_high_risk_review():
 def test_money_fields_reject_negative_values():
     with pytest.raises(ValidationError):
         OrderContext(order_id="ORDER-INVALID", item_paid=-1, shipping_paid=0)
+
+
+def test_risk_scorecard_output_is_explainable():
+    result = decide_resolution(
+        _case(
+            customer_risk=CustomerRiskContext(not_received_claims_180d=3, refund_cases_180d=4),
+        )
+    )
+
+    assert result.risk_score >= 40
+    assert result.risk_tier == "supervisor"
+    assert result.risk_level is RiskLevel.HIGH
+    assert any(s["signal"] == "repeat_not_received_claims" for s in result.risk_signals)
+
+
+def test_sign_receipt_hours_feeds_the_scorecard():
+    result = decide_resolution(
+        _case(
+            issue_type=IssueType.DAMAGED_ITEM,
+            visual_evidence_confirmed=True,
+            sign_receipt_hours=1,
+        )
+    )
+
+    assert any(s["signal"] == "immediate_claim_after_receipt" for s in result.risk_signals)
+    assert "high_value_refund" in result.signals
