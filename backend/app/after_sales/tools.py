@@ -11,21 +11,12 @@ from deerflow.tools.types import Runtime
 from deerflow.trace_context import get_current_trace_id
 
 from .actions import create_refund_action, execute_approved_action, get_mock_refund_executor
-from .decision import decide_resolution
-from .mock_data import CUSTOMER_PROFILES, CUSTOMER_RISK, INVENTORY, LOGISTICS, OPERATIONS_METRICS, ORDERS, PAYMENTS, POLICIES, REVERSE_COSTS, SIGN_RECEIPT_HOURS, resolve_operator_refund_limit
+from .mock_data import CUSTOMER_RISK, INVENTORY, LOGISTICS, OPERATIONS_METRICS, ORDERS, PAYMENTS, POLICIES, REVERSE_COSTS, resolve_operator_refund_limit
 from .repository import AfterSalesRepository, ConcurrentActionError
 from .reverse import CustomerPreference, ReverseInput, VisualEvidence, decide_reverse_fulfillment
 from .risk_ops import MetricBucket, detect_after_sales_anomalies
-from .schemas import (
-    CustomerRiskContext,
-    DecisionInput,
-    DecisionResult,
-    IssueType,
-    LogisticsEvidence,
-    OrderContext,
-    PaymentContext,
-    PolicySnapshot,
-)
+from .schemas import DecisionResult, IssueType
+from .workflow import run_case_evaluation
 
 
 def _json(value: Any) -> str:
@@ -174,45 +165,16 @@ def evaluate_mock_case(
     operator_refund_limit: int,
     visual_evidence_confirmed: bool = False,
 ):
-    """Build and evaluate a local demo case for both tools and the API."""
-    order = ORDERS.get(order_id)
-    payment = PAYMENTS.get(order_id)
-    if order is None:
-        return {"error": "ORDER_NOT_FOUND", "order_id": order_id}
-    if payment is None:
-        return {"error": "PAYMENT_NOT_FOUND", "order_id": order_id}
-
-    policy_data = POLICIES.get(order["region"])
-    if policy_data is None:
-        return {"error": "POLICY_NOT_FOUND", "region": order["region"]}
-
-    logistics_data = LOGISTICS.get(order_id)
-    risk_data = CUSTOMER_RISK.get(order["customer_id"], {})
-    profile = CUSTOMER_PROFILES.get(order["customer_id"], {})
-    case = DecisionInput(
-        issue_type=IssueType(issue_type),
-        order=OrderContext(**order),
-        payment=PaymentContext(**payment),
-        logistics=LogisticsEvidence(**logistics_data) if logistics_data else None,
-        customer_risk=CustomerRiskContext(**risk_data),
-        policy=PolicySnapshot(**policy_data),
+    """Build and evaluate a local demo case via the LangGraph case-evaluation workflow."""
+    state = run_case_evaluation(
+        order_id=order_id,
+        issue_type=issue_type,
         operator_refund_limit=operator_refund_limit,
         visual_evidence_confirmed=visual_evidence_confirmed,
-        sign_receipt_hours=SIGN_RECEIPT_HOURS.get(order_id),
-        account_age_days=profile.get("account_age_days"),
-        historical_refund_rate=profile.get("historical_refund_rate"),
-        address_changes_30d=profile.get("address_changes_30d", 0),
-        device_reuse=profile.get("device_reuse", False),
     )
-    evidence = {
-        "order": order,
-        "payment": payment,
-        "logistics": logistics_data,
-        "customer_risk": risk_data,
-        "policy": policy_data,
-        "visual_evidence_confirmed": visual_evidence_confirmed,
-    }
-    return decide_resolution(case), evidence
+    if state.get("error"):
+        return state["error"]
+    return state["decision"], state["evidence"]
 
 
 def _runtime_context(runtime: Runtime) -> dict:
