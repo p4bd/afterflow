@@ -114,6 +114,7 @@ C5-5. 为什么权威审批状态不能放 Memory？
 C5-6. API 与 Agent Tool 怎样复用同一业务真相？
 C5-7. LangGraph 两张 StateGraph 做了什么？为什么不是装饰（怎么证明是真编排）？
 C5-8. 为什么不用 LangGraph 重写整个 ReAct Agent？什么时候才该把 HITL/审批建模成图节点？
+C5-9. MCP client + RAG 在 AfterFlow 里做什么？为什么是 inform 层、不参与 validate？不可用时怎么办？
 
 ### C6. 评测、边界与生产化
 

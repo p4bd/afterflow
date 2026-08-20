@@ -28,6 +28,19 @@ AfterFlow 用 LangGraph 做**确定性编排层**（不是把 ReAct 包一层）
 
 **为什么用图而不是 if/else**：① 状态转移拓扑可 `get_graph()` 渲染、可测试；② 条件路由是数据（`add_conditional_edges`），`route` 可审计；③ `needs_evidence` 是未来 `interrupt()` HITL 的预留位；④ 未来可接 Langfuse 节点级 span。不 checkpoint、不写库、图内无副作用——纯编排。
 
+## 1.6 MCP client + RAG 知识检索（inform 层）
+
+文件：`backend/app/after_sales/knowledge.py`
+
+AfterFlow 用 **MCP client** 调用外部知识服务（例如另一个 RAG+MCP 项目的 `search_knowledge`），供 Agent 检索政策/知识文本做引用。这是 **inform 层**——只提供解释与引用；**金额/资格/审批由确定性引擎 validate**，两层不混。
+
+- `McpKnowledgeClient`：用 langchain-mcp-adapters 的 `MultiServerMCPClient` 连 `afterflow-rag` server，调用其 `search_knowledge` 工具。
+- `retrieve_knowledge`：MCP 不可用/空结果时 **fail-open** 到确定性 mock 政策知识（带 `policy_id@version` 引用），不破坏案件流程。
+- Tool：`search_after_sales_knowledge`（第 13 个 after-sales 工具）。
+- 配置：`extensions_config.example.json` 有 `afterflow-rag` server 示例（默认 disabled）。
+
+**面试口径**：「政策文本走 RAG/MCP 检索、带引用解释给客户；但能不能退、退多少是 `PolicySnapshot` + `decide_resolution` 的确定性输出——RAG inform、引擎 validate，两层不混。」
+
 ## 2. 退款决策
 
 文件：`backend/app/after_sales/schemas.py`、`decision.py`
