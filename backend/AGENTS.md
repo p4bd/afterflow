@@ -29,7 +29,7 @@ API 与 Agent Tool 必须复用同一领域函数，不能分别实现状态规�
 2. LLM 只做编排和解释，不做金额、权限和状态决策。
 3. 写操作必须在 Guardrail 和执行器内部双重校验。
 4. Action 执行必须校验 payload hash、version、expires_at、余额和幂等键。
-5. 高风险申请人不得审批自己的 Action。
+5. 申请人不得审批自己的 Action（maker-checker，与风险等级无关）。
 6. 运营异常只能生成调查线索，不能把相关性描述成根因。
 
 ## 验证

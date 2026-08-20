@@ -52,8 +52,8 @@ ISSUE_NAMES = {
 }
 
 PROMPT_TEMPLATE = (
-    "案件 {case_id}（订单 {order_id}）用户申报问题类型是 {issue_name}（{issue_code}），"
-    "操作员退款限额 {limit} 分。请核验证据并直接创建退款审批请求。"
+    "案件 {case_id}（订单 {order_id}）用户申报问题类型是 {issue_name}（{issue_code}）。"
+    "请核验证据并直接创建退款审批请求。"
 )
 
 
@@ -93,10 +93,11 @@ class Client:
             sys.exit(1)
 
     def create_case(self, order: str, issue: str, limit: int) -> dict:
+        # NOTE: the operator refund limit is server-authoritative and derived
+        # from the authenticated role; it is intentionally not sent to the API.
         return self._request("/api/after-sales/cases", method="POST", body={
             "order_id": order,
             "issue_type": issue,
-            "operator_refund_limit": limit,
             "visual_evidence_confirmed": False,
         })
 
@@ -167,8 +168,8 @@ def main() -> None:
             order_id=args.order,
             issue_name=name,
             issue_code=issue_code,
-            limit=args.limit,
         ))
+        print("\n💡 操作员退款限额由服务端按登录角色决定，不随提示词传入。")
         print("\n💡 Agent 创建 Action 后，用本脚本 list/approve/execute 或审批台完成闭环。")
 
     elif args.cmd == "list":

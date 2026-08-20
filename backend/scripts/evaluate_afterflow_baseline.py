@@ -63,7 +63,7 @@ def engine_prediction(case: dict) -> dict:
                     if v["logistics_present"]
                     else None
                 ),
-                customer_risk={"not_received_claims_180d": v["claims"], "refund_cases_180d": 0},
+                customer_risk={"not_received_claims_180d": v["claims"], "refund_cases_180d": v.get("refund_cases", 0)},
                 policy={
                     "policy_id": "EVAL",
                     "version": "1",
@@ -75,6 +75,11 @@ def engine_prediction(case: dict) -> dict:
                 },
                 operator_refund_limit=v["operator"],
                 visual_evidence_confirmed=v["visual"],
+                sign_receipt_hours=v.get("sign_receipt_hours"),
+                account_age_days=v.get("account_age_days"),
+                historical_refund_rate=v.get("refund_rate"),
+                address_changes_30d=v.get("address_changes", 0),
+                device_reuse=v.get("device_reuse", False),
             )
         ).model_dump(mode="json")
     if kind == "reverse":
@@ -86,8 +91,8 @@ def engine_prediction(case: dict) -> dict:
                 return_shipping_cost=v["return_shipping"],
                 handling_cost=v["handling"],
                 expected_recovery_value=v["recovery"],
-                replacement_unit_cost=7_000,
-                replacement_shipping_cost=600,
+                replacement_unit_cost=v.get("replacement_unit_cost", 7_000),
+                replacement_shipping_cost=v.get("replacement_shipping_cost", 600),
                 replacement_inventory=v["inventory"],
                 customer_preference=v["preference"],
                 visual_evidence=VisualEvidence(damage_level="major", human_confirmed=v["human"]),

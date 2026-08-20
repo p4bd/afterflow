@@ -20,13 +20,13 @@ LLM 不计算金额、不判断授权，也不能通过对话中的“已经批�
 ## 核心能力
 
 - 订单、支付、物流、客户历史和政策版本的跨系统取证
-- 确定性退款金额与政策决策
-- 退货、换货、补发和仅退款的成本比较
-- 服务端 RBAC、禁止高风险自审批和 fail-closed Guardrail
-- payload hash、乐观锁、审批过期和余额二次校验
+- 确定性退款金额与政策决策；操作员可批限额来自服务端角色，不接受客户端/对话传值
+- 退货、换货、补发和仅退款的成本比较与处置执行状态机
+- 服务端 RBAC、禁止自审批（maker-checker）和 fail-closed Guardrail
+- payload hash、确定性业务幂等键、乐观锁、审批过期和实时余额二次校验
 - 幂等退款执行与完整案件事件审计
 - SKU、承运商和仓库维度的运营异常扫描
-- 134 条退款、逆向履约和运营预警评测集（含 34 条人工边界样本）
+- 150 条退款、逆向履约和运营预警合同评测集（100 回归 + 34 人工边界 + 16 风控信号）+ 10 条真实业务流场景样本
 
 ## 业务链路
 
@@ -47,7 +47,7 @@ LLM 不计算金额、不判断授权，也不能通过对话中的“已经批�
 backend/app/after_sales/                  售后领域核心
 backend/app/gateway/routers/after_sales.py 审批与执行 API
 backend/tests/test_after_sales_*.py        领域与安全测试
-backend/tests/fixtures/after_sales_*       Gold cases 与 134 条评测集
+backend/tests/fixtures/after_sales_*       Gold cases 与 150 条评测集 + 场景样本
 frontend/src/app/workspace/after-sales/    售后审批台
 skills/public/after-sales-*/               领域 Skills
 skills/public/reverse-fulfillment/         逆向履约 Skill
@@ -92,7 +92,7 @@ pnpm check
 pnpm test
 ```
 
-同一份 134 条合同评测中，确定性引擎用于验证业务规则的精确执行；纯 LLM baseline 用于说明资金决策不应交给概率模型。它不是通用智能排行榜，详见 [docs/EVALUATION.md](docs/EVALUATION.md)。
+同一份 150 条合同评测中，确定性引擎用于验证业务规则的精确执行；纯 LLM baseline 用于说明资金决策不应交给概率模型。它不是通用智能排行榜，详见 [docs/EVALUATION.md](docs/EVALUATION.md)。
 
 ## 当前边界
 

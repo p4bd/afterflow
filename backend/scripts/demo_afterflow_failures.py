@@ -7,7 +7,7 @@
   A  未审批直接执行退款             → 403  action is not approved（Guardrail/状态机）
   B  审批后伪造 payload 执行（改金额）→ 409  payload hash mismatch
   C  旧版本重复审批（页面重复点击）  → 409  version conflict（乐观锁）
-  D  高风险案件申请人自审批          → 403  requester cannot approve own high-risk action
+  D  案件申请人自审批（含高风险）     → 403  requester cannot approve own action
   E  重复执行已完成退款              → 403  action is not approved（幂等）
   F  拒绝但未填理由                 → 422  rejection comment is required
 """
