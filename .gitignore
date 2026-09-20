@@ -72,3 +72,14 @@ config.yaml.bak
 /frontend/playwright-report/
 .gstack/
 .worktrees
+
+# Personal interview and study material (kept local, not project source)
+/.planning/
+/interview_prep/
+/INTERVIEW-AFTERFLOW.md
+/docs/INTERVIEW-CAPABILITY-GUIDE.md
+/docs/INTERVIEW-IMPROVEMENT-PLAN.md
+/docs/PROJECT-CLOSEOUT-TASKS.md
+
+# Local SQLite databases and runtime artifacts
+*.db
