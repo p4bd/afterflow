@@ -4,6 +4,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from scripts.evaluate_afterflow_baseline import build_prompt
+
 CASES = json.loads((Path(__file__).parent / "fixtures" / "after_sales_evaluation.json").read_text(encoding="utf-8"))
 CURATED_SOURCE = "curated_boundary_v2"
 REQUIRED_BOUNDARY_TAGS = {
@@ -121,3 +123,11 @@ def test_boundary_tags_match_the_values_they_claim_to_cover():
     assert rate_exact["issue_cases"] / rate_exact["orders"] == 0.05
     assert uplift_below["issue_cases"] / uplift_below["orders"] < 1.5 * uplift_below["prev_cases"] / uplift_below["prev_orders"]
     assert uplift_exact["issue_cases"] / uplift_exact["orders"] == 1.5 * uplift_exact["prev_cases"] / uplift_exact["prev_orders"]
+
+
+def test_llm_baseline_prompt_matches_every_scored_refund_and_reverse_field():
+    refund_prompt = build_prompt(next(case for case in CASES if case["kind"] == "refund"))
+    reverse_prompt = build_prompt(next(case for case in CASES if case["kind"] == "reverse"))
+
+    assert all(field in refund_prompt for field in ("risk_score", "risk_tier", "签收后申报小时数", "历史退款率"))
+    assert all(field in reverse_prompt for field in ("requires_return", "resend_without_return", "换货商品成本", "换货正向运费"))

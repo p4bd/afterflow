@@ -1,5 +1,5 @@
 # AfterFlow local configuration
-config_version: 21
+config_version: 22
 log_level: info
 
 models:
@@ -36,6 +36,12 @@ tools:
   - name: evaluate_after_sales_case
     group: after-sales
     use: app.after_sales.tools:evaluate_after_sales_case_tool
+  - name: create_after_sales_case
+    group: after-sales
+    use: app.after_sales.tools:create_after_sales_case_tool
+  - name: update_after_sales_case
+    group: after-sales
+    use: app.after_sales.tools:update_after_sales_case_tool
   - name: create_after_sales_action
     group: after-sales
     use: app.after_sales.tools:create_after_sales_action_tool
@@ -84,4 +90,11 @@ guardrails:
   enabled: true
   fail_closed: true
   provider:
-    use: app.after_sales.guardrail:AfterSalesGuardrailProvider
+    use: app.after_sales.guardrail:AuditedAfterSalesGuardrailProvider
+    # Audit-wrapped guardrail provider. The runtime constructs this class
+    # through its middleware loader; it resolves the active repository and
+    # SQL-backed auditor from the initialized persistence engine. The lifespan
+    # also exposes an inspectable instance on app.state. Do NOT change this to the un-audited
+    # ``AfterSalesGuardrailProvider`` unless you also drop the audit
+    # requirement — the audit chain is what answers the auditor's
+    # "why was this refund approved?" question.

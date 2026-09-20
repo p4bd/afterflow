@@ -8,8 +8,9 @@ AfterFlow 处理资金相关售后决策。核心目标不是让模型“更会�
 
 ```text
 Web 工作台
-  ├─ 智能售后助手
-  ├─ 审批队列
+  ├─ 自然语言受理与案件详情
+  ├─ 案件内补证/续办
+  ├─ 主管审批队列
   └─ 运营巡检
         ↓
 Gateway API / Auth / RBAC
@@ -44,8 +45,10 @@ Repository / Mock providers / payment executor
 ## 4. 退款主流程
 
 ```text
-intake
+complaint_received
+  → awaiting_clarification（缺订单/问题）
   → evidence_gathering
+  → awaiting_evidence（缺证据/事实冲突，可续办）
   → decided
   → proposed
   → pending_approval / approved
@@ -75,13 +78,15 @@ intake
 
 ## 6. 数据模型
 
-三张核心表：
+三张核心表；受理字段直接扩展在案件表，不为每个证据字段拆表：
 
-- `service_cases`：案件事实快照、决策结果和状态。
+- `service_cases`：客户原话、期望、关联会话、当前待办、回复草稿、证据快照、决策结果和状态。
 - `action_requests`：待审批/待执行副作用、载荷指纹、版本和有效期。
 - `case_events`：受理、决策、审批、拒绝、执行和失败事件。
 
 所有业务行带用户归属；API 查询与修改均按当前可信用户隔离。
+
+HTTP API 与 Agent Tool 通过 `operations.py` 复用建案、续办、Action 创建和执行。模型输入在信任边界规范化；金额、权限、状态与图片人工确认仍由确定性服务或可信 UI 决定。
 
 ## 7. 逆向履约
 
@@ -92,7 +97,7 @@ intake
 - 换货：补发商品成本 + 正向物流 + 可能的逆向成本
 - 补发：偏好换货且有库存但残值不足以覆盖逆向成本时，免退补发
 
-处置执行：决策之后是可治理的处置状态机（`reverse_execution.py`）——`pending → return_label_issued → warehouse_received → inspected → settled`，退货路径必须收货与质检后才能结算，仅退款/补发走免退快路径；派发通过幂等的 mock 出库适配器。
+`reverse_execution.py` 定义了 `pending → return_label_issued → warehouse_received → inspected → settled` 的处置状态机，但完整 RMA 尚未持久接入主链路。当前执行边界对需退货退款直接阻塞，只有免退补发可通过幂等 Mock 出库；出库点会重新检查并扣减库存。
 
 图片模型输出不能直接进入资金决策，必须先形成结构化证据并由人工确认。
 
@@ -102,13 +107,13 @@ intake
 
 ## 9. 评测
 
-固定 150 条合同评测（81 退款、32 逆向履约、37 运营预警）：原 100 条回归 + 34 条人工边界 + 16 条风控评分信号（`curated_risk_signals_v1`）。另有一组 10 条真实业务流场景样本（`after_sales_scenarios.json`）从客户投诉叙述断言终态决策，以及注入扰动轨迹验证 prompt 注入不改终态。指标包括 coverage、field accuracy、exact case accuracy、字段切片和边界标签切片。详见 [EVALUATION.md](EVALUATION.md)。
+固定 150 条合同评测继续只代表规则回归。真实 Agent 集使用 18 个自然语言任务×3 次，覆盖开发/留出、歧义、否定和安全接续；显式售后路由的最终实测为 54/54 严格完成。评测器记录模型、配置、轨迹、Tool 结果/耗时、Token usage 及持久化终态；usage 缺失时明确记不可用。工作台建案仍走确定性 API，聊天调用方需显式选择售后路由。详见 [EVALUATION.md](EVALUATION.md)。
 
 ## 10. 生产化边界
 
 | 当前 | 生产化替换 |
 | --- | --- |
-| 3 个 Mock 订单 | OMS / 支付 / 物流 / CRM Provider |
+| 4 个 Mock 订单 | OMS / 支付 / 物流 / CRM Provider |
 | Mock 退款执行器 | 真实支付网关，保留幂等协议 |
 | 人工确认图片协议 | OCR / 视觉模型 + 人工复核 |
-| SQLite | PostgreSQL 多实例部署 |
+| 单进程 SQLite + 内存 Provider 账本 | PostgreSQL、持久 Provider 对账与多实例 claim（需分别验证） |

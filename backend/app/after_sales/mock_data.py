@@ -4,14 +4,15 @@
 # user's system_role. The limit is NEVER accepted from a request body or an
 # LLM tool argument — callers must resolve it from the trusted auth context.
 ROLE_REFUND_LIMITS: dict[str, int] = {
-    "user": 20_000,       # regular operator: ¥200
-    "admin": 1_000_000,   # supervisor: ¥10,000
+    "user": 20_000,  # regular operator: ¥200
+    "admin": 1_000_000,  # supervisor: ¥10,000
 }
 
 
 def resolve_operator_refund_limit(system_role: str | None) -> int:
     """Return the operator refund limit for a role, defaulting to the most restrictive."""
     return ROLE_REFUND_LIMITS.get(system_role or "", ROLE_REFUND_LIMITS["user"])
+
 
 ORDERS = {
     "ORDER-1001": {

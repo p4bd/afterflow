@@ -14,8 +14,14 @@ from alembic import op
 
 revision: str = "0008_action_reserved"
 down_revision: str | Sequence[str] | None = "0007_case_event_hash_chain"
+# Parallel-branch merge: 0007_tool_call_audit is a sibling head alongside
+# 0007_case_event_hash_chain. Declaring ``depends_on`` (without changing
+# ``down_revision``, which is committed history) forces 0008 to wait for
+# both 0007_* migrations to complete, collapsing the heads back into a
+# single linear chain: 0007_case_event_hash_chain + 0007_tool_call_audit
+# → 0008 → 0009 → 0010_*. Same pattern applies to the 0006_* pair.
 branch_labels: str | Sequence[str] | None = None
-depends_on: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = "0007_tool_call_audit"
 
 
 def upgrade() -> None:

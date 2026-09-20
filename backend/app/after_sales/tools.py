@@ -6,21 +6,24 @@ from typing import Any
 from langchain.tools import tool
 
 from deerflow.persistence.engine import get_session_factory
-from deerflow.runtime.user_context import get_current_user
+from deerflow.runtime.user_context import get_current_user, resolve_runtime_user_id
 from deerflow.tools.types import Runtime
 from deerflow.trace_context import get_current_trace_id
 
-from .actions import create_refund_action, execute_approved_action, get_mock_refund_executor
+from .actions import get_mock_refund_executor
+from .intake import normalize_issue_type
 from .mock_data import CUSTOMER_RISK, INVENTORY, LOGISTICS, OPERATIONS_METRICS, ORDERS, PAYMENTS, POLICIES, REVERSE_COSTS, resolve_operator_refund_limit
+from .operations import continue_intake_case, create_case_action, create_intake_case, execute_case_action
 from .repository import AfterSalesRepository, ConcurrentActionError
 from .reverse import CustomerPreference, ReverseInput, VisualEvidence, decide_reverse_fulfillment
+from .reverse_execution import get_mock_reverse_executor
 from .risk_ops import MetricBucket, detect_after_sales_anomalies
-from .schemas import DecisionResult, IssueType
+from .schemas import IssueType
 from .workflow import run_case_evaluation
 
 
 def _json(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=False)
+    return json.dumps(value, ensure_ascii=False, default=str)
 
 
 def _lookup(records: dict[str, dict], key: str, error: str, field: str) -> str:
@@ -30,37 +33,37 @@ def _lookup(records: dict[str, dict], key: str, error: str, field: str) -> str:
 
 @tool("get_after_sales_order")
 def get_order_context_tool(order_id: str) -> str:
-    """Read the paid amount, customer, region, and status for an order."""
+    """Explicitly refresh order context for a legacy/incomplete Case; new complaints use create_after_sales_case."""
     return _lookup(ORDERS, order_id, "ORDER_NOT_FOUND", "order_id")
 
 
 @tool("get_after_sales_payment")
 def get_payment_context_tool(order_id: str) -> str:
-    """Read the remaining refundable payment balance for an order."""
+    """Explicitly refresh payment context for a legacy/incomplete Case; new complaints use create_after_sales_case."""
     return _lookup(PAYMENTS, order_id, "PAYMENT_NOT_FOUND", "order_id")
 
 
 @tool("get_logistics_evidence")
 def get_logistics_evidence_tool(order_id: str) -> str:
-    """Read carrier status and proof-of-delivery evidence for an order."""
+    """Explicitly refresh logistics evidence for a legacy/incomplete Case; new complaints use create_after_sales_case."""
     return _lookup(LOGISTICS, order_id, "LOGISTICS_NOT_FOUND", "order_id")
 
 
 @tool("get_customer_refund_risk")
 def get_customer_risk_context_tool(customer_id: str) -> str:
-    """Read recent refund and not-received claim counts for a customer."""
+    """Explicitly refresh customer risk for a legacy/incomplete Case; new complaints use create_after_sales_case."""
     return _lookup(CUSTOMER_RISK, customer_id, "CUSTOMER_NOT_FOUND", "customer_id")
 
 
 @tool("get_after_sales_policy")
 def get_policy_snapshot_tool(region: str = "CN") -> str:
-    """Read the versioned after-sales policy for a region."""
+    """Explicitly refresh policy for a legacy/incomplete Case; new complaints use create_after_sales_case."""
     return _lookup(POLICIES, region, "POLICY_NOT_FOUND", "region")
 
 
 @tool("get_replacement_inventory")
 def get_replacement_inventory_tool(order_id: str) -> str:
-    """Read replacement inventory and unit cost for the order SKU."""
+    """Explicitly refresh inventory for a legacy/incomplete Case; new complaints use create_after_sales_case."""
     order = ORDERS.get(order_id)
     if order is None:
         return _json({"error": "ORDER_NOT_FOUND", "order_id": order_id})
@@ -69,7 +72,7 @@ def get_replacement_inventory_tool(order_id: str) -> str:
 
 @tool("get_reverse_fulfillment_costs")
 def get_reverse_fulfillment_costs_tool(order_id: str) -> str:
-    """Read return shipping, handling, recovery, and replacement shipping costs."""
+    """Explicitly refresh reverse costs for a legacy/incomplete Case; new complaints use create_after_sales_case."""
     order = ORDERS.get(order_id)
     if order is None:
         return _json({"error": "ORDER_NOT_FOUND", "order_id": order_id})
@@ -144,6 +147,9 @@ def evaluate_after_sales_case_tool(
     """
     user = get_current_user()
     system_role = getattr(user, "system_role", None)
+    issue_type = normalize_issue_type(issue_type)
+    if issue_type is None:
+        return _json({"error": "UNSUPPORTED_ISSUE_TYPE"})
     result = evaluate_mock_case(
         order_id=order_id,
         issue_type=issue_type,
@@ -188,6 +194,79 @@ def _repository() -> AfterSalesRepository:
     return AfterSalesRepository(session_factory)
 
 
+@tool("create_after_sales_case")
+async def create_after_sales_case_tool(
+    runtime: Runtime,
+    complaint_text: str,
+    order_id: str | None = None,
+    issue_type: str | None = None,
+    customer_expectation: str | None = None,
+) -> str:
+    """Use first for every new complaint: persist and deterministically evaluate it.
+
+    The returned Case already contains the verified context and decision. Do not
+    repeat granular context or evaluation tools unless an explicit refresh is requested.
+    """
+    context = _runtime_context(runtime)
+    user = get_current_user()
+    user_id = resolve_runtime_user_id(runtime)
+    role = getattr(user, "system_role", None) or context.get("user_role")
+    repo = _repository()
+    case = await create_intake_case(
+        repo=repo,
+        user_id=user_id,
+        user_role=role,
+        thread_id=context.get("thread_id"),
+        complaint_text=complaint_text,
+        order_id=order_id,
+        issue_type=issue_type,
+        customer_expectation=customer_expectation,
+        run_id=context.get("run_id"),
+        trace_id=context.get("trace_id") or get_current_trace_id(),
+        structured_source="model",
+    )
+    return _json(case)
+
+
+@tool("update_after_sales_case")
+async def update_after_sales_case_tool(
+    runtime: Runtime,
+    case_id: str,
+    note: str,
+    complaint_text: str | None = None,
+    order_id: str | None = None,
+    issue_type: str | None = None,
+    customer_expectation: str | None = None,
+) -> str:
+    """Continue the same case after clarification; human image confirmation must come from the case UI."""
+    context = _runtime_context(runtime)
+    user = get_current_user()
+    user_id = resolve_runtime_user_id(runtime)
+    repo = _repository()
+    case = await repo.get_case(case_id, user_id=user_id)
+    if case is None:
+        return _json({"error": "CASE_NOT_FOUND", "case_id": case_id})
+    role = getattr(user, "system_role", None) or context.get("user_role")
+    try:
+        case = await continue_intake_case(
+            repo=repo,
+            case=case,
+            actor_id=user_id,
+            user_role=role,
+            note=note,
+            refund_executor=get_mock_refund_executor(),
+            complaint_text=complaint_text,
+            order_id=order_id,
+            issue_type=issue_type,
+            customer_expectation=customer_expectation,
+            run_id=context.get("run_id"),
+            trace_id=context.get("trace_id") or get_current_trace_id(),
+        )
+    except (ValueError, ConcurrentActionError) as error:
+        return _json({"error": "CASE_NOT_UPDATED", "detail": str(error)})
+    return _json(case)
+
+
 @tool("create_after_sales_action")
 async def create_after_sales_action_tool(runtime: Runtime, case_id: str) -> str:
     """Create a persisted refund Action Request from an existing deterministic case decision."""
@@ -203,19 +282,14 @@ async def create_after_sales_action_tool(runtime: Runtime, case_id: str) -> str:
     if case is None:
         return _json({"error": "CASE_NOT_FOUND", "case_id": case_id})
     try:
-        action = create_refund_action(
-            case_id=case_id,
-            order_id=case["order_id"],
-            requested_by=user_id,
-            decision=DecisionResult.model_validate(case["decision_json"]),
+        action = await create_case_action(
+            repo=repo,
+            case=case,
+            actor_id=user_id,
+            refund_executor=get_mock_refund_executor(),
         )
-        action = await repo.create_action(action, user_id=user_id)
     except (ValueError, ConcurrentActionError) as error:
         return _json({"error": "ACTION_NOT_CREATED", "detail": str(error)})
-    if action.status == "approved":
-        # Auto-approved actions freeze the funds immediately (authorize-capture).
-        if not get_mock_refund_executor().reserve(order_id=case["order_id"], amount=action.payload["amount"]):
-            return _json({"error": "INSUFFICIENT_BALANCE", "detail": "cannot fund auto-approved refund"})
     await repo.append_event(
         case_id=case_id,
         user_id=user_id,
@@ -254,15 +328,15 @@ async def execute_approved_action_tool(
         return _json({"error": "PAYMENT_STATE_UNAVAILABLE"})
     executor = get_mock_refund_executor()
     try:
-        updated = execute_approved_action(
-            action,
+        updated = await execute_case_action(
+            repo=repo,
+            action=action,
+            case=case,
             payload=payload,
             expected_version=expected_version,
-            # Capture from the reservation frozen at approval time.
-            current_refundable_balance=executor.reserved_of(case["order_id"]),
-            executor=executor,
+            refund_executor=executor,
+            reverse_executor=get_mock_reverse_executor(),
         )
-        updated = await repo.save_action(updated, user_id=None, expected_version=expected_version)
     except (ValueError, PermissionError, ConcurrentActionError) as error:
         return _json({"error": "ACTION_NOT_EXECUTED", "detail": str(error)})
     await repo.append_event(

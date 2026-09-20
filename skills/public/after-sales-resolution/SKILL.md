@@ -9,7 +9,7 @@ The deterministic engine owns money and policy decisions; the language model onl
 
 ## Procedure
 
-1. Call `evaluate_after_sales_case` with the verified order ID, normalized issue type, current operator limit, and visual-evidence status.
+1. Continue the persisted case with `update_after_sales_case` when intake facts change; its deterministic decision is the source of truth.
 2. Copy, do not recompute, these result fields: `eligibility`, `action`, `refund_amount`, `risk_level`, `approval_required`, `approval_reasons`, `signals`, `missing_evidence`, and `policy_refs`.
 3. If the tool returns an error, report the exact error and stop.
 4. If eligibility is `needs_evidence`, request only the listed evidence.

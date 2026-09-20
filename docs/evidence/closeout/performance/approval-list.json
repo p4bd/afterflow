@@ -1,0 +1,5431 @@
+{
+  "scope": "local SQLite repository approval-list query only; no HTTP, model, payment, or logistics latency",
+  "environment": {
+    "python": "3.12.13",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "config": {
+    "rows": 100,
+    "samples_per_round": 100,
+    "rounds": 3,
+    "warmups": 1
+  },
+  "summary": {
+    "n_plus_one": {
+      "observations": 300,
+      "p50_ms": 257.62980000035896,
+      "p95_ms": 289.11840000000666,
+      "mean_sql_queries": 101,
+      "errors": 0
+    },
+    "joined": {
+      "observations": 300,
+      "p50_ms": 8.448450002106256,
+      "p95_ms": 12.283800002478529,
+      "mean_sql_queries": 1,
+      "errors": 0
+    }
+  },
+  "observations": [
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 1,
+      "latency_ms": 287.9356000012194,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 2,
+      "latency_ms": 260.8360000012908,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 3,
+      "latency_ms": 272.8830000014568,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 4,
+      "latency_ms": 249.05460000081803,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 5,
+      "latency_ms": 236.32540000107838,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 6,
+      "latency_ms": 242.96490000051563,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 7,
+      "latency_ms": 253.00459999925806,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 8,
+      "latency_ms": 248.25849999979255,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 9,
+      "latency_ms": 248.84149999707006,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 10,
+      "latency_ms": 249.92529999872204,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 11,
+      "latency_ms": 245.1584999980696,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 12,
+      "latency_ms": 236.90949999945587,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 13,
+      "latency_ms": 235.1810000000114,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 14,
+      "latency_ms": 238.5446000007505,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 15,
+      "latency_ms": 238.07920000035665,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 16,
+      "latency_ms": 233.87690000163275,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 17,
+      "latency_ms": 229.41540000101668,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 18,
+      "latency_ms": 227.34789999958593,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 19,
+      "latency_ms": 234.53760000120383,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 20,
+      "latency_ms": 228.49040000073728,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 21,
+      "latency_ms": 231.55400000177906,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 22,
+      "latency_ms": 232.45020000103978,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 23,
+      "latency_ms": 234.49149999942165,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 24,
+      "latency_ms": 225.50000000046566,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 25,
+      "latency_ms": 238.54120000032708,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 26,
+      "latency_ms": 225.15910000220174,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 27,
+      "latency_ms": 234.0098000022408,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 28,
+      "latency_ms": 233.3357999996224,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 29,
+      "latency_ms": 237.54900000130874,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 30,
+      "latency_ms": 262.8925999997591,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 31,
+      "latency_ms": 296.20820000127424,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 32,
+      "latency_ms": 304.46589999701246,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 33,
+      "latency_ms": 301.77999999796157,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 34,
+      "latency_ms": 274.60789999895496,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 35,
+      "latency_ms": 273.9298999986204,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 36,
+      "latency_ms": 258.7167999990925,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 37,
+      "latency_ms": 255.15470000027562,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 38,
+      "latency_ms": 257.126700002118,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 39,
+      "latency_ms": 258.2934000020032,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 40,
+      "latency_ms": 250.75830000059796,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 41,
+      "latency_ms": 252.85649999932502,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 42,
+      "latency_ms": 261.2326000016765,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 43,
+      "latency_ms": 250.46799999836367,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 44,
+      "latency_ms": 250.27919999774895,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 45,
+      "latency_ms": 250.7532000017818,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 46,
+      "latency_ms": 269.5037000012235,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 47,
+      "latency_ms": 258.04920000155107,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 48,
+      "latency_ms": 251.89350000073318,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 49,
+      "latency_ms": 260.5838000017684,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 50,
+      "latency_ms": 256.53930000044056,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 51,
+      "latency_ms": 254.12449999930686,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 52,
+      "latency_ms": 252.49080000139656,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 53,
+      "latency_ms": 245.4145999981847,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 54,
+      "latency_ms": 255.44509999963338,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 55,
+      "latency_ms": 256.39570000203094,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 56,
+      "latency_ms": 256.71280000096885,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 57,
+      "latency_ms": 252.1998000011081,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 58,
+      "latency_ms": 251.09669999801554,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 59,
+      "latency_ms": 258.04319999951986,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 60,
+      "latency_ms": 255.05730000077165,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 61,
+      "latency_ms": 260.0488000025507,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 62,
+      "latency_ms": 255.44520000039483,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 63,
+      "latency_ms": 255.24159999986296,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 64,
+      "latency_ms": 251.13889999920502,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 65,
+      "latency_ms": 252.72929999846383,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 66,
+      "latency_ms": 254.39209999967716,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 67,
+      "latency_ms": 252.89429999975255,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 68,
+      "latency_ms": 257.26209999993443,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 69,
+      "latency_ms": 253.50819999948726,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 70,
+      "latency_ms": 268.58590000119875,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 71,
+      "latency_ms": 261.35900000008405,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 72,
+      "latency_ms": 255.23009999960777,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 73,
+      "latency_ms": 256.2718000008317,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 74,
+      "latency_ms": 250.46089999887045,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 75,
+      "latency_ms": 259.99790000059875,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 76,
+      "latency_ms": 254.18210000134422,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 77,
+      "latency_ms": 260.1079000014579,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 78,
+      "latency_ms": 252.38230000104522,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 79,
+      "latency_ms": 255.51350000023376,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 80,
+      "latency_ms": 253.0557999998564,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 81,
+      "latency_ms": 257.1067999997467,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 82,
+      "latency_ms": 253.09240000206046,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 83,
+      "latency_ms": 279.8798999974679,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 84,
+      "latency_ms": 248.225100000127,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 85,
+      "latency_ms": 255.6112000020221,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 86,
+      "latency_ms": 255.12940000044182,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 87,
+      "latency_ms": 253.61439999687718,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 88,
+      "latency_ms": 256.28209999922547,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 89,
+      "latency_ms": 258.91780000165454,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 90,
+      "latency_ms": 260.74399999924935,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 91,
+      "latency_ms": 258.25320000149077,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 92,
+      "latency_ms": 250.50310000005993,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 93,
+      "latency_ms": 250.79440000263276,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 94,
+      "latency_ms": 258.3259999992151,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 95,
+      "latency_ms": 278.31769999829703,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 96,
+      "latency_ms": 282.6782000011008,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 97,
+      "latency_ms": 276.13840000049095,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 98,
+      "latency_ms": 260.6290000003355,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 99,
+      "latency_ms": 256.17050000073505,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 1,
+      "sample": 100,
+      "latency_ms": 254.4411000017135,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 1,
+      "latency_ms": 254.75960000039777,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 2,
+      "latency_ms": 257.86340000195196,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 3,
+      "latency_ms": 255.46209999811254,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 4,
+      "latency_ms": 254.8650999997335,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 5,
+      "latency_ms": 261.59800000095856,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 6,
+      "latency_ms": 256.03029999911087,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 7,
+      "latency_ms": 251.1103999968327,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 8,
+      "latency_ms": 253.47289999990608,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 9,
+      "latency_ms": 264.60389999920153,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 10,
+      "latency_ms": 272.5453000020934,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 11,
+      "latency_ms": 264.5773000003828,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 12,
+      "latency_ms": 262.1760000001814,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 13,
+      "latency_ms": 264.6191000021645,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 14,
+      "latency_ms": 249.19869999939692,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 15,
+      "latency_ms": 256.64180000239867,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 16,
+      "latency_ms": 255.65629999982775,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 17,
+      "latency_ms": 256.7974999983562,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 18,
+      "latency_ms": 263.633700000355,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 19,
+      "latency_ms": 281.7982000015036,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 20,
+      "latency_ms": 267.10670000102255,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 21,
+      "latency_ms": 263.3937999999034,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 22,
+      "latency_ms": 267.3670000003767,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 23,
+      "latency_ms": 274.68170000065584,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 24,
+      "latency_ms": 274.9693000005209,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 25,
+      "latency_ms": 287.83690000273054,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 26,
+      "latency_ms": 286.2746999999217,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 27,
+      "latency_ms": 279.55150000343565,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 28,
+      "latency_ms": 278.8598000006459,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 29,
+      "latency_ms": 251.7783999974199,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 30,
+      "latency_ms": 264.2564999987371,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 31,
+      "latency_ms": 254.09399999989546,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 32,
+      "latency_ms": 261.9371000000683,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 33,
+      "latency_ms": 258.6260000025504,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 34,
+      "latency_ms": 255.9581999994407,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 35,
+      "latency_ms": 252.29630000103498,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 36,
+      "latency_ms": 258.72009999875445,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 37,
+      "latency_ms": 247.85850000262144,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 38,
+      "latency_ms": 263.9627000025939,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 39,
+      "latency_ms": 253.2208000011451,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 40,
+      "latency_ms": 259.751800000231,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 41,
+      "latency_ms": 282.4706999999762,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 42,
+      "latency_ms": 283.1432999992103,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 43,
+      "latency_ms": 277.13070000027074,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 44,
+      "latency_ms": 295.2102000017476,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 45,
+      "latency_ms": 264.0300999992178,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 46,
+      "latency_ms": 280.15509999750066,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 47,
+      "latency_ms": 272.3784000008891,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 48,
+      "latency_ms": 289.603299999726,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 49,
+      "latency_ms": 293.1934000007459,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 50,
+      "latency_ms": 283.48689999984344,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 51,
+      "latency_ms": 266.2192999996478,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 52,
+      "latency_ms": 268.4531999984756,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 53,
+      "latency_ms": 260.74380000136443,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 54,
+      "latency_ms": 256.72689999919385,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 55,
+      "latency_ms": 255.65529999948922,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 56,
+      "latency_ms": 280.22280000004685,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 57,
+      "latency_ms": 296.92570000042906,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 58,
+      "latency_ms": 278.7750999996206,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 59,
+      "latency_ms": 278.71220000088215,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 60,
+      "latency_ms": 282.7618999981496,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 61,
+      "latency_ms": 276.2211000008392,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 62,
+      "latency_ms": 277.85299999959534,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 63,
+      "latency_ms": 267.5745000015013,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 64,
+      "latency_ms": 266.5739999974903,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 65,
+      "latency_ms": 266.18909999888274,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 66,
+      "latency_ms": 278.1333999992057,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 67,
+      "latency_ms": 260.246099998767,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 68,
+      "latency_ms": 287.40010000183247,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 69,
+      "latency_ms": 273.2219999998051,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 70,
+      "latency_ms": 274.75670000058017,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 71,
+      "latency_ms": 264.2645999985689,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 72,
+      "latency_ms": 258.75879999875906,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 73,
+      "latency_ms": 266.71210000131396,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 74,
+      "latency_ms": 284.7351999989769,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 75,
+      "latency_ms": 260.67239999974845,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 76,
+      "latency_ms": 264.5325000012235,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 77,
+      "latency_ms": 267.3377999999502,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 78,
+      "latency_ms": 289.11840000000666,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 79,
+      "latency_ms": 269.54119999936665,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 80,
+      "latency_ms": 259.28209999983665,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 81,
+      "latency_ms": 267.3489000007976,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 82,
+      "latency_ms": 283.7488000004669,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 83,
+      "latency_ms": 280.50549999898067,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 84,
+      "latency_ms": 282.049299999926,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 85,
+      "latency_ms": 269.63379999870085,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 86,
+      "latency_ms": 275.6790000021283,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 87,
+      "latency_ms": 313.7133000018366,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 88,
+      "latency_ms": 284.7832000006747,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 89,
+      "latency_ms": 271.2608000001637,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 90,
+      "latency_ms": 268.87400000123307,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 91,
+      "latency_ms": 272.89419999942766,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 92,
+      "latency_ms": 259.64009999734117,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 93,
+      "latency_ms": 267.789300000004,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 94,
+      "latency_ms": 281.59099999902537,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 95,
+      "latency_ms": 276.3225999988208,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 96,
+      "latency_ms": 251.67610000062268,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 97,
+      "latency_ms": 254.29429999712738,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 98,
+      "latency_ms": 291.5165000013076,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 99,
+      "latency_ms": 310.63039999935427,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 2,
+      "sample": 100,
+      "latency_ms": 293.61749999952735,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 1,
+      "latency_ms": 285.86840000207303,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 2,
+      "latency_ms": 270.6326000006811,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 3,
+      "latency_ms": 256.8447000012384,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 4,
+      "latency_ms": 258.94659999903524,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 5,
+      "latency_ms": 272.6442999992287,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 6,
+      "latency_ms": 292.95990000173333,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 7,
+      "latency_ms": 265.81350000196835,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 8,
+      "latency_ms": 259.94580000042333,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 9,
+      "latency_ms": 274.0580999998201,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 10,
+      "latency_ms": 266.0680000008142,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 11,
+      "latency_ms": 262.20069999908446,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 12,
+      "latency_ms": 260.365099999035,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 13,
+      "latency_ms": 258.94010000047274,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 14,
+      "latency_ms": 255.75250000110827,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 15,
+      "latency_ms": 275.7836999990104,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 16,
+      "latency_ms": 297.8103999994346,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 17,
+      "latency_ms": 270.33850000225357,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 18,
+      "latency_ms": 258.671299998241,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 19,
+      "latency_ms": 260.96469999902183,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 20,
+      "latency_ms": 265.07610000044224,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 21,
+      "latency_ms": 272.53120000023046,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 22,
+      "latency_ms": 268.86279999962426,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 23,
+      "latency_ms": 257.7445000024454,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 24,
+      "latency_ms": 261.0032000011415,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 25,
+      "latency_ms": 267.8721000011137,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 26,
+      "latency_ms": 257.79400000101305,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 27,
+      "latency_ms": 258.2460000012361,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 28,
+      "latency_ms": 256.2921999997343,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 29,
+      "latency_ms": 249.0168000003905,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 30,
+      "latency_ms": 259.1145999977016,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 31,
+      "latency_ms": 256.7716000012297,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 32,
+      "latency_ms": 255.31509999927948,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 33,
+      "latency_ms": 251.88669999988633,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 34,
+      "latency_ms": 258.21189999987837,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 35,
+      "latency_ms": 249.1976999990584,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 36,
+      "latency_ms": 255.34489999699872,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 37,
+      "latency_ms": 249.31819999983418,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 38,
+      "latency_ms": 260.5899000009231,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 39,
+      "latency_ms": 254.02049999684095,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 40,
+      "latency_ms": 258.98310000047786,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 41,
+      "latency_ms": 267.07860000169603,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 42,
+      "latency_ms": 251.8963000002259,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 43,
+      "latency_ms": 253.90150000021094,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 44,
+      "latency_ms": 250.69710000025225,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 45,
+      "latency_ms": 251.37869999889517,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 46,
+      "latency_ms": 257.27139999798965,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 47,
+      "latency_ms": 251.7457000030845,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 48,
+      "latency_ms": 251.12260000241804,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 49,
+      "latency_ms": 263.25220000217087,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 50,
+      "latency_ms": 256.70940000054543,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 51,
+      "latency_ms": 252.9291999999259,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 52,
+      "latency_ms": 252.45459999860032,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 53,
+      "latency_ms": 254.6619999993709,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 54,
+      "latency_ms": 255.36239999928512,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 55,
+      "latency_ms": 260.1057000028959,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 56,
+      "latency_ms": 253.40440000218223,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 57,
+      "latency_ms": 252.22779999967315,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 58,
+      "latency_ms": 254.59780000164756,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 59,
+      "latency_ms": 253.64089999857242,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 60,
+      "latency_ms": 254.8916999985522,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 61,
+      "latency_ms": 248.22599999970407,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 62,
+      "latency_ms": 256.6268999980821,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 63,
+      "latency_ms": 251.84580000131973,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 64,
+      "latency_ms": 289.9498000006133,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 65,
+      "latency_ms": 275.28959999835934,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 66,
+      "latency_ms": 254.64300000021467,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 67,
+      "latency_ms": 250.06890000076964,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 68,
+      "latency_ms": 256.4883999984886,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 69,
+      "latency_ms": 253.0202999987523,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 70,
+      "latency_ms": 259.19489999796497,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 71,
+      "latency_ms": 251.42509999932372,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 72,
+      "latency_ms": 249.32819999958156,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 73,
+      "latency_ms": 253.62440000026254,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 74,
+      "latency_ms": 253.79570000222884,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 75,
+      "latency_ms": 255.08629999967525,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 76,
+      "latency_ms": 265.4359999978624,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 77,
+      "latency_ms": 264.7885000005772,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 78,
+      "latency_ms": 254.40230000094743,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 79,
+      "latency_ms": 257.578900000226,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 80,
+      "latency_ms": 252.76730000041425,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 81,
+      "latency_ms": 257.6807000004919,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 82,
+      "latency_ms": 253.0406000005314,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 83,
+      "latency_ms": 254.15789999897243,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 84,
+      "latency_ms": 251.16459999844665,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 85,
+      "latency_ms": 260.42860000234214,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 86,
+      "latency_ms": 253.24380000165547,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 87,
+      "latency_ms": 252.29309999849647,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 88,
+      "latency_ms": 253.52270000075805,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 89,
+      "latency_ms": 255.28260000282899,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 90,
+      "latency_ms": 252.09130000075675,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 91,
+      "latency_ms": 250.14809999993304,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 92,
+      "latency_ms": 250.11989999984507,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 93,
+      "latency_ms": 256.1983000014152,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 94,
+      "latency_ms": 254.93209999694955,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 95,
+      "latency_ms": 252.38530000206083,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 96,
+      "latency_ms": 255.43610000022454,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 97,
+      "latency_ms": 257.28630000230623,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 98,
+      "latency_ms": 260.1439999998547,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 99,
+      "latency_ms": 250.73600000177976,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "n_plus_one",
+      "round": 3,
+      "sample": 100,
+      "latency_ms": 253.82489999901736,
+      "sql_queries": 101,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 1,
+      "latency_ms": 10.486799998034257,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 2,
+      "latency_ms": 10.898799999267794,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 3,
+      "latency_ms": 9.779700001672609,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 4,
+      "latency_ms": 8.190300002752338,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 5,
+      "latency_ms": 7.90689999848837,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 6,
+      "latency_ms": 8.231499999965308,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 7,
+      "latency_ms": 8.484800000587711,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 8,
+      "latency_ms": 29.3937000024016,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 9,
+      "latency_ms": 9.123200001340592,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 10,
+      "latency_ms": 8.731000001716893,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 11,
+      "latency_ms": 7.92860000001383,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 12,
+      "latency_ms": 9.543000000121538,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 13,
+      "latency_ms": 8.856700002070284,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 14,
+      "latency_ms": 8.1923999969149,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 15,
+      "latency_ms": 7.444200000463752,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 16,
+      "latency_ms": 8.473800000501797,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 17,
+      "latency_ms": 8.669200000440469,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 18,
+      "latency_ms": 7.883399997808738,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 19,
+      "latency_ms": 8.510999999998603,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 20,
+      "latency_ms": 9.427699998923345,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 21,
+      "latency_ms": 7.955999997648178,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 22,
+      "latency_ms": 8.939300001657102,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 23,
+      "latency_ms": 7.716699998127297,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 24,
+      "latency_ms": 9.898200001771329,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 25,
+      "latency_ms": 8.3178000022599,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 26,
+      "latency_ms": 8.270199999969918,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 27,
+      "latency_ms": 7.940699997561751,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 28,
+      "latency_ms": 9.304699997301213,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 29,
+      "latency_ms": 11.56740000078571,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 30,
+      "latency_ms": 9.361899999930756,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 31,
+      "latency_ms": 7.7543000006699,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 32,
+      "latency_ms": 9.75309999921592,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 33,
+      "latency_ms": 8.544100001017796,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 34,
+      "latency_ms": 9.063900000910508,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 35,
+      "latency_ms": 8.970999999291962,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 36,
+      "latency_ms": 7.967999998072628,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 37,
+      "latency_ms": 7.9657999995106366,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 38,
+      "latency_ms": 7.999199999176199,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 39,
+      "latency_ms": 9.48699999935343,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 40,
+      "latency_ms": 7.995600000867853,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 41,
+      "latency_ms": 9.296299998823088,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 42,
+      "latency_ms": 29.371100001299055,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 43,
+      "latency_ms": 7.946300000185147,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 44,
+      "latency_ms": 10.767799998575356,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 45,
+      "latency_ms": 8.699400001205504,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 46,
+      "latency_ms": 8.673500000440981,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 47,
+      "latency_ms": 8.231700001488207,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 48,
+      "latency_ms": 8.882300000550458,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 49,
+      "latency_ms": 8.006300002307398,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 50,
+      "latency_ms": 8.182900000974769,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 51,
+      "latency_ms": 8.753499998420011,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 52,
+      "latency_ms": 8.443799997621682,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 53,
+      "latency_ms": 8.078999999270309,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 54,
+      "latency_ms": 8.262299998023082,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 55,
+      "latency_ms": 9.149400000751484,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 56,
+      "latency_ms": 9.251200001017423,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 57,
+      "latency_ms": 8.251399998698616,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 58,
+      "latency_ms": 8.49710000329651,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 59,
+      "latency_ms": 8.111300001473865,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 60,
+      "latency_ms": 8.352799999556737,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 61,
+      "latency_ms": 8.041000000957865,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 62,
+      "latency_ms": 8.074199999100529,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 63,
+      "latency_ms": 8.273400002508424,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 64,
+      "latency_ms": 8.03280000036466,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 65,
+      "latency_ms": 7.895099999586819,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 66,
+      "latency_ms": 8.334699999977602,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 67,
+      "latency_ms": 7.900299999164417,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 68,
+      "latency_ms": 9.441900001547765,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 69,
+      "latency_ms": 8.718299999600276,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 70,
+      "latency_ms": 9.220800002367469,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 71,
+      "latency_ms": 8.092899999610381,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 72,
+      "latency_ms": 9.149299999990035,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 73,
+      "latency_ms": 11.852499999804422,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 74,
+      "latency_ms": 8.965799999714363,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 75,
+      "latency_ms": 28.2788000004075,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 76,
+      "latency_ms": 8.53609999830951,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 77,
+      "latency_ms": 9.973799998988397,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 78,
+      "latency_ms": 8.413300001848256,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 79,
+      "latency_ms": 8.178700001735706,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 80,
+      "latency_ms": 7.8377999998338055,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 81,
+      "latency_ms": 7.953500000439817,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 82,
+      "latency_ms": 8.088700000371318,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 83,
+      "latency_ms": 8.053099998505786,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 84,
+      "latency_ms": 7.802500000252621,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 85,
+      "latency_ms": 8.247599998867372,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 86,
+      "latency_ms": 7.896300001448253,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 87,
+      "latency_ms": 8.643600001960294,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 88,
+      "latency_ms": 9.523500000796048,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 89,
+      "latency_ms": 8.583099999668775,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 90,
+      "latency_ms": 7.863700000598328,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 91,
+      "latency_ms": 7.68439999956172,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 92,
+      "latency_ms": 10.26590000037686,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 93,
+      "latency_ms": 8.128599998599384,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 94,
+      "latency_ms": 8.508599999913713,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 95,
+      "latency_ms": 10.853299998416333,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 96,
+      "latency_ms": 8.602599998994265,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 97,
+      "latency_ms": 8.585300001868745,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 98,
+      "latency_ms": 8.933699999033706,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 99,
+      "latency_ms": 9.222100001352374,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 1,
+      "sample": 100,
+      "latency_ms": 9.313199996540789,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 1,
+      "latency_ms": 9.05359999887878,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 2,
+      "latency_ms": 8.051299999351613,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 3,
+      "latency_ms": 8.578299999498995,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 4,
+      "latency_ms": 8.397899997362401,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 5,
+      "latency_ms": 7.94799999857787,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 6,
+      "latency_ms": 8.02800000019488,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 7,
+      "latency_ms": 8.941100000811275,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 8,
+      "latency_ms": 30.389299998205388,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 9,
+      "latency_ms": 12.283800002478529,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 10,
+      "latency_ms": 9.474100002989871,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 11,
+      "latency_ms": 7.628700001077959,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 12,
+      "latency_ms": 10.973399999784306,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 13,
+      "latency_ms": 9.113100000831764,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 14,
+      "latency_ms": 8.786999998847023,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 15,
+      "latency_ms": 9.696199998870725,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 16,
+      "latency_ms": 9.778899999218993,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 17,
+      "latency_ms": 12.536599999293685,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 18,
+      "latency_ms": 10.52960000015446,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 19,
+      "latency_ms": 12.204399998154258,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 20,
+      "latency_ms": 10.30719999835128,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 21,
+      "latency_ms": 11.946799997531343,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 22,
+      "latency_ms": 14.003600001160521,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 23,
+      "latency_ms": 12.879399997473229,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 24,
+      "latency_ms": 10.891000001720386,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 25,
+      "latency_ms": 11.15139999819803,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 26,
+      "latency_ms": 10.385600002337014,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 27,
+      "latency_ms": 10.388800001237541,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 28,
+      "latency_ms": 11.985299999651033,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 29,
+      "latency_ms": 11.037000000214903,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 30,
+      "latency_ms": 11.643500001810025,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 31,
+      "latency_ms": 12.77490000211401,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 32,
+      "latency_ms": 13.21520000055898,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 33,
+      "latency_ms": 9.828700000070967,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 34,
+      "latency_ms": 8.07370000256924,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 35,
+      "latency_ms": 8.52370000211522,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 36,
+      "latency_ms": 7.753599998977734,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 37,
+      "latency_ms": 8.671899999171728,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 38,
+      "latency_ms": 9.210300002450822,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 39,
+      "latency_ms": 7.904199999757111,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 40,
+      "latency_ms": 8.035499999095919,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 41,
+      "latency_ms": 25.550999998813495,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 42,
+      "latency_ms": 9.6415000007255,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 43,
+      "latency_ms": 9.178399999655085,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 44,
+      "latency_ms": 8.119300000544172,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 45,
+      "latency_ms": 11.113399999885587,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 46,
+      "latency_ms": 7.967599998664809,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 47,
+      "latency_ms": 11.024499999621185,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 48,
+      "latency_ms": 8.875899999111425,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 49,
+      "latency_ms": 8.248400001320988,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 50,
+      "latency_ms": 9.892199999740114,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 51,
+      "latency_ms": 7.827800000086427,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 52,
+      "latency_ms": 8.070399999269284,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 53,
+      "latency_ms": 7.575600000564009,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 54,
+      "latency_ms": 8.444800001598196,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 55,
+      "latency_ms": 10.388600003352622,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 56,
+      "latency_ms": 8.561200000258395,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 57,
+      "latency_ms": 8.145499999955064,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 58,
+      "latency_ms": 8.452100002614316,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 59,
+      "latency_ms": 7.995399999344954,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 60,
+      "latency_ms": 7.702299997617956,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 61,
+      "latency_ms": 8.245900000474649,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 62,
+      "latency_ms": 8.29149999844958,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 63,
+      "latency_ms": 8.454199996776879,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 64,
+      "latency_ms": 9.200600001349812,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 65,
+      "latency_ms": 8.390399998461362,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 66,
+      "latency_ms": 9.610300003259908,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 67,
+      "latency_ms": 8.529600003384985,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 68,
+      "latency_ms": 7.750200002192287,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 69,
+      "latency_ms": 7.487800001399592,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 70,
+      "latency_ms": 8.43199999872013,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 71,
+      "latency_ms": 7.695299998886185,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 72,
+      "latency_ms": 8.249999998952262,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 73,
+      "latency_ms": 8.319699998537544,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 74,
+      "latency_ms": 28.323399998043897,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 75,
+      "latency_ms": 8.761500001128297,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 76,
+      "latency_ms": 11.246800000662915,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 77,
+      "latency_ms": 9.968899998057168,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 78,
+      "latency_ms": 9.174200000416022,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 79,
+      "latency_ms": 9.529400002065813,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 80,
+      "latency_ms": 8.35689999803435,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 81,
+      "latency_ms": 7.697100001678336,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 82,
+      "latency_ms": 8.37870000032126,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 83,
+      "latency_ms": 8.179100001143524,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 84,
+      "latency_ms": 8.289899997180328,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 85,
+      "latency_ms": 7.773199999064673,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 86,
+      "latency_ms": 8.444700000836747,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 87,
+      "latency_ms": 8.30599999972037,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 88,
+      "latency_ms": 8.301800000481308,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 89,
+      "latency_ms": 7.562900002085371,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 90,
+      "latency_ms": 7.88490000195452,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 91,
+      "latency_ms": 8.33010000133072,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 92,
+      "latency_ms": 7.941200001368998,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 93,
+      "latency_ms": 8.074000001215609,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 94,
+      "latency_ms": 8.122999999613967,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 95,
+      "latency_ms": 8.010100002138643,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 96,
+      "latency_ms": 9.753999998793006,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 97,
+      "latency_ms": 8.76310000239755,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 98,
+      "latency_ms": 8.077999998931773,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 99,
+      "latency_ms": 8.530299997801194,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 2,
+      "sample": 100,
+      "latency_ms": 9.003999999549706,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 1,
+      "latency_ms": 8.101699997496326,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 2,
+      "latency_ms": 9.093399999983376,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 3,
+      "latency_ms": 8.225599998695543,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 4,
+      "latency_ms": 7.689599999139318,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 5,
+      "latency_ms": 8.984199997939868,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 6,
+      "latency_ms": 7.975999997142935,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 7,
+      "latency_ms": 28.31009999863454,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 8,
+      "latency_ms": 9.190600001602434,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 9,
+      "latency_ms": 8.329000000230735,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 10,
+      "latency_ms": 9.351900000183377,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 11,
+      "latency_ms": 8.54329999856418,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 12,
+      "latency_ms": 8.319100001244806,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 13,
+      "latency_ms": 8.394600001338404,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 14,
+      "latency_ms": 7.631999997101957,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 15,
+      "latency_ms": 7.9336999988299794,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 16,
+      "latency_ms": 8.635700000013458,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 17,
+      "latency_ms": 8.389999999053543,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 18,
+      "latency_ms": 8.611499997641658,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 19,
+      "latency_ms": 9.283299998060102,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 20,
+      "latency_ms": 7.902900000772206,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 21,
+      "latency_ms": 8.309199998620898,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 22,
+      "latency_ms": 10.651500000676606,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 23,
+      "latency_ms": 8.377900001505623,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 24,
+      "latency_ms": 8.680700000695651,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 25,
+      "latency_ms": 7.703800001763739,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 26,
+      "latency_ms": 8.316399998875568,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 27,
+      "latency_ms": 7.763999998132931,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 28,
+      "latency_ms": 8.221799998864299,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 29,
+      "latency_ms": 7.946400000946596,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 30,
+      "latency_ms": 10.530499999731546,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 31,
+      "latency_ms": 8.482599998387741,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 32,
+      "latency_ms": 8.087199999863515,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 33,
+      "latency_ms": 8.718699999008095,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 34,
+      "latency_ms": 7.884000002377434,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 35,
+      "latency_ms": 9.20860000042012,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 36,
+      "latency_ms": 8.152500002324814,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 37,
+      "latency_ms": 8.20949999979348,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 38,
+      "latency_ms": 7.677599998714868,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 39,
+      "latency_ms": 8.22150000021793,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 40,
+      "latency_ms": 29.076299997541355,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 41,
+      "latency_ms": 9.087200000067241,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 42,
+      "latency_ms": 8.129900001222268,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 43,
+      "latency_ms": 7.668100002774736,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 44,
+      "latency_ms": 9.132200000749435,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 45,
+      "latency_ms": 9.790399999474175,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 46,
+      "latency_ms": 7.6502000010805205,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 47,
+      "latency_ms": 9.115999997447943,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 48,
+      "latency_ms": 8.377500002097804,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 49,
+      "latency_ms": 9.164600000076462,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 50,
+      "latency_ms": 8.218300001317402,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 51,
+      "latency_ms": 8.71720000213827,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 52,
+      "latency_ms": 7.834500000171829,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 53,
+      "latency_ms": 8.319799999298993,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 54,
+      "latency_ms": 8.655900001031114,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 55,
+      "latency_ms": 7.705199997872114,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 56,
+      "latency_ms": 8.106199999019736,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 57,
+      "latency_ms": 9.323800000856863,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 58,
+      "latency_ms": 9.785300000658026,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 59,
+      "latency_ms": 7.842099999834318,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 60,
+      "latency_ms": 9.33929999882821,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 61,
+      "latency_ms": 8.859199999278644,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 62,
+      "latency_ms": 8.22390000030282,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 63,
+      "latency_ms": 8.239399998274166,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 64,
+      "latency_ms": 7.688100002269493,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 65,
+      "latency_ms": 8.196300001145573,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 66,
+      "latency_ms": 8.508999999321532,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 67,
+      "latency_ms": 7.9430000005231705,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 68,
+      "latency_ms": 7.6253000006545335,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 69,
+      "latency_ms": 9.496800001215888,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 70,
+      "latency_ms": 7.7676000000792556,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 71,
+      "latency_ms": 8.182399997167522,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 72,
+      "latency_ms": 9.967399997549364,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 73,
+      "latency_ms": 27.776200000516837,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 74,
+      "latency_ms": 9.94419999915408,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 75,
+      "latency_ms": 8.505400001013186,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 76,
+      "latency_ms": 7.545100001152605,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 77,
+      "latency_ms": 8.17520000055083,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 78,
+      "latency_ms": 9.328699998150114,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 79,
+      "latency_ms": 8.239399998274166,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 80,
+      "latency_ms": 8.953800002927892,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 81,
+      "latency_ms": 8.21449999784818,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 82,
+      "latency_ms": 8.74140000087209,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 83,
+      "latency_ms": 9.113100000831764,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 84,
+      "latency_ms": 8.862099999532802,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 85,
+      "latency_ms": 7.946800000354415,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 86,
+      "latency_ms": 8.349900002940558,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 87,
+      "latency_ms": 8.29650000014226,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 88,
+      "latency_ms": 7.942000000184635,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 89,
+      "latency_ms": 9.469499997067032,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 90,
+      "latency_ms": 9.353199999168282,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 91,
+      "latency_ms": 7.771799999318318,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 92,
+      "latency_ms": 8.198999999876833,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 93,
+      "latency_ms": 8.114600001135841,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 94,
+      "latency_ms": 8.089799997833325,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 95,
+      "latency_ms": 8.527699999831384,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 96,
+      "latency_ms": 7.830399998056237,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 97,
+      "latency_ms": 8.111099999950966,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 98,
+      "latency_ms": 9.07780000125058,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 99,
+      "latency_ms": 8.405300002777949,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    },
+    {
+      "strategy": "joined",
+      "round": 3,
+      "sample": 100,
+      "latency_ms": 8.047300001635449,
+      "sql_queries": 1,
+      "returned": 100,
+      "error": null
+    }
+  ]
+}

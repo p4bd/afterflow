@@ -13,13 +13,30 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from datetime import date, datetime
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
 
 def _json_serializer(obj: object) -> str:
-    """JSON serializer with ensure_ascii=False for Chinese character support."""
-    return json.dumps(obj, ensure_ascii=False)
+    """JSON serializer with ensure_ascii=False for Chinese character support.
+
+    Handles ``datetime`` / ``date`` values which FastAPI Pydantic responses
+    frequently carry — ``create_case`` returns ``created_at`` / ``updated_at``
+    timestamps that flow into the SQL-backed idempotency cache as
+    ``response_json``. SQLAlchemy's default ``json.dumps`` raises
+    ``TypeError`` on those, so the lifespan-installed ``SqlIdempotencyStore``
+    would crash on every write if we did not normalise here.
+    """
+
+    def _default(value: object) -> object:
+        if isinstance(value, datetime):
+            return value.isoformat()
+        if isinstance(value, date):
+            return value.isoformat()
+        raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+
+    return json.dumps(obj, ensure_ascii=False, default=_default)
 
 
 logger = logging.getLogger(__name__)

@@ -35,6 +35,7 @@ def _graph_edge_pairs(graph) -> set[tuple[str, str]]:
 
 # ---- case evaluation graph ----
 
+
 def test_case_graph_routes_refund_issue_to_refund_decision():
     result = run_case_evaluation(order_id="ORDER-1001", issue_type="delivery_not_received", operator_refund_limit=20_000)
 
@@ -87,6 +88,7 @@ def test_case_graph_has_explicit_orchestration_topology():
 
 
 # ---- disposition lifecycle graph ----
+
 
 def _return_decision():
     # ORDER-1001 (PHONE-X) has high recovery, so a minor-damaged item is

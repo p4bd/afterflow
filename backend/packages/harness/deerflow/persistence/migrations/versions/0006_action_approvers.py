@@ -14,7 +14,12 @@ from alembic import op
 
 revision: str = "0006_action_approvers"
 down_revision: str | Sequence[str] | None = "0005_action_active_partial_index"
-branch_labels: str | Sequence[str] | None = None
+# Parallel branch with 0006_after_sales_idempotency: four-eyes approval
+# columns vs. idempotency cache. Both 0006_* must complete before 0008
+# runs (see depends_on on 0008_action_reserved, which gates 0008 on both
+# 0007_* revisions). ``branch_labels`` is informational and labels this
+# head so the parallel structure is visible in ``alembic history``.
+branch_labels: str | Sequence[str] | None = "after_sales_approvers"
 depends_on: str | Sequence[str] | None = None
 
 

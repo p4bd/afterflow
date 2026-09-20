@@ -23,9 +23,7 @@ async def client(tmp_path):
 
     app = FastAPI()
     app.state.after_sales_repo = AfterSalesRepository(async_sessionmaker(engine, expire_on_commit=False))
-    app.state.after_sales_refund_executor = MockRefundExecutor(
-        initial_balances={order_id: payment["refundable_balance"] for order_id, payment in PAYMENTS.items()}
-    )
+    app.state.after_sales_refund_executor = MockRefundExecutor(initial_balances={order_id: payment["refundable_balance"] for order_id, payment in PAYMENTS.items()})
 
     @app.middleware("http")
     async def fake_auth(request: Request, call_next):

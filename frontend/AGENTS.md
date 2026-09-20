@@ -5,7 +5,8 @@
 ## 产品入口
 
 - `/` 与 `/workspace`：进入 `/workspace/after-sales`。
-- `/workspace/after-sales`：售后审批台。
+- `/workspace/after-sales`：自然语言受理、案件列表与主管审批队列。
+- `/workspace/after-sales/[caseId]`：证据、方案、补证续办、回复草稿和事件时间线。
 - `/workspace/chats/new`：智能售后助手。
 - `/workspace/scheduled-tasks`：运营巡检。
 

@@ -69,10 +69,7 @@ def test_realistic_scenario_terminal_decision(scenario):
     actual = _decide(scenario)
 
     for field, expected in scenario["expect"].items():
-        assert actual[field] == expected, (
-            f"{scenario['id']}: field {field} = {actual.get(field)!r}, expected {expected!r}\n"
-            f"  scenario: {scenario['scenario']}"
-        )
+        assert actual[field] == expected, f"{scenario['id']}: field {field} = {actual.get(field)!r}, expected {expected!r}\n  scenario: {scenario['scenario']}"
 
 
 def test_scenarios_cover_a_spread_of_tiers():

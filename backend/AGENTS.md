@@ -19,9 +19,13 @@
 - `guardrail.py`：写工具调用前的 fail-closed 授权。
 - `repository.py`：案件、Action 和事件持久化。
 - `tools.py`：Agent 可调用的业务工具适配层。
+- `intake.py`：投诉字段规范化、证据快照与待补证状态。
+- `operations.py`：HTTP API 与 Agent Tool 共享的建案、续办、Action 创建和执行。
 - `mock_data.py`：可替换演示 Provider。
 
 API 与 Agent Tool 必须复用同一领域函数，不能分别实现状态规则。
+
+自然语言受理先持久化案件；模型给出的枚举在信任边界规范化。图片人工确认只允许从可信案件操作进入，聊天 Tool 不得直接设置。
 
 ## 开发规则
 

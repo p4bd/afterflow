@@ -27,10 +27,10 @@ class RiskLevel(StrEnum):
 
 
 class RiskTier(StrEnum):
-    AUTO = "auto"                        # no human sign-off (subject to operator limit)
-    REVIEW = "review"                    # one reviewer
-    SUPERVISOR = "supervisor"            # supervisor; self-approval forbidden
-    FOUR_EYES = "four_eyes"              # two distinct approvers
+    AUTO = "auto"  # no human sign-off (subject to operator limit)
+    REVIEW = "review"  # one reviewer
+    SUPERVISOR = "supervisor"  # supervisor; self-approval forbidden
+    FOUR_EYES = "four_eyes"  # two distinct approvers
 
 
 class ResolutionAction(StrEnum):

@@ -1,6 +1,6 @@
 ---
 name: after-sales-evidence
-description: Use for ecommerce refund evidence collection and contradiction checks across order, payment, logistics, customer history, and policy records.
+description: Use only to refresh a legacy or incomplete ecommerce after-sales Case. New complaints must use after-sales-intake, whose compound tool already collects this evidence.
 ---
 
 # After-sales Evidence
@@ -9,10 +9,10 @@ Build an evidence package before any resolution recommendation.
 
 ## Required checks
 
-1. Call `get_after_sales_order` and `get_after_sales_payment` for every case.
-2. For `delivery_not_received`, call `get_logistics_evidence`; distinguish carrier proof of delivery from a delivery status label.
-3. Call `get_customer_refund_risk` using the customer ID returned by the order tool. A risk signal is not proof of fraud.
-4. Call `get_after_sales_policy` using the order region. Preserve the policy ID and version.
+1. Reuse the persisted `evidence_json` returned by `create_after_sales_case` or `update_after_sales_case`; those compound tools already collect order, payment, logistics, risk, policy, inventory, and cost evidence. Do not repeat those reads for a fresh Case.
+2. Use the granular evidence tools only for an explicit refresh or a legacy Case without a complete evidence snapshot.
+3. For `delivery_not_received`, distinguish carrier proof of delivery from a delivery status label.
+4. Treat a risk signal as context, not proof of fraud, and preserve policy ID/version from the snapshot.
 5. For damaged or wrong-item cases, require confirmed visual evidence. If unavailable, return `needs_evidence` rather than guessing.
 
 Output facts, contradictions, missing evidence, and source tool names. Do not decide the amount in this skill.

@@ -53,7 +53,7 @@ def test_cancelled_is_terminal():
 
 
 def test_reverse_executor_is_idempotent_by_key():
-    executor = MockReverseExecutor()
+    executor = MockReverseExecutor(inventory={"KETTLE-SMART": 1})
 
     first = executor.dispatch(order_id="ORDER-1003", sku="KETTLE-SMART", kind="resend", idempotency_key="key-1")
     second = executor.dispatch(order_id="ORDER-1003", sku="KETTLE-SMART", kind="resend", idempotency_key="key-1")
@@ -61,10 +61,10 @@ def test_reverse_executor_is_idempotent_by_key():
     assert first == second
     assert first.startswith("MOCK-RESEND-")
     assert len(executor.outbound) == 1
+    assert executor.available("KETTLE-SMART") == 0
 
-    other = executor.dispatch(order_id="ORDER-1003", sku="KETTLE-SMART", kind="restock", idempotency_key="key-2")
-    assert other != first
-    assert len(executor.outbound) == 2
+    with pytest.raises(DispositionConflict, match="inventory"):
+        executor.dispatch(order_id="ORDER-1003", sku="KETTLE-SMART", kind="resend", idempotency_key="key-2")
 
 
 def _decided_return() -> ReverseDecision:

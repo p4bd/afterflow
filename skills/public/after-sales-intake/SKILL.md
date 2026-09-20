@@ -9,15 +9,16 @@ Turn an unstructured complaint into a traceable case without promising an outcom
 
 ## Procedure
 
-1. Obtain exactly one `order_id`. If it is absent or ambiguous, ask for it and stop.
-2. Map the complaint to one supported `issue_type`:
+1. Call `create_after_sales_case` with the original complaint immediately. This persists the work even when the order or issue is missing.
+2. If the result is `awaiting_clarification`, ask only for its `next_step`; then call `update_after_sales_case` on the same `case_id` with the confirmed answer.
+3. Map the complaint to one supported `issue_type`:
    - `delivery_not_received`
    - `damaged_item`
    - `wrong_item`
    - `quality_issue`
    - `refund_amount_dispute`
-3. Call `get_after_sales_order`. Treat tool output as the source of truth for paid amounts, customer, region, and order status.
-4. Record the customer's requested outcome separately from the policy-supported outcome.
-5. Hand off a compact case summary containing `order_id`, `issue_type`, customer statement, requested outcome, and known facts.
+4. Reuse the verified `evidence_json` and `decision_json` returned by `create_after_sales_case`. Do not repeat order, payment, logistics, risk, policy, inventory, cost, or evaluation calls unless an explicit refresh is requested.
+5. Record the customer's requested outcome separately from the policy-supported outcome.
+6. Hand off the persisted `case_id`, current status, next step, and compact verified summary. Never ask the user to copy an internal ID.
 
 Never infer an order ID, invent evidence, calculate a refund, or promise approval.

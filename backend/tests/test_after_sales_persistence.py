@@ -97,14 +97,16 @@ async def test_audit_event_chain_is_tamper_evident(repository):
 @pytest.mark.asyncio
 async def test_reaper_releases_expired_reservations(repository):
     case = await repository.create_case(
-        user_id="owner-1", thread_id=None, order_id="ORDER-1001",
-        issue_type="delivery_not_received", evidence={}, decision=_decision().model_dump(mode="json"),
+        user_id="owner-1",
+        thread_id=None,
+        order_id="ORDER-1001",
+        issue_type="delivery_not_received",
+        evidence={},
+        decision=_decision().model_dump(mode="json"),
     )
-    action = create_refund_action(case_id=case["id"], order_id="ORDER-1001", requested_by="owner-1",
-                                  decision=_decision(), now=datetime(2026, 7, 13, tzinfo=UTC))
+    action = create_refund_action(case_id=case["id"], order_id="ORDER-1001", requested_by="owner-1", decision=_decision(), now=datetime(2026, 7, 13, tzinfo=UTC))
     action = await repository.create_action(action, user_id="owner-1")
-    approved = approve_action(action, approver_id="admin-1", approver_roles={"admin"}, expected_version=1,
-                              now=datetime(2026, 7, 13, tzinfo=UTC))
+    approved = approve_action(action, approver_id="admin-1", approver_roles={"admin"}, expected_version=1, now=datetime(2026, 7, 13, tzinfo=UTC))
     approved = approved.model_copy(update={"reserved": True})
     approved = await repository.save_action(approved, user_id="owner-1", expected_version=1)
 
@@ -169,14 +171,11 @@ async def test_partial_unique_index_blocks_second_active_action(tmp_path):
     sf = async_sessionmaker(engine, expire_on_commit=False)
 
     async with sf() as session:
-        session.add(ServiceCaseRow(id="C-1", user_id="owner-1", thread_id=None, order_id="ORDER-1001",
-                                   issue_type="delivery_not_received", status="decided",
-                                   evidence_json={}, decision_json={}))
+        session.add(ServiceCaseRow(id="C-1", user_id="owner-1", thread_id=None, order_id="ORDER-1001", issue_type="delivery_not_received", status="decided", evidence_json={}, decision_json={}))
         await session.commit()
 
     now = datetime(2026, 7, 13, tzinfo=UTC)
-    first = create_refund_action(case_id="C-1", order_id="ORDER-1001", requested_by="owner-1",
-                                 decision=_decision(), now=now)
+    first = create_refund_action(case_id="C-1", order_id="ORDER-1001", requested_by="owner-1", decision=_decision(), now=now)
     first.id = "A-1"
     async with sf() as session:
         session.add(ActionRequestRow(**first.model_dump()))

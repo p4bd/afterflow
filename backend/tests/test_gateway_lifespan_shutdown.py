@@ -52,9 +52,7 @@ async def _run_lifespan_with_upload_staging_cleanup():
 
 
 def test_lifespan_sweeps_upload_staging_files_on_startup():
-    cleanup_upload_staging_files, close_oidc_service = asyncio.run(
-        _run_lifespan_with_upload_staging_cleanup()
-    )
+    cleanup_upload_staging_files, close_oidc_service = asyncio.run(_run_lifespan_with_upload_staging_cleanup())
 
     cleanup_upload_staging_files.assert_called_once_with()
     close_oidc_service.assert_awaited_once()

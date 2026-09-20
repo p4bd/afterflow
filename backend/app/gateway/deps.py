@@ -252,8 +252,22 @@ async def langgraph_runtime(app: FastAPI, startup_config: AppConfig) -> AsyncGen
         # Initialize repositories — one get_session_factory() call for all.
         sf = get_session_factory()
         if sf is not None:
+            from datetime import timedelta
+
             from app.after_sales.actions import get_mock_refund_executor
+            from app.after_sales.cancellation import CancellationRegistry
+            from app.after_sales.guardrail import (
+                AfterSalesGuardrailProvider,
+                AuditedAfterSalesGuardrailProvider,
+            )
+            from app.after_sales.idempotency import SqlIdempotencyStore
+            from app.after_sales.knowledge import set_knowledge_health_recorder
+            from app.after_sales.knowledge_health import (
+                SqlKnowledgeHealthRecorder,
+            )
             from app.after_sales.repository import AfterSalesRepository
+            from app.after_sales.tool_audit import SqlToolCallAuditor
+            from app.after_sales.tool_policy import ToolPolicyStore
             from deerflow.persistence.feedback import FeedbackRepository
             from deerflow.persistence.run import RunRepository
 
@@ -261,6 +275,63 @@ async def langgraph_runtime(app: FastAPI, startup_config: AppConfig) -> AsyncGen
             app.state.feedback_repo = FeedbackRepository(sf)
             app.state.after_sales_repo = AfterSalesRepository(sf)
             app.state.after_sales_refund_executor = get_mock_refund_executor()
+
+            # ------------------------------------------------------------------
+            # P0-A lifespan wiring: instantiate the 5 modules the audit report
+            # flagged as "未生产接线". Each module already has tests; the gap
+            # was that no production code path constructed and bound them to
+            # ``app.state``. Wiring them here closes that loop and exposes the
+            # singletons via ``request.app.state.*`` to routers, middlewares,
+            # and tools that need them.
+            # ------------------------------------------------------------------
+
+            # 1. Idempotency store: SQL-backed so retries survive process
+            #    restarts. TTL matches the documented 24h contract.
+            app.state.after_sales_idempotency_store = SqlIdempotencyStore(sf, ttl=timedelta(hours=24))
+
+            # 2. Guardrail provider: audit-wrapping variant. The inner
+            #    provider carries the same AfterSalesRepository used by the
+            #    actions layer; the auditor records every decision so the
+            #    operator can answer "why was this refund approved?" by
+            #    reading the audit chain. The lifespan-installed provider is
+            #    the single source of truth — config-driven middleware
+            #    loaders should NOT instantiate a second one or the audit
+            #    rows would double (see ``tool_error_handling_middleware``).
+            auditor = SqlToolCallAuditor(sf)
+            inner_provider = AfterSalesGuardrailProvider(repository=app.state.after_sales_repo)
+            app.state.after_sales_guardrail_provider = AuditedAfterSalesGuardrailProvider(
+                repository=app.state.after_sales_repo,
+                auditor=auditor,
+                case_id_resolver=lambda req: req.tool_input.get("case_id"),
+                inner=inner_provider,
+            )
+
+            # 3. Tool policy store: in-memory. The store is per-session and
+            #    resets when a new agent loop starts; persistence isn't
+            #    required because the lifetime is bounded by the run. The
+            #    Agent middleware reads ``record_step()`` and
+            #    ``check_and_record()`` from this instance via
+            #    ``app.state.after_sales_tool_policy_store``.
+            app.state.after_sales_tool_policy_store = ToolPolicyStore()
+
+            # 4. Cancellation registry: in-process. Per ADR-007, the
+            #    production contract is "in-process for the demo"; a
+            #    multi-process Gateway deployment would swap this for a
+            #    Redis-backed implementation behind the same Protocol.
+            #    The cancel-handler contract is unchanged across the swap.
+            app.state.after_sales_cancellation_registry = CancellationRegistry()
+
+            # 5. Knowledge health recorder: SQL-backed singleton row.
+            #    The lifespan also pushes the same instance onto the
+            #    module-level ``_health_recorder`` in ``knowledge.py``
+            #    (via ``set_knowledge_health_recorder``) so existing
+            #    callers using ``get_knowledge_health_recorder()`` route
+            #    through the persistent implementation. We do NOT keep a
+            #    parallel in-memory recorder on app.state — that would
+            #    silently desync the two and break the health snapshot.
+            sql_health = SqlKnowledgeHealthRecorder(sf)
+            set_knowledge_health_recorder(sql_health)
+            app.state.after_sales_knowledge_health_recorder = sql_health
         else:
             from deerflow.runtime.runs.store.memory import MemoryRunStore
 
@@ -268,6 +339,24 @@ async def langgraph_runtime(app: FastAPI, startup_config: AppConfig) -> AsyncGen
             app.state.feedback_repo = None
             app.state.after_sales_repo = None
             app.state.after_sales_refund_executor = None
+            # In-memory fallbacks so dependencies that read ``app.state.*``
+            # attributes always get something (even if the persistence
+            # engine is intentionally disabled for tests / demos). The
+            # behaviour diverges from the SQL case only in that nothing
+            # survives a process restart — acceptable when no DB is wired.
+            from app.after_sales.cancellation import CancellationRegistry
+            from app.after_sales.idempotency import InMemoryIdempotencyStore
+            from app.after_sales.knowledge import set_knowledge_health_recorder
+            from app.after_sales.knowledge_health import InMemoryKnowledgeHealthRecorder
+            from app.after_sales.tool_policy import ToolPolicyStore
+
+            app.state.after_sales_idempotency_store = InMemoryIdempotencyStore()
+            app.state.after_sales_guardrail_provider = None
+            app.state.after_sales_tool_policy_store = ToolPolicyStore()
+            app.state.after_sales_cancellation_registry = CancellationRegistry()
+            mem_health = InMemoryKnowledgeHealthRecorder()
+            set_knowledge_health_recorder(mem_health)
+            app.state.after_sales_knowledge_health_recorder = mem_health
 
         from deerflow.persistence.thread_meta import make_thread_store
 

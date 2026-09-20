@@ -1,0 +1,131 @@
+{
+  "generated_at": "2026-09-15T05:29:56.495386+00:00",
+  "model": "deepseek-v4-flash",
+  "config_version": 22,
+  "task_count": 12,
+  "repeats": 3,
+  "run_count": 36,
+  "successful_agent_runs": 36,
+  "case_creation_rate": 0.8333333333333334,
+  "fields_accuracy": 0.7222222222222222,
+  "terminal_accuracy": 0.75,
+  "human_intervention_accuracy": 0.75,
+  "reply_consistent_accuracy": 0.8333333333333334,
+  "average_tool_count": 4.5,
+  "average_latency_ms": 8976.694444444445,
+  "token_usage_available_runs": 0,
+  "average_total_tokens": null,
+  "failures": [
+    {
+      "task_id": "AGENT-002",
+      "attempt": 2,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": true,
+        "human_intervention": true,
+        "reply_consistent": true
+      }
+    },
+    {
+      "task_id": "AGENT-007",
+      "attempt": 2,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-007",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-009",
+      "attempt": 1,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-009",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": true
+      }
+    },
+    {
+      "task_id": "AGENT-010",
+      "attempt": 1,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-010",
+      "attempt": 2,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-010",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-012",
+      "attempt": 1,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": true
+      }
+    },
+    {
+      "task_id": "AGENT-012",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "fields": false,
+        "terminal": false,
+        "human_intervention": false,
+        "reply_consistent": true
+      }
+    }
+  ],
+  "raw_records": "runs-20260915T052956Z.jsonl"
+}

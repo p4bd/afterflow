@@ -83,3 +83,32 @@ async def test_subagents_and_stale_versions_are_denied():
     assert (await provider.aevaluate(request)).reasons[0].code == "after_sales.subagent_forbidden"
     request.is_subagent = False
     assert (await provider.aevaluate(request)).reasons[0].code == "after_sales.version_conflict"
+
+
+@pytest.mark.asyncio
+async def test_case_write_tools_require_trusted_identity_and_forbid_subagents():
+    provider = AfterSalesGuardrailProvider(repository=FakeRepository(None))
+    request = GuardrailRequest(tool_name="create_after_sales_case", tool_input={"complaint_text": "help"})
+    assert (await provider.aevaluate(request)).reasons[0].code == "after_sales.authentication_required"
+
+    request.user_id = "agent-1"
+    request.user_role = "user"
+    assert (await provider.aevaluate(request)).allow is True
+    request.is_subagent = True
+    assert (await provider.aevaluate(request)).reasons[0].code == "after_sales.subagent_forbidden"
+
+
+def test_sync_guardrail_allows_non_executing_case_writes_with_identity():
+    provider = AfterSalesGuardrailProvider(repository=FakeRepository(None))
+    request = GuardrailRequest(
+        tool_name="create_after_sales_case",
+        tool_input={"complaint_text": "help"},
+        user_id="agent-1",
+        user_role="user",
+    )
+    assert provider.evaluate(request).allow is True
+    request.is_subagent = True
+    assert provider.evaluate(request).reasons[0].code == "after_sales.subagent_forbidden"
+
+    execute = GuardrailRequest(tool_name="execute_approved_action", tool_input={}, user_id="admin-1", user_role="admin")
+    assert provider.evaluate(execute).reasons[0].code == "after_sales.async_required"

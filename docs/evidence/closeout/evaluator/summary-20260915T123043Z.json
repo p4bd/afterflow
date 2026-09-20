@@ -1,0 +1,194 @@
+{
+  "generated_at": "2026-09-15T12:30:43.713730+00:00",
+  "mode": "offline_rescore",
+  "source": "..\\docs\\evidence\\closeout\\historical-agent\\runs-20260915T052956Z.jsonl",
+  "source_sha256": "6bc5ac4e3b24f93cba01c6e1b5e55b9294348fc6b4c1ded6bbe3491b2579a152",
+  "task_set_sha256": "031cbb0a106e533f40cdc54db64d08d652e9c66bf144e737482dfbab2ae1d45d",
+  "run_count": 36,
+  "raw_records": "rescored-20260915T123043Z.jsonl",
+  "successful_agent_runs": 36,
+  "case_created_observed": 36,
+  "case_created_accuracy": 0.8333333333333334,
+  "order_id_match_observed": 36,
+  "order_id_match_accuracy": 0.8055555555555556,
+  "issue_type_match_observed": 36,
+  "issue_type_match_accuracy": 0.75,
+  "fields_joint_match_observed": 36,
+  "fields_joint_match_accuracy": 0.7222222222222222,
+  "stage_match_observed": 36,
+  "stage_match_accuracy": 0.75,
+  "human_intervention_match_observed": 36,
+  "human_intervention_match_accuracy": 0.75,
+  "forbidden_tools_absent_observed": 36,
+  "forbidden_tools_absent_accuracy": 1.0,
+  "agent_reply_consistent_observed": 34,
+  "agent_reply_consistent_accuracy": 0.9411764705882353,
+  "draft_reply_consistent_observed": 36,
+  "draft_reply_consistent_accuracy": 0.8333333333333334,
+  "average_tool_count": 4.5,
+  "average_latency_ms": 8976.694444444445,
+  "token_usage_available_runs": 0,
+  "average_total_tokens": null,
+  "failures": [
+    {
+      "task_id": "AGENT-002",
+      "attempt": 2,
+      "error": null,
+      "score": {
+        "case_created": true,
+        "order_id_match": true,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": true,
+        "human_intervention_match": true,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": true
+      }
+    },
+    {
+      "task_id": "AGENT-007",
+      "attempt": 2,
+      "error": null,
+      "score": {
+        "case_created": false,
+        "order_id_match": false,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-007",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "case_created": false,
+        "order_id_match": false,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-009",
+      "attempt": 1,
+      "error": null,
+      "score": {
+        "case_created": false,
+        "order_id_match": false,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-009",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "case_created": true,
+        "order_id_match": false,
+        "issue_type_match": true,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": false,
+        "draft_reply_consistent": true
+      }
+    },
+    {
+      "task_id": "AGENT-010",
+      "attempt": 1,
+      "error": null,
+      "score": {
+        "case_created": false,
+        "order_id_match": false,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-010",
+      "attempt": 2,
+      "error": null,
+      "score": {
+        "case_created": false,
+        "order_id_match": false,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-010",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "case_created": false,
+        "order_id_match": false,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": false
+      }
+    },
+    {
+      "task_id": "AGENT-012",
+      "attempt": 1,
+      "error": null,
+      "score": {
+        "case_created": true,
+        "order_id_match": true,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": true,
+        "draft_reply_consistent": true
+      }
+    },
+    {
+      "task_id": "AGENT-012",
+      "attempt": 3,
+      "error": null,
+      "score": {
+        "case_created": true,
+        "order_id_match": true,
+        "issue_type_match": false,
+        "fields_joint_match": false,
+        "stage_match": false,
+        "human_intervention_match": false,
+        "forbidden_tools_absent": true,
+        "agent_reply_consistent": false,
+        "draft_reply_consistent": true
+      }
+    }
+  ]
+}

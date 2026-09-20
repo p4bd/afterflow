@@ -85,6 +85,7 @@ class TestProviders:
             assert p.models
             assert p.default_model in p.models
 
+
 class TestBuildMinimalConfig:
     def test_produces_valid_yaml(self):
         content = build_minimal_config(
@@ -296,6 +297,7 @@ class TestBuildMinimalConfig:
         assert model["supports_thinking"] is True
         assert model["when_thinking_enabled"]["extra_body"]["thinking"]["type"] == "enabled"
         assert model["when_thinking_disabled"]["extra_body"]["thinking"]["type"] == "disabled"
+
 
 class TestThinkingSupport:
     def test_other_provider_requests_thinking_prompt(self):

@@ -32,9 +32,7 @@ def test_repeat_claims_force_high_and_supervisor():
 
 
 def test_pod_conflict_is_decisive_high():
-    assessment = assess_risk(
-        RiskSignals(is_delivery_not_received=True, carrier_has_proof_of_delivery=True)
-    )
+    assessment = assess_risk(RiskSignals(is_delivery_not_received=True, carrier_has_proof_of_delivery=True))
 
     assert assessment.level is RiskLevel.HIGH
     assert assessment.tier is RiskTier.SUPERVISOR
@@ -70,9 +68,7 @@ def test_medium_tier_from_elevated_claims_or_high_value():
 
 
 def test_device_reuse_and_young_account_stack_points():
-    risky = assess_risk(
-        RiskSignals(account_age_days=10, historical_refund_rate=0.4, address_changes_30d=3, device_reuse=True)
-    )
+    risky = assess_risk(RiskSignals(account_age_days=10, historical_refund_rate=0.4, address_changes_30d=3, device_reuse=True))
 
     assert risky.score == 8 + 15 + 10 + 20
     assert risky.level is RiskLevel.MEDIUM

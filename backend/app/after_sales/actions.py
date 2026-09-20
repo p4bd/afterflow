@@ -4,6 +4,7 @@ import hashlib
 import json
 import threading
 import uuid
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 
@@ -77,7 +78,11 @@ def create_refund_action(
     if decision.action not in {ResolutionAction.REFUND_ORIGINAL_PAYMENT, ResolutionAction.RETURN_AND_REFUND} or decision.refund_amount <= 0:
         raise ValueError("decision does not contain an executable refund")
     now = now or datetime.now(UTC)
-    payload = {"order_id": order_id, "amount": decision.refund_amount}
+    payload = {
+        "order_id": order_id,
+        "amount": decision.refund_amount,
+        **({"requires_return": True} if decision.action is ResolutionAction.RETURN_AND_REFUND else {}),
+    }
     auto_approved = not decision.approval_required and decision.risk_level is not RiskLevel.HIGH
     # Deterministic business idempotency key: the same case + action + payload
     # always derives the same key, so a retry replays instead of issuing a
@@ -104,6 +109,33 @@ def create_refund_action(
     )
 
 
+def create_resend_action(
+    *,
+    case_id: str,
+    order_id: str,
+    sku: str,
+    requested_by: str,
+    estimated_cost: int,
+    now: datetime | None = None,
+    ttl: timedelta = timedelta(hours=24),
+) -> ActionRequest:
+    """Create the single connected reverse action: returnless replacement dispatch."""
+    now = now or datetime.now(UTC)
+    payload = {"order_id": order_id, "sku": sku, "kind": "resend", "estimated_cost": estimated_cost}
+    return ActionRequest(
+        id=str(uuid.uuid4()),
+        case_id=case_id,
+        action_type="resend",
+        payload=payload,
+        payload_hash=payload_hash(payload),
+        status=ActionStatus.PENDING_APPROVAL,
+        risk_level=RiskLevel.MEDIUM,
+        requested_by=requested_by,
+        idempotency_key=hashlib.sha256(f"{case_id}:resend:{payload_hash(payload)}".encode()).hexdigest(),
+        expires_at=now + ttl,
+    )
+
+
 def approve_action(
     action: ActionRequest,
     *,
@@ -112,9 +144,17 @@ def approve_action(
     expected_version: int,
     now: datetime | None = None,
     comment: str | None = None,
+    balance_check: Callable[..., None] | None = None,
 ) -> ActionRequest:
     now = now or datetime.now(UTC)
     _check_decision(action, approver_id, approver_roles, expected_version, now)
+    # P0-3: re-check the available+reserved pool BEFORE flipping the action
+    # to APPROVED. If the pool has drained since create_refund_action, fail
+    # fast with ActionConflict rather than queuing an execute-time failure.
+    # The check is opt-in (None = skip) so unit tests that don't care about
+    # the executor can still drive the state machine.
+    if balance_check is not None and not action.reserved:
+        balance_check(order_id=action.payload.get("order_id", ""), amount=action.payload["amount"])
     if approver_id in action.approver_ids:
         raise ActionForbidden("approver already approved this action")
     approver_ids = [*action.approver_ids, approver_id]
@@ -246,9 +286,7 @@ class MockRefundExecutor:
             return self.transactions[idempotency_key]
 
 
-_mock_refund_executor = MockRefundExecutor(
-    initial_balances={order_id: payment["refundable_balance"] for order_id, payment in PAYMENTS.items()}
-)
+_mock_refund_executor = MockRefundExecutor(initial_balances={order_id: payment["refundable_balance"] for order_id, payment in PAYMENTS.items()})
 
 
 def get_mock_refund_executor() -> MockRefundExecutor:
@@ -275,10 +313,16 @@ def execute_approved_action(
     # payload is assumed consistent with its stored hash (written atomically).
     if payload_hash(payload) != action.payload_hash:
         raise ActionConflict("payload hash mismatch")
-    if current_refundable_balance < action.payload["amount"]:
+    if action.payload.get("requires_return"):
+        raise ActionConflict("return receipt and inspection required before refund execution")
+    if action.idempotency_key not in executor.transactions and current_refundable_balance < action.payload["amount"]:
         raise ActionConflict("refundable balance changed")
 
-    transaction_id = executor.refund(**action.payload, idempotency_key=action.idempotency_key)
+    transaction_id = executor.refund(
+        order_id=action.payload["order_id"],
+        amount=action.payload["amount"],
+        idempotency_key=action.idempotency_key,
+    )
     return action.model_copy(
         update={
             "status": ActionStatus.COMPLETED,
@@ -286,3 +330,31 @@ def execute_approved_action(
             "version": action.version + 1,
         }
     )
+
+
+def execute_approved_resend(
+    action: ActionRequest,
+    *,
+    payload: dict,
+    expected_version: int,
+    executor,
+    now: datetime | None = None,
+) -> ActionRequest:
+    now = now or datetime.now(UTC)
+    if action.action_type != "resend":
+        raise ActionConflict("action is not a resend")
+    if action.status is not ActionStatus.APPROVED:
+        raise ActionForbidden("action is not approved")
+    if action.version != expected_version:
+        raise ActionConflict("action version conflict")
+    if now >= action.expires_at:
+        raise ActionConflict("action expired")
+    if payload_hash(payload) != action.payload_hash:
+        raise ActionConflict("payload hash mismatch")
+    reference = executor.dispatch(
+        order_id=action.payload["order_id"],
+        sku=action.payload["sku"],
+        kind="resend",
+        idempotency_key=action.idempotency_key,
+    )
+    return action.model_copy(update={"status": ActionStatus.COMPLETED, "external_transaction_id": reference, "version": action.version + 1})

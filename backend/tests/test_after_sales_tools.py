@@ -7,6 +7,7 @@ import yaml
 from langchain_core.tools import BaseTool
 
 from app.after_sales.tools import (
+    create_after_sales_case_tool,
     evaluate_after_sales_case_tool,
     evaluate_reverse_fulfillment_tool,
     get_customer_risk_context_tool,
@@ -17,6 +18,7 @@ from app.after_sales.tools import (
     get_replacement_inventory_tool,
     get_reverse_fulfillment_costs_tool,
     scan_after_sales_operations_tool,
+    update_after_sales_case_tool,
 )
 from deerflow.reflection.resolvers import resolve_variable
 
@@ -90,6 +92,11 @@ def test_evaluate_tool_limit_is_not_client_controllable():
     assert "operator_refund_limit" not in evaluate_after_sales_case_tool.args
 
 
+def test_evaluate_tool_normalizes_common_model_alias_and_rejects_unknown_values():
+    assert _invoke(evaluate_after_sales_case_tool, order_id="ORDER-1001", issue_type="not_received")["refund_amount"] == 90_900
+    assert _invoke(evaluate_after_sales_case_tool, order_id="ORDER-1001", issue_type="invented") == {"error": "UNSUPPORTED_ISSUE_TYPE"}
+
+
 def test_reverse_tools_use_inventory_cost_and_confirmed_visual_evidence():
     inventory = _invoke(get_replacement_inventory_tool, order_id="ORDER-1003")
     costs = _invoke(get_reverse_fulfillment_costs_tool, order_id="ORDER-1003")
@@ -116,12 +123,17 @@ def test_operations_scan_returns_ranked_traceable_alerts():
     assert {alert["dimension"] for alert in result["alerts"]} == {"sku", "carrier", "warehouse"}
 
 
-def test_example_config_registers_thirteen_loadable_after_sales_tools():
+def test_example_config_registers_fifteen_loadable_after_sales_tools():
     config = yaml.safe_load((Path(__file__).parents[2] / "config.example.yaml").read_text(encoding="utf-8"))
     tools = [item for item in config["tools"] if item.get("group") == "after-sales"]
 
-    assert len(tools) == 13
+    assert len(tools) == 15
     assert "after-sales" in {group["name"] for group in config["tool_groups"]}
     for item in tools:
         resolved = resolve_variable(item["use"])
         assert isinstance(resolved, BaseTool)
+
+
+def test_agent_case_tools_cannot_claim_human_visual_confirmation():
+    assert "visual_evidence_confirmed" not in create_after_sales_case_tool.args
+    assert "visual_evidence_confirmed" not in update_after_sales_case_tool.args

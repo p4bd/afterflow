@@ -19,6 +19,8 @@ LLM 不计算金额、不判断授权，也不能通过对话中的“已经批�
 
 ## 核心能力
 
+- 自然语言投诉直接建案，保存客户原话、期望、关联会话、待办与回复草稿；缺信息时原案件暂停并续办
+- 案件工作台聚合客户主张、权威事实、冲突、证据快照、方案、审批、执行凭证与事件时间线
 - 订单、支付、物流、客户历史和政策版本的跨系统取证
 - LangGraph 确定性编排：案件评估 StateGraph（取证→决策→按问题/风险路由）+ 退货处置生命周期 StateGraph（按残值分级路由 settle/dispose）
 - MCP client 知识检索：通过 MCP 调用外部 RAG 知识库（`search_after_sales_knowledge`）提供政策引用——inform 层，金额决策仍由确定性引擎 validate
@@ -34,13 +36,15 @@ LLM 不计算金额、不判断授权，也不能通过对话中的“已经批�
 
 ```text
 客户诉求
+  → 持久化案件与必要澄清
   → 订单/支付/物流/历史/政策取证
+  → 缺失/冲突时待补证并在原案件重评
   → 确定性决策与风险分级
   → Action Request
   → 人工审批或权限内自动批准
   → 余额/版本/hash/有效期二次校验
   → 幂等执行
-  → 交易凭证与审计事件
+  → 交易/出库凭证、状态一致的回复草稿与审计事件
 ```
 
 ## 项目结构
@@ -51,11 +55,14 @@ backend/app/gateway/routers/after_sales.py 审批与执行 API
 backend/tests/test_after_sales_*.py        领域与安全测试
 backend/tests/fixtures/after_sales_*       Gold cases 与 150 条评测集 + 场景样本
 frontend/src/app/workspace/after-sales/    售后审批台
+frontend/src/app/workspace/after-sales/[caseId]/ 案件详情与补证续办
 skills/public/after-sales-*/               领域 Skills
 skills/public/reverse-fulfillment/         逆向履约 Skill
 docs/ARCHITECTURE.md                       系统设计
 docs/EVALUATION.md                         评测方法与结果
 docs/DEMO.md                               面试演示脚本
+docs/INTERVIEW-CAPABILITY-GUIDE.md          面试讲解与追问入口
+docs/OPERATIONS.md / PERFORMANCE.md         恢复演练与性能证据
 ```
 
 ## 快速开始
@@ -70,7 +77,7 @@ make install
 make dev
 ```
 
-浏览器打开 `http://localhost:2026`。登录后默认进入售后审批台，侧边栏可进入智能售后助手和运营巡检。
+浏览器打开 `http://localhost:2026`。登录后默认进入售后案件工作台，直接粘贴客户投诉即可建案；主管审批队列在同一页面下方。
 
 ## 演示数据
 
@@ -88,19 +95,21 @@ make dev
 cd backend
 uv run pytest tests -k "after_sales or skillscan_native"
 uv run python scripts/evaluate_afterflow_baseline.py
+PYTHONPATH=.:packages/harness uv run python scripts/evaluate_afterflow_agent.py
 
 cd ../frontend
 pnpm check
 pnpm test
 ```
 
-同一份 150 条合同评测中，确定性引擎用于验证业务规则的精确执行；纯 LLM baseline 用于说明资金决策不应交给概率模型。它不是通用智能排行榜，详见 [docs/EVALUATION.md](docs/EVALUATION.md)。
+150 条合同集用于确定性规则回归；真实 Agent 评测使用 18 个自然语言任务各跑 3 次。显式售后路由与 Skill 白名单将严格任务完成率从 72.2% 提升到 100%，平均 Tool 调用 2.20→1.28，p95 延迟 11.64→6.35 秒，平均 Token 25,074→19,548；禁止 Tool 和持久化副作用避免率均为 100%。详见 [真实 Agent 优化与评测](docs/AGENT-EVALUATION-REPORT.md)、[评测方法](docs/EVALUATION.md) 和 [性能记录](docs/PERFORMANCE.md)。
 
 ## 当前边界
 
-- 订单、支付、物流、库存和退款执行器为可替换 Mock Provider
+- 订单、支付、物流、库存和退款执行器为可替换 Mock Provider；当前样例共 4 个订单
 - 图片证据协议已定义，实际 OCR/视觉模型待接入
-- 本地默认使用 SQLite，生产可切换 PostgreSQL
+- 本地默认单 Gateway + SQLite；换 PostgreSQL 本身不解决 Mock 账本和多实例执行一致性
+- 需退货方案在缺收货/质检记录时阻塞人工履约，尚未接完整 RMA 仓储链路
 - Demo 聚焦决策、安全和执行闭环，不宣称已连接真实支付系统
 
 ## License

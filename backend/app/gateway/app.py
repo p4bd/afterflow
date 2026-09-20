@@ -22,6 +22,7 @@ from app.gateway.routers import (
     input_polish,
     mcp,
     memory,
+    metrics,
     models,
     runs,
     scheduled_tasks,
@@ -387,6 +388,9 @@ This gateway provides runtime endpoints for agent runs plus custom endpoints for
 
     # AfterFlow vertical-agent cases and approvals are mounted at /api/after-sales
     app.include_router(after_sales.router)
+
+    # Prometheus /metrics endpoint. Internal scrape use only — no auth.
+    app.include_router(metrics.router)
 
     # Features API is mounted at /api/features
     app.include_router(features.router)

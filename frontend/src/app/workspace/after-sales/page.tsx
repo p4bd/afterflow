@@ -2,14 +2,14 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  AlertTriangle,
+  ArrowRight,
   CheckCircle2,
-  Clock3,
-  Fingerprint,
-  PackageCheck,
+  Plus,
   RefreshCw,
   ShieldCheck,
 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -22,308 +22,272 @@ import {
   WorkspaceHeader,
 } from "@/components/workspace/workspace-container";
 import {
+  afterSalesCasePath,
   approveAfterSalesAction,
   type AfterSalesAction,
+  buildCaseIntakeInput,
+  createAfterSalesCase,
   executeAfterSalesAction,
   fetchAfterSalesActions,
+  fetchAfterSalesCases,
   formatAfterSalesMoney,
   rejectAfterSalesAction,
 } from "@/core/after-sales";
 
-const statusText = {
+const caseStatus: Record<string, string> = {
+  awaiting_clarification: "待澄清",
+  awaiting_evidence: "待补证",
+  decided: "方案已生成",
   pending_approval: "待审批",
   approved: "待执行",
   rejected: "已拒绝",
+  execution_processing: "退款处理中",
   completed: "已完成",
 };
 
 export default function AfterSalesPage() {
+  const router = useRouter();
   const queryClient = useQueryClient();
-  const [comments, setComments] = useState<Record<string, string>>({});
-  const query = useQuery({
+  const [complaint, setComplaint] = useState("");
+  const [orderId, setOrderId] = useState("");
+  const cases = useQuery({
+    queryKey: ["after-sales-cases"],
+    queryFn: fetchAfterSalesCases,
+  });
+  const actions = useQuery({
     queryKey: ["after-sales-actions"],
     queryFn: fetchAfterSalesActions,
     refetchInterval: 15_000,
   });
-  const mutate = useMutation({
-    mutationFn: async ({
-      action,
-      operation,
-    }: {
-      action: AfterSalesAction;
-      operation: "approve" | "reject" | "execute";
-    }) => {
-      if (operation === "approve")
-        return approveAfterSalesAction(action, comments[action.id]);
-      if (operation === "reject")
-        return rejectAfterSalesAction(action, comments[action.id] ?? "");
-      return executeAfterSalesAction(action);
+  const intake = useMutation({
+    mutationFn: () =>
+      createAfterSalesCase(buildCaseIntakeInput(complaint, orderId)),
+    onSuccess: (created) => {
+      void queryClient.invalidateQueries({ queryKey: ["after-sales-cases"] });
+      router.push(afterSalesCasePath(created.id));
     },
-    onSuccess: () =>
-      void queryClient.invalidateQueries({ queryKey: ["after-sales-actions"] }),
     onError: (error: Error) => toast.error(error.message),
   });
-  const actions = query.data ?? [];
-  const pending = actions.filter(
-    (action) => action.status === "pending_approval",
-  ).length;
 
   return (
-    <WorkspaceContainer className="bg-[radial-gradient(circle_at_top_right,hsl(var(--muted))_0,transparent_32%)]">
+    <WorkspaceContainer>
       <WorkspaceHeader />
       <WorkspaceBody className="overflow-y-auto">
-        <div className="w-full max-w-6xl px-5 py-8 sm:px-8">
-          <div className="mb-8 flex flex-col justify-between gap-5 border-b pb-6 sm:flex-row sm:items-end">
+        <main className="mx-auto w-full max-w-6xl space-y-10 px-5 py-8 sm:px-8">
+          <header className="flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-end">
             <div>
-              <div className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-amber-700 uppercase dark:text-amber-400">
-                <ShieldCheck className="size-4" /> AfterFlow control desk
-              </div>
+              <p className="mb-2 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-amber-700 uppercase dark:text-amber-400">
+                <ShieldCheck className="size-4" /> AfterFlow case workspace
+              </p>
               <h1 className="text-3xl font-semibold tracking-tight">
-                售后审批台
+                售后案件工作台
               </h1>
-              <p className="text-muted-foreground mt-2 max-w-2xl text-sm">
-                核对证据、金额和政策版本。批准后仍会再次校验余额、版本和载荷哈希。
+              <p className="text-muted-foreground mt-2 text-sm">
+                从客户原话开始，证据、方案、审批与执行结果都留在同一案件。
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="border-border bg-background flex items-center gap-3 rounded-lg border px-4 py-2">
-                <span className="text-2xl font-semibold tabular-nums">
-                  {pending}
-                </span>
-                <span className="text-muted-foreground text-xs leading-tight">
-                  等待
-                  <br />
-                  主管决定
-                </span>
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => void query.refetch()}
-                aria-label="刷新审批队列"
-              >
-                <RefreshCw
-                  className={
-                    query.isFetching ? "size-4 animate-spin" : "size-4"
-                  }
-                />
-              </Button>
-            </div>
-          </div>
-
-          {query.isLoading && (
-            <p className="text-muted-foreground py-16 text-center">
-              正在加载审批队列…
-            </p>
-          )}
-          {query.error && (
-            <div className="border-destructive/30 bg-destructive/5 rounded-xl border p-5 text-sm">
-              无法加载审批队列：{query.error.message}
-            </div>
-          )}
-          {!query.isLoading && !query.error && actions.length === 0 && (
-            <div className="border-border bg-card rounded-2xl border border-dashed py-20 text-center">
-              <CheckCircle2 className="mx-auto mb-3 size-8 text-emerald-600" />
-              <p className="font-medium">审批队列已清空</p>
-              <p className="text-muted-foreground mt-1 text-sm">
-                新的高金额或高风险申请会出现在这里。
-              </p>
-            </div>
-          )}
-          <div className="grid gap-5">
-            {actions.map((action) => (
-              <ApprovalCard
-                key={action.id}
-                action={action}
-                comment={comments[action.id] ?? ""}
-                onComment={(value) =>
-                  setComments((current) => ({ ...current, [action.id]: value }))
-                }
-                onAction={(operation) => mutate.mutate({ action, operation })}
-                busy={
-                  mutate.isPending && mutate.variables?.action.id === action.id
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                void cases.refetch();
+                void actions.refetch();
+              }}
+              aria-label="刷新案件工作台"
+            >
+              <RefreshCw
+                className={
+                  cases.isFetching || actions.isFetching
+                    ? "size-4 animate-spin"
+                    : "size-4"
                 }
               />
-            ))}
-          </div>
-        </div>
+            </Button>
+          </header>
+
+          <section className="border-border bg-card rounded-2xl border p-5 shadow-sm sm:p-6">
+            <div className="mb-4 flex items-center gap-2">
+              <Plus className="size-5" />
+              <h2 className="text-lg font-semibold">新建案件</h2>
+            </div>
+            <label className="text-sm font-medium" htmlFor="complaint">
+              客户诉求原文
+            </label>
+            <textarea
+              id="complaint"
+              className="border-input bg-background focus-visible:ring-ring mt-2 min-h-28 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+              value={complaint}
+              onChange={(event) => setComplaint(event.target.value)}
+              placeholder="例如：买的耳机右边没声音，我想换一个。订单是 ORDER-1003。"
+            />
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+              <Input
+                value={orderId}
+                onChange={(event) => setOrderId(event.target.value)}
+                placeholder="订单号（可选，原文已包含则不用填）"
+              />
+              <Button
+                disabled={!complaint.trim() || intake.isPending}
+                onClick={() => intake.mutate()}
+                className="sm:min-w-32"
+              >
+                创建并评估
+              </Button>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-xl font-semibold">我的案件</h2>
+            {cases.isLoading && (
+              <p className="text-muted-foreground py-8 text-sm">
+                正在加载案件…
+              </p>
+            )}
+            {cases.error && (
+              <p className="text-destructive text-sm">
+                无法加载案件：{cases.error.message}
+              </p>
+            )}
+            {!cases.isLoading && !cases.error && !cases.data?.length && (
+              <div className="border-border text-muted-foreground rounded-xl border border-dashed py-10 text-center text-sm">
+                还没有案件，从上方粘贴一段客户投诉开始。
+              </div>
+            )}
+            <div className="grid gap-3 sm:grid-cols-2">
+              {cases.data?.map((item) => (
+                <Link
+                  key={item.id}
+                  href={afterSalesCasePath(item.id)}
+                  className="border-border bg-card hover:border-foreground/30 rounded-xl border p-5 transition-colors"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <Badge variant="outline">
+                      {caseStatus[item.status] ?? item.status}
+                    </Badge>
+                    <span className="text-muted-foreground font-mono text-xs">
+                      {item.order_id ?? "待确认订单"}
+                    </span>
+                  </div>
+                  <p className="mt-4 line-clamp-2 font-medium">
+                    {item.complaint_text || item.issue_type}
+                  </p>
+                  <p className="text-muted-foreground mt-3 flex items-center justify-between text-xs">
+                    下一步：{item.next_step}
+                    <ArrowRight className="size-4" />
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section className="border-t pt-8">
+            <h2 className="text-xl font-semibold">主管审批队列</h2>
+            <p className="text-muted-foreground mt-1 mb-4 text-sm">
+              审批身份来自登录会话，不接受聊天中的授权声明。
+            </p>
+            {!actions.isLoading && !actions.error && !actions.data?.length && (
+              <div className="border-border rounded-xl border border-dashed py-10 text-center">
+                <CheckCircle2 className="mx-auto mb-2 size-6 text-emerald-600" />
+                <p className="text-sm">审批队列已清空</p>
+              </div>
+            )}
+            <div className="grid gap-4">
+              {actions.data?.map((action) => (
+                <ApprovalCard key={action.id} action={action} />
+              ))}
+            </div>
+          </section>
+        </main>
       </WorkspaceBody>
     </WorkspaceContainer>
   );
 }
 
-function ApprovalCard({
-  action,
-  comment,
-  onComment,
-  onAction,
-  busy,
-}: {
-  action: AfterSalesAction;
-  comment: string;
-  onComment: (value: string) => void;
-  onAction: (operation: "approve" | "reject" | "execute") => void;
-  busy: boolean;
-}) {
-  const decision = action.case?.decision_json;
-  const stripe =
-    action.status === "pending_approval"
-      ? "bg-amber-500"
-      : action.status === "completed"
-        ? "bg-emerald-500"
-        : "bg-muted-foreground/40";
+function ApprovalCard({ action }: { action: AfterSalesAction }) {
+  const queryClient = useQueryClient();
+  const [comment, setComment] = useState("");
+  const mutation = useMutation({
+    mutationFn: (operation: "approve" | "reject" | "execute") => {
+      if (operation === "approve")
+        return approveAfterSalesAction(action, comment);
+      if (operation === "reject")
+        return rejectAfterSalesAction(action, comment);
+      return executeAfterSalesAction(action);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["after-sales-actions"] });
+      void queryClient.invalidateQueries({ queryKey: ["after-sales-cases"] });
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+  const amount = action.payload.amount ?? action.payload.estimated_cost;
   return (
-    <article className="border-border bg-card relative overflow-hidden rounded-2xl border shadow-sm">
-      <div className={`absolute inset-y-0 left-0 w-1.5 ${stripe}`} />
-      <div className="grid gap-6 p-6 pl-8 lg:grid-cols-[1.3fr_0.7fr]">
+    <article className="border-border bg-card rounded-xl border p-5 shadow-sm">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row">
         <div>
-          <div className="mb-5 flex flex-wrap items-center gap-2">
-            <Badge variant="outline">{statusText[action.status]}</Badge>
-            <Badge
-              variant={
-                action.risk_level === "high" ? "destructive" : "secondary"
-              }
-            >
-              风险 {action.risk_level}
-            </Badge>
-            <span className="text-muted-foreground ml-auto font-mono text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge>{caseStatus[action.status] ?? action.status}</Badge>
+            <Badge variant="secondary">风险 {action.risk_level}</Badge>
+            <span className="text-muted-foreground font-mono text-xs">
               v{action.version}
             </span>
           </div>
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-            <div>
-              <p className="text-muted-foreground text-xs">
-                订单 {action.payload.order_id}
-              </p>
-              <h2 className="mt-1 text-xl font-semibold break-words">
-                {action.case?.issue_type ?? action.action_type}
-              </h2>
-            </div>
-            <div className="text-left sm:text-right">
-              <p className="text-muted-foreground text-xs">原路退款</p>
-              <p className="mt-1 text-2xl font-semibold tabular-nums">
-                {formatAfterSalesMoney(action.payload.amount)}
-              </p>
-            </div>
-          </div>
-          <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
-            <Fact
-              icon={<PackageCheck />}
-              label="证据状态"
-              value={action.case ? "订单、支付、物流已快照" : "案件快照缺失"}
-            />
-            <Fact
-              icon={<Clock3 />}
-              label="审批有效期"
-              value={new Date(action.expires_at).toLocaleString("zh-CN")}
-            />
-            <Fact
-              icon={<ShieldCheck />}
-              label="审批原因"
-              value={
-                decision?.approval_reasons.length
-                  ? decision.approval_reasons.join("、")
-                  : "权限内自动批准"
-              }
-            />
-            <Fact
-              icon={<Fingerprint />}
-              label="政策版本"
-              value={
-                decision?.policy_refs.length
-                  ? decision.policy_refs.join("、")
-                  : "—"
-              }
-            />
-          </div>
-          {decision?.signals?.length ? (
-            <div className="mt-5 flex items-start gap-2 rounded-lg bg-amber-500/10 px-3 py-2 text-sm text-amber-900 dark:text-amber-200">
-              <AlertTriangle className="mt-0.5 size-4 shrink-0" />{" "}
-              {decision.signals.join("、")}
-            </div>
-          ) : null}
+          <p className="mt-3 font-semibold">
+            {action.action_type === "resend" ? "免退补发" : "原路退款"}
+          </p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            订单 {action.payload.order_id}
+            {amount !== undefined ? ` · ${formatAfterSalesMoney(amount)}` : ""}
+          </p>
+          {action.case && (
+            <Link
+              className="mt-3 inline-flex items-center gap-1 text-sm underline"
+              href={afterSalesCasePath(action.case_id)}
+            >
+              查看案件证据 <ArrowRight className="size-3" />
+            </Link>
+          )}
         </div>
-        <div className="border-border flex flex-col justify-between border-t pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
-          <div className="space-y-3 text-xs">
-            <p>
-              <span className="text-muted-foreground">申请人</span>
-              <br />
-              <span className="font-mono">{action.requested_by}</span>
-            </p>
-            <p className="break-all">
-              <span className="text-muted-foreground">载荷指纹</span>
-              <br />
-              <span className="font-mono">
-                {action.payload_hash.slice(0, 20)}…
-              </span>
-            </p>
-            {action.external_transaction_id && (
-              <p>
-                <span className="text-muted-foreground">支付凭证</span>
-                <br />
-                <span className="font-mono">
-                  {action.external_transaction_id}
-                </span>
-              </p>
-            )}
-          </div>
+        <div className="flex min-w-56 flex-col justify-end gap-2">
           {action.status === "pending_approval" && (
-            <div className="mt-6 space-y-3">
-              <Input
-                value={comment}
-                onChange={(event) => onComment(event.target.value)}
-                placeholder="审批备注；拒绝时必填"
-              />
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  variant="outline"
-                  disabled={busy || !comment.trim()}
-                  onClick={() => onAction("reject")}
-                >
-                  拒绝
-                </Button>
-                <Button disabled={busy} onClick={() => onAction("approve")}>
-                  批准退款
-                </Button>
-              </div>
+            <Input
+              value={comment}
+              onChange={(event) => setComment(event.target.value)}
+              placeholder="审批备注；拒绝时必填"
+            />
+          )}
+          {action.status === "pending_approval" && (
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                variant="outline"
+                disabled={!comment.trim() || mutation.isPending}
+                onClick={() => mutation.mutate("reject")}
+              >
+                拒绝
+              </Button>
+              <Button
+                disabled={mutation.isPending}
+                onClick={() => mutation.mutate("approve")}
+              >
+                批准
+              </Button>
             </div>
           )}
           {action.status === "approved" && (
             <Button
-              className="mt-6"
-              disabled={busy}
-              onClick={() => onAction("execute")}
+              disabled={mutation.isPending}
+              onClick={() => mutation.mutate("execute")}
             >
-              执行已批准退款
+              执行已批准动作
             </Button>
           )}
-          {action.status === "rejected" && (
-            <p className="bg-muted mt-6 rounded-lg p-3 text-sm">
-              拒绝原因：{action.comment}
+          {action.external_transaction_id && (
+            <p className="font-mono text-xs break-all">
+              凭证 {action.external_transaction_id}
             </p>
           )}
         </div>
       </div>
     </article>
-  );
-}
-
-function Fact({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="bg-muted/45 flex gap-3 rounded-lg p-3">
-      <span className="text-muted-foreground [&>svg]:size-4">{icon}</span>
-      <div>
-        <p className="text-muted-foreground text-xs">{label}</p>
-        <p className="mt-0.5">{value}</p>
-      </div>
-    </div>
   );
 }

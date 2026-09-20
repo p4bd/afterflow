@@ -132,12 +132,16 @@ def _refund_prompt(case_id: str, v: dict) -> str:
         f"操作员退款限额：{v['operator']} 分（超过需审批）\n"
         f"政策人工审核金额阈值：{v['manual']} 分；高价值金额阈值：{v['high']} 分\n"
         f"图片证据是否已人工确认：{'是' if v['visual'] else '否'}\n"
+        f"签收后申报小时数：{v.get('sign_receipt_hours')}；账户天数：{v.get('account_age_days')}\n"
+        f"历史退款率：{v.get('refund_rate')}；30 天改址次数：{v.get('address_changes', 0)}；设备复用：{v.get('device_reuse', False)}\n"
         "请输出："
         '{"eligibility": "eligible 或 eligible_with_approval 或 ineligible 或 needs_evidence", '
         '"action": "refund_original_payment 或 return_and_refund 或 manual_review", '
         '"refund_amount": <整数金额，单位分>, '
         '"risk_level": "low 或 medium 或 high", '
-        '"approval_required": true 或 false}'
+        '"approval_required": true 或 false, '
+        '"risk_score": <0-100整数>, '
+        '"risk_tier": "auto 或 review 或 supervisor 或 four_eyes"}'
     )
 
 
@@ -150,13 +154,14 @@ def _reverse_prompt(case_id: str, v: dict) -> str:
         f"商品价值/退款额：{v['refund']} 分\n"
         f"退货运费：{v['return_shipping']} 分，处理成本：{v['handling']} 分\n"
         f"预计残值回收：{v['recovery']} 分\n"
+        f"换货商品成本：{v.get('replacement_unit_cost', 7000)} 分，换货正向运费：{v.get('replacement_shipping_cost', 600)} 分\n"
         f"换货库存：{v['inventory']} 件\n"
         f"客户偏好：{pref}\n"
         f"图片证据是否已人工确认：{'是' if v['human'] else '否'}\n"
         "请输出："
         '{"outcome": "decided 或 needs_evidence 或 unsupported", '
-        '"action": "refund_without_return 或 return_and_refund 或 replace_after_return 或 manual_review", '
-        '"estimated_resolution_cost": <整数，单位分>}'
+        '"action": "refund_without_return 或 return_and_refund 或 replace_after_return 或 resend_without_return 或 manual_review", '
+        '"estimated_resolution_cost": <整数，单位分>, "requires_return": true 或 false}'
     )
 
 

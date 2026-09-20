@@ -14,6 +14,7 @@ from app.after_sales.actions import (
     execute_approved_action,
     reject_action,
 )
+from app.after_sales.operations import execute_case_action
 from app.after_sales.schemas import DecisionResult, Eligibility, ResolutionAction, RiskLevel
 
 NOW = datetime(2026, 7, 13, tzinfo=UTC)
@@ -220,6 +221,90 @@ def test_execution_consumes_the_reservation_not_the_available_pool():
     assert executor.balance_of("ORDER-1001") == 0
 
 
+def test_execution_recovers_existing_provider_result_after_action_save_failure():
+    action = approve_action(_pending(), approver_id="supervisor", approver_roles={"admin"}, expected_version=1, now=NOW)
+    executor = MockRefundExecutor(initial_balances={"ORDER-1001": 90_900})
+    assert executor.reserve(order_id="ORDER-1001", amount=90_900) is True
+
+    first_result = execute_approved_action(
+        action,
+        payload=action.payload,
+        expected_version=2,
+        current_refundable_balance=executor.reserved_of("ORDER-1001"),
+        executor=executor,
+        now=NOW,
+    )
+    recovered = execute_approved_action(
+        action,
+        payload=action.payload,
+        expected_version=2,
+        current_refundable_balance=executor.reserved_of("ORDER-1001"),
+        executor=executor,
+        now=NOW,
+    )
+
+    assert recovered.external_transaction_id == first_result.external_transaction_id
+    assert len(executor.transactions) == 1
+
+
+@pytest.mark.asyncio
+async def test_shared_execution_recovers_after_provider_success_and_repository_failure():
+    now = datetime.now(UTC)
+    action = create_refund_action(
+        case_id="CASE-1",
+        order_id="ORDER-1001",
+        requested_by="agent-user",
+        decision=_decision(),
+        now=now,
+    )
+    action = approve_action(action, approver_id="supervisor", approver_roles={"admin"}, expected_version=1, now=now)
+    executor = MockRefundExecutor(initial_balances={"ORDER-1001": 90_900})
+    assert executor.reserve(order_id="ORDER-1001", amount=90_900) is True
+
+    class FlakyRepository:
+        def __init__(self):
+            self.fail = True
+            self.saved = None
+            self.case_updates = []
+
+        async def save_action(self, updated, **_):
+            if self.fail:
+                self.fail = False
+                raise RuntimeError("injected database failure")
+            self.saved = updated
+            return updated
+
+        async def update_case(self, case_id, **kwargs):
+            self.case_updates.append((case_id, kwargs["values"]))
+
+    repo = FlakyRepository()
+    case = {"id": "CASE-1", "user_id": "agent-user", "order_id": "ORDER-1001", "version": 1}
+
+    with pytest.raises(RuntimeError, match="injected"):
+        await execute_case_action(
+            repo=repo,
+            action=action,
+            case=case,
+            payload=action.payload,
+            expected_version=action.version,
+            refund_executor=executor,
+            reverse_executor=None,
+        )
+    recovered = await execute_case_action(
+        repo=repo,
+        action=action,
+        case=case,
+        payload=action.payload,
+        expected_version=action.version,
+        refund_executor=executor,
+        reverse_executor=None,
+    )
+
+    assert recovered.external_transaction_id == next(iter(executor.transactions.values()))
+    assert len(executor.transactions) == 1
+    assert repo.case_updates[-1][1]["status"] == "execution_processing"
+
+
 def test_four_eyes_action_requires_two_distinct_approvers():
     decision = DecisionResult(
         eligibility=Eligibility.ELIGIBLE_WITH_APPROVAL,
@@ -290,10 +375,7 @@ def test_single_approval_action_approves_immediately():
     assert approved.status is ActionStatus.APPROVED
 
 
-def test_return_and_refund_decision_generates_executable_action():
-    # Damaged/wrong-item decisions produce RETURN_AND_REFUND with a computed
-    # refund_amount; that amount must be executable as a refund Action, not
-    # rejected by the boundary (regression for the broken C3 path).
+def test_return_and_refund_requires_receipt_and_inspection_before_execution():
     decision = DecisionResult(
         eligibility=Eligibility.ELIGIBLE_WITH_APPROVAL,
         action=ResolutionAction.RETURN_AND_REFUND,
@@ -313,5 +395,18 @@ def test_return_and_refund_decision_generates_executable_action():
         now=NOW,
     )
 
-    assert action.payload == {"order_id": "ORDER-1003", "amount": 31_600}
+    assert action.payload == {"order_id": "ORDER-1003", "amount": 31_600, "requires_return": True}
     assert action.status is ActionStatus.PENDING_APPROVAL
+
+    approved = approve_action(action, approver_id="supervisor", approver_roles={"admin"}, expected_version=1, now=NOW)
+    executor = MockRefundExecutor(initial_balances={"ORDER-1003": 31_600})
+    assert executor.reserve(order_id="ORDER-1003", amount=31_600) is True
+    with pytest.raises(ActionConflict, match="receipt and inspection"):
+        execute_approved_action(
+            approved,
+            payload=approved.payload,
+            expected_version=2,
+            current_refundable_balance=executor.reserved_of("ORDER-1003"),
+            executor=executor,
+            now=NOW,
+        )

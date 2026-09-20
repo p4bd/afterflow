@@ -7,11 +7,14 @@ adapter, mirroring the RMA state machine used in production OMS systems.
 """
 
 import hashlib
+import threading
 import uuid
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
 
 from pydantic import BaseModel
+
+from .mock_data import INVENTORY
 
 
 class DispositionStatus(StrEnum):
@@ -144,11 +147,30 @@ class MockReverseExecutor:
     same reference instead of creating a second outbound shipment.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, inventory: dict[str, int] | None = None) -> None:
         self.outbound: dict[str, str] = {}
+        self._inventory = inventory
+        self._lock = threading.Lock()
+
+    def available(self, sku: str) -> int | None:
+        return None if self._inventory is None else self._inventory.get(sku, 0)
 
     def dispatch(self, *, order_id: str, sku: str, kind: str, idempotency_key: str) -> str:
-        if idempotency_key not in self.outbound:
+        with self._lock:
+            if idempotency_key in self.outbound:
+                return self.outbound[idempotency_key]
+            if kind == "resend" and self._inventory is not None:
+                available = self._inventory.get(sku, 0)
+                if available < 1:
+                    raise DispositionConflict("replacement inventory unavailable")
+                self._inventory[sku] = available - 1
             digest = hashlib.sha256(f"{order_id}:{sku}:{kind}:{idempotency_key}".encode()).hexdigest()[:16]
             self.outbound[idempotency_key] = f"MOCK-{kind.upper()}-{digest}"
-        return self.outbound[idempotency_key]
+            return self.outbound[idempotency_key]
+
+
+_mock_reverse_executor = MockReverseExecutor(inventory={sku: item["available"] for sku, item in INVENTORY.items()})
+
+
+def get_mock_reverse_executor() -> MockReverseExecutor:
+    return _mock_reverse_executor
