@@ -28,6 +28,6 @@ class ToolCallAuditRow(Base):
     params_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     decision: Mapped[str] = mapped_column(String(16), nullable=False)
     reason_code: Mapped[str | None] = mapped_column(String(64), nullable=True)
-    latency_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    latency_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
     metadata_json: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)

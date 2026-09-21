@@ -8,12 +8,11 @@ This migration does two things at once:
 
 1. **Merge migration (P0-D)** — ``down_revision`` is a tuple of the two
    heads that existed when P0-D was resolved: ``0010_after_sales_knowledge_health``
-   (the ``after_sales_knowledge_health`` / ``after_sales_approvers`` branch)
-   and ``0007_tool_call_audit`` (the ``after_sales_idempotency`` /
-   ``after_sales_tool_audit`` branch). After this migration the DAG has a
-   single head again. ``depends_on`` on ``0008_action_reserved`` already
-   enforced correct upgrade ordering; the merge makes ``alembic upgrade
-   head`` (singular) work in CI without juggling branches.
+   (the four-eyes approval / hash-chain branch) and ``0007_tool_call_audit``
+   (the idempotency cache / tool-call audit branch). This revision is what
+   collapses the DAG back to a single head -- alembic applies every ancestor
+   of a revision before the revision itself, so both branches are guaranteed
+   complete before 0011 runs and before ``0012``/``head`` is reached.
 
 2. **Composite unique constraint (P0-B)** — ``case_events`` previously had
    only ``UNIQUE(id)`` and a global ``UNIQUE(seq)`` (added in 0009 as

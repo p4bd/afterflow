@@ -15,19 +15,17 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-from alembic import op
+
+from deerflow.persistence.migrations._helpers import safe_create_index, safe_create_table, safe_drop_table
 
 revision: str = "0007_tool_call_audit"
 down_revision: str | Sequence[str] | None = "0006_after_sales_idempotency"
-# Parallel branch with 0007_case_event_hash_chain: tool-call audit table
-# vs. hash-chain columns on case_events. 0008 depends on this revision
-# (via ``depends_on``) so the chain does not fork into two permanent heads.
-branch_labels: str | Sequence[str] | None = "after_sales_tool_audit"
+branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    op.create_table(
+    safe_create_table(
         "after_sales_tool_audit",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("case_id", sa.String(length=64), nullable=False),
@@ -41,9 +39,8 @@ def upgrade() -> None:
         sa.Column("recorded_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("metadata_json", sa.JSON(), nullable=False),
     )
-    op.create_index("ix_tool_audit_case_recorded", "after_sales_tool_audit", ["case_id", "recorded_at"])
+    safe_create_index("ix_tool_audit_case_recorded", "after_sales_tool_audit", ["case_id", "recorded_at"])
 
 
 def downgrade() -> None:
-    op.drop_index("ix_tool_audit_case_recorded", table_name="after_sales_tool_audit")
-    op.drop_table("after_sales_tool_audit")
+    safe_drop_table("after_sales_tool_audit")

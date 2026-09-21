@@ -1,8 +1,9 @@
-"""Idempotent helpers for alembic column revisions.
+"""Idempotent helpers for alembic schema revisions.
 
-Column revisions in ``versions/`` should use these helpers instead of raw
-``op.add_column`` / ``op.drop_column`` so re-running a column change against a
-DB that already has (or has already removed) the column is a safe no-op.
+Revisions in ``versions/`` should use these helpers instead of raw
+``op.create_table`` / ``op.create_index`` / ``op.add_column`` /
+``op.drop_column`` so re-running a schema change against a DB that already
+has (or has already removed) the object is a safe no-op.
 
 Two reasons we need idempotency:
 
@@ -13,8 +14,20 @@ Two reasons we need idempotency:
    be safe to re-run.
 
 2. **Same posture that made ``Base.metadata.create_all`` forgiving.**
-   ``create_all`` skips existing tables. Column migrations should mirror that
-   forgiving behavior by skipping columns already in the desired state.
+   ``create_all`` skips existing tables. Revisions should mirror that
+   forgiving behavior by skipping objects already in the desired state.
+
+The helpers come in table- and column-level pairs so a revision that both
+creates a table and indexes it reads symmetrically::
+
+    safe_create_table("after_sales_tool_audit", sa.Column(...), ...)
+    safe_create_index("ix_tool_audit_case_recorded", "after_sales_tool_audit", ["case_id", "recorded_at"])
+
+    safe_add_column("action_requests", sa.Column("approvers_required", sa.Integer(), ...))
+    safe_drop_column("action_requests", "approver_ids")
+
+Each ``safe_drop_*`` mirrors its ``safe_create_*`` so a downgrade that failed
+part-way can be retried.
 
 Drift warning
 -------------
@@ -37,6 +50,7 @@ operators to notice and decide.
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 import sqlalchemy as sa
 from alembic import op
@@ -97,11 +111,21 @@ def _normalize_type(value: object) -> str:
 # keeps a Postgres deployment quiet while still catching genuine type errors
 # like ``TEXT NOT NULL DEFAULT '{}'`` re-adds.
 #
+# ``STRING``/``VARCHAR`` is the same kind of alias: ``sa.String`` compiles to
+# ``VARCHAR`` on every dialect we support, so a ``String(64)`` column always
+# reflects back as ``VARCHAR(64)``. Not listing it produced a spurious
+# "drifts from the model definition" warning on every ``String`` column a
+# revision touched, which is exactly the noise that trains operators to
+# ignore the warning that matters.
+#
 # Add a new pair here ONLY when a real reflection-vs-model mismatch is
 # proven to be a false positive in a deployment -- not pre-emptively, since
 # overly broad equivalence would re-open the silent-drift hole this helper
 # exists to close.
-_EQUIVALENT_TYPE_FAMILIES: tuple[frozenset[str], ...] = (frozenset({"JSON", "JSONB"}),)
+_EQUIVALENT_TYPE_FAMILIES: tuple[frozenset[str], ...] = (
+    frozenset({"JSON", "JSONB"}),
+    frozenset({"STRING", "VARCHAR"}),
+)
 
 
 def _type_equivalent(actual: object, desired: object) -> bool:
@@ -187,3 +211,57 @@ def safe_drop_column(table: str, column_name: str) -> None:
         return
     with op.batch_alter_table(table) as batch:
         batch.drop_column(column_name)
+
+
+def safe_create_table(table: str, *args: Any, **kw: Any) -> None:
+    """``op.create_table`` that no-ops when the table already exists.
+
+    The table-level counterpart to :func:`safe_add_column`. Both are needed
+    because the legacy bootstrap branch (see ``persistence/bootstrap.py``)
+    stamps ``0001_baseline`` and then upgrades a database that may already
+    carry some of the post-baseline schema -- the branch's ``create_all``
+    backfill is restricted to ``_BASELINE_TABLE_NAMES``, but a legacy DB
+    provisioned by an unconditional-``create_all`` release can still already
+    hold a table that a later revision also creates. Without this guard that
+    revision dies with ``table ... already exists`` and the whole upgrade
+    aborts, leaving the DB stamped at a revision it never actually reached.
+
+    Mirroring ``create_all``'s forgiving behaviour (it skips existing tables)
+    is also what makes a retry safe after SQLite lock contention, which is
+    the documented posture for column revisions.
+
+    ``args`` / ``kw`` are forwarded verbatim to :func:`op.create_table`, so
+    ``sa.Column`` objects, constraints and ``**kw`` table options all work
+    as written in a normal revision.
+    """
+    if table in _inspector().get_table_names():
+        return
+    op.create_table(table, *args, **kw)
+
+
+def safe_create_index(name: str, table: str, columns: list[str], **kw: Any) -> None:
+    """``op.create_index`` that no-ops when the index or its table is absent.
+
+    - Missing table => nothing to index. Skip silently, on the same reasoning
+      as :func:`safe_add_column`: the revision's table is created by an
+      earlier revision that a legacy DB may or may not have reached.
+    - Index already present => no-op, so a retry does not raise
+      ``index ... already exists``.
+    """
+    insp = _inspector()
+    if table not in insp.get_table_names():
+        return
+    if name in {idx["name"] for idx in insp.get_indexes(table)}:
+        return
+    op.create_index(name, table, columns, **kw)
+
+
+def safe_drop_table(table: str) -> None:
+    """``op.drop_table`` that no-ops when the table is already gone.
+
+    Downgrade-side counterpart to :func:`safe_create_table`, so a downgrade
+    that partly ran before failing can be retried.
+    """
+    if table not in _inspector().get_table_names():
+        return
+    op.drop_table(table)

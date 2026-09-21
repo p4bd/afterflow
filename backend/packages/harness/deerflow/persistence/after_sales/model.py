@@ -1,3 +1,16 @@
+"""ORM rows for AfterFlow service cases, actions and audit events.
+
+``default=`` and ``server_default=`` are both declared on the same columns on
+purpose, and the pairing is load-bearing. ``default=`` is Python-side and emits
+no DDL; ``server_default=`` emits ``DEFAULT`` in ``CREATE TABLE``. Any column
+whose migration adds ``server_default`` must therefore carry one here too,
+otherwise ``Base.metadata.create_all`` (the empty-DB bootstrap branch) and the
+alembic chain (every other branch) produce different schemas for the same
+release -- a fresh install would reject a bare ``INSERT`` that an upgraded
+install accepts. ``tests/test_persistence_bootstrap.py::test_create_all_and_alembic_upgrade_produce_same_schema``
+is the guard: it reflects both paths and asserts the defaults match.
+"""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime
@@ -17,10 +30,10 @@ class ServiceCaseRow(Base):
     order_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     issue_type: Mapped[str | None] = mapped_column(String(32), nullable=True)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="decided", index=True)
-    complaint_text: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    complaint_text: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
     customer_expectation: Mapped[str | None] = mapped_column(String(32), nullable=True)
-    next_step: Mapped[str] = mapped_column(String(64), nullable=False, default="review_decision")
-    reply_draft: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    next_step: Mapped[str] = mapped_column(String(64), nullable=False, default="review_decision", server_default="review_decision")
+    reply_draft: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
     evidence_json: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
     decision_json: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
@@ -60,9 +73,9 @@ class ActionRequestRow(Base):
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
     external_transaction_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
-    approvers_required: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
-    approver_ids: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
-    reserved: Mapped[bool] = mapped_column(Integer, nullable=False, default=0)
+    approvers_required: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
+    approver_ids: Mapped[list] = mapped_column(JSON, nullable=False, default=list, server_default="[]")
+    reserved: Mapped[bool] = mapped_column(Integer, nullable=False, default=0, server_default="0")
 
 
 class CaseEventRow(Base):
@@ -90,8 +103,8 @@ class CaseEventRow(Base):
     run_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     trace_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     event_metadata: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
-    prev_hash: Mapped[str] = mapped_column(String(64), nullable=False, default="")
-    event_hash: Mapped[str] = mapped_column(String(64), nullable=False, default="")
+    prev_hash: Mapped[str] = mapped_column(String(64), nullable=False, default="", server_default="")
+    event_hash: Mapped[str] = mapped_column(String(64), nullable=False, default="", server_default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
     # Per-case monotonic sequence: orders the chain deterministically,
     # independent of uuid4/created_at ties when events land in the same

@@ -17,20 +17,17 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-from alembic import op
+
+from deerflow.persistence.migrations._helpers import safe_create_index, safe_create_table, safe_drop_table
 
 revision: str = "0006_after_sales_idempotency"
 down_revision: str | Sequence[str] | None = "0005_action_active_partial_index"
-# Parallel branch with 0006_action_approvers: idempotency cache table
-# while the sibling migration adds four-eyes columns. Both 0006_* must
-# complete before 0008 runs (see ``depends_on`` on 0008_action_reserved,
-# which gates 0008 on this revision without changing its down_revision).
-branch_labels: str | Sequence[str] | None = "after_sales_idempotency"
+branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    op.create_table(
+    safe_create_table(
         "after_sales_idempotency",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("key", sa.String(length=128), nullable=False),
@@ -42,9 +39,8 @@ def upgrade() -> None:
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
         sa.UniqueConstraint("key", "endpoint", name="uq_idempotency_key_endpoint"),
     )
-    op.create_index("ix_idempotency_expires_at", "after_sales_idempotency", ["expires_at"])
+    safe_create_index("ix_idempotency_expires_at", "after_sales_idempotency", ["expires_at"])
 
 
 def downgrade() -> None:
-    op.drop_index("ix_idempotency_expires_at", table_name="after_sales_idempotency")
-    op.drop_table("after_sales_idempotency")
+    safe_drop_table("after_sales_idempotency")

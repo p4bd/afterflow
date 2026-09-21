@@ -29,6 +29,15 @@ import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import create_async_engine
 
 # Pre-import models so Base.metadata is populated before bootstrap reads it.
+#
+# The product package is imported too, because its ``*_orm`` modules are what
+# register ``after_sales_idempotency`` / ``after_sales_tool_audit`` /
+# ``after_sales_knowledge_health``. The runtime package cannot do that itself
+# (it may not import ``app.*``), so in production the registration rides on
+# ``app.gateway.app`` importing its routers at module level. Without this
+# import the ``create_all`` side of the parity test would be missing those
+# three tables and the comparison below would report false drift.
+import app.after_sales  # noqa: F401
 import deerflow.persistence.models  # noqa: F401
 from deerflow.persistence.base import Base
 from deerflow.persistence.bootstrap import (
@@ -47,7 +56,11 @@ from deerflow.persistence.migrations._helpers import _normalize_default
 asyncio_test = pytest.mark.asyncio
 
 
-HEAD = "0003_scheduled_tasks"
+# Pinned head revision. Deliberately a literal rather than a lookup: if a new
+# revision is added (or head is renamed) without this constant being updated,
+# every ``== HEAD`` assertion below fails loudly instead of silently tracking
+# whatever the script tree happens to say.
+HEAD = "0012_after_sales_case_intake"
 BASELINE = "0001_baseline"
 
 
@@ -615,7 +628,7 @@ class TestDecideState:
 # ---------------------------------------------------------------------------
 
 
-def test_head_revision_is_token_usage_revision() -> None:
+def test_head_revision_matches_pinned_constant() -> None:
     assert _get_head_revision() == HEAD
 
 

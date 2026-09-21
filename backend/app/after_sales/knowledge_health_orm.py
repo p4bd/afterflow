@@ -28,9 +28,9 @@ class KnowledgeHealthRow(Base):
     __tablename__ = "after_sales_knowledge_health"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
-    attempt_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    fallback_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    consecutive_failures: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    attempt_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    fallback_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    consecutive_failures: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
     last_error: Mapped[str | None] = mapped_column(String(512), nullable=True)
     last_attempt_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))

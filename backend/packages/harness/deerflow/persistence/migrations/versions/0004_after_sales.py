@@ -10,7 +10,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-from alembic import op
+
+from deerflow.persistence.migrations._helpers import safe_create_index, safe_create_table, safe_drop_table
 
 revision: str = "0004_after_sales"
 down_revision: str | Sequence[str] | None = "0003_scheduled_tasks"
@@ -19,9 +20,12 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    if sa.inspect(op.get_bind()).has_table("service_cases"):
-        return
-    op.create_table(
+    # Each table is guarded independently. An early ``return`` on
+    # ``service_cases`` (the previous shape of this revision) would skip
+    # ``action_requests`` and ``case_events`` entirely on a DB that happened to
+    # have only the first of the three, leaving the schema half-built while
+    # alembic still stamped this revision as applied.
+    safe_create_table(
         "service_cases",
         sa.Column("id", sa.String(length=64), nullable=False),
         sa.Column("user_id", sa.String(length=64), nullable=False),
@@ -37,9 +41,9 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     for column in ("user_id", "thread_id", "order_id", "status"):
-        op.create_index(f"ix_service_cases_{column}", "service_cases", [column])
+        safe_create_index(f"ix_service_cases_{column}", "service_cases", [column])
 
-    op.create_table(
+    safe_create_table(
         "action_requests",
         sa.Column("id", sa.String(length=64), nullable=False),
         sa.Column("case_id", sa.String(length=64), nullable=False),
@@ -62,9 +66,9 @@ def upgrade() -> None:
         sa.UniqueConstraint("idempotency_key"),
     )
     for column in ("case_id", "status", "expires_at"):
-        op.create_index(f"ix_action_requests_{column}", "action_requests", [column])
+        safe_create_index(f"ix_action_requests_{column}", "action_requests", [column])
 
-    op.create_table(
+    safe_create_table(
         "case_events",
         sa.Column("id", sa.String(length=64), nullable=False),
         sa.Column("case_id", sa.String(length=64), nullable=False),
@@ -78,10 +82,10 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     for column in ("case_id", "event_type"):
-        op.create_index(f"ix_case_events_{column}", "case_events", [column])
+        safe_create_index(f"ix_case_events_{column}", "case_events", [column])
 
 
 def downgrade() -> None:
-    op.drop_table("case_events")
-    op.drop_table("action_requests")
-    op.drop_table("service_cases")
+    safe_drop_table("case_events")
+    safe_drop_table("action_requests")
+    safe_drop_table("service_cases")

@@ -28,7 +28,8 @@ from deerflow.persistence.bootstrap import bootstrap_schema
 pytestmark = pytest.mark.asyncio
 
 
-HEAD = "0003_scheduled_tasks"
+# Pinned head revision -- see the same constant in test_persistence_bootstrap.py.
+HEAD = "0012_after_sales_case_intake"
 
 
 def _url(tmp_path: Path) -> str:
