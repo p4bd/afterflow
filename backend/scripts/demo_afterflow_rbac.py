@@ -41,9 +41,7 @@ def _register(client: Client, email: str, password: str) -> bool:
 
 def _raw_status(client: Client, path: str, body: dict) -> tuple[int, str]:
     data = json.dumps(body).encode()
-    req = urllib.request.Request(
-        client.base + path, data=data,
-        headers={"Content-Type": "application/json"}, method="POST")
+    req = urllib.request.Request(client.base + path, data=data, headers={"Content-Type": "application/json"}, method="POST")
     try:
         with client.opener.open(req) as resp:
             return resp.status, resp.read().decode("utf-8")[:200]
@@ -76,21 +74,18 @@ def main() -> int:
 
     # 2) 客服尝试审批 → 角色门禁
     print("\n[2] 客服尝试审批自己的 Action（应被角色门禁拦截）")
-    code, detail = _raw_status(probe, f"/api/after-sales/actions/{action_id}/approve",
-                               {"expected_version": 1, "comment": "我想自己批准"})
+    code, detail = _raw_status(probe, f"/api/after-sales/actions/{action_id}/approve", {"expected_version": 1, "comment": "我想自己批准"})
     print(f"    -> [{code}] {detail}")
 
     # 3) 客服尝试执行 → 角色门禁
     print("\n[3] 客服尝试执行退款（应被角色门禁拦截）")
-    code, detail = _raw_status(probe, f"/api/after-sales/actions/{action_id}/execute",
-                               {"expected_version": 1, "payload": {"order_id": "ORDER-1002", "amount": 9900}})
+    code, detail = _raw_status(probe, f"/api/after-sales/actions/{action_id}/execute", {"expected_version": 1, "payload": {"order_id": "ORDER-1002", "amount": 9900}})
     print(f"    -> [{code}] {detail}")
 
     # 4) 主管审批客服发起的动作 → 成功（跨角色）
     print("\n[4] 主管登录 → 审批客服发起的 Action（跨角色，应成功）")
     admin = Client(args.base_url, args.admin_email, args.admin_password)
-    result = admin._request(f"/api/after-sales/actions/{action_id}/approve", method="POST",
-                            body={"expected_version": 1, "comment": "主管审批"})
+    result = admin._request(f"/api/after-sales/actions/{action_id}/approve", method="POST", body={"expected_version": 1, "comment": "主管审批"})
     print(f"    -> approved: version={result.get('version')} by={result.get('approved_by')}")
 
     # 5) 主管执行 → 成功
@@ -102,8 +97,7 @@ def main() -> int:
     print("\n[6] 主管自己发起高风险 Action 再自审批（应被自审批限制拦截）")
     own_case = admin.create_case("ORDER-1002", "delivery_not_received", limit=20000)
     own_action = admin._request(f"/api/after-sales/cases/{own_case['id']}/actions", method="POST")["id"]
-    code, detail = _raw_status(admin, f"/api/after-sales/actions/{own_action}/approve",
-                               {"expected_version": 1, "comment": "自己批自己"})
+    code, detail = _raw_status(admin, f"/api/after-sales/actions/{own_action}/approve", {"expected_version": 1, "comment": "自己批自己"})
     print(f"    -> [{code}] {detail}")
 
     print("\n" + "=" * 74)

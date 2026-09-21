@@ -130,13 +130,7 @@ export function RecentChatList() {
           : undefined,
       });
     },
-    [
-      deleteThread,
-      pathname,
-      router,
-      threadIdFromPath,
-      threads,
-    ],
+    [deleteThread, pathname, router, threadIdFromPath, threads],
   );
 
   const handleRenameClick = useCallback(

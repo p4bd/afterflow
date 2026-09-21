@@ -15,13 +15,14 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 import urllib.error
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "scripts"))
-from demo_afterflow import Client, DEFAULT_BASE  # noqa: E402
+from demo_afterflow import DEFAULT_BASE, Client  # noqa: E402
 
 
 def _create_case_action(client: Client, order: str, issue: str) -> tuple[str, str]:
@@ -33,7 +34,6 @@ def _create_case_action(client: Client, order: str, issue: str) -> tuple[str, st
 
 def _raw(client: Client, path: str, method: str, body: dict) -> tuple[int, str]:
     """Return (status_code, detail) even on HTTP errors, for display."""
-    data = json = None
     try:
         result = client._request(path, method=method, body=body)
         return 200, json.dumps(result, ensure_ascii=False)[:160]
@@ -104,6 +104,7 @@ def _api_expect(client: Client, op: str, action_id: str, *, version: int = 1, pa
     path_tpl, body = path_map[op]
     path = path_tpl.format(id=action_id)
     import json as _json
+
     req = __import__("urllib.request", fromlist=["Request"])
     opener = client.opener
     data = _json.dumps(body).encode()

@@ -16,7 +16,6 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useI18n } from "@/core/i18n/hooks";
 import { cn } from "@/lib/utils";
 
-
 export function WorkspaceContainer({
   className,
   children,

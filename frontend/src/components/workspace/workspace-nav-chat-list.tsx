@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CalendarClock,
-  ClipboardCheck,
-  Headset,
-} from "lucide-react";
+import { CalendarClock, ClipboardCheck, Headset } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -27,10 +23,7 @@ export function WorkspaceNavChatList() {
             isActive={pathname.startsWith("/workspace/chats")}
             asChild
           >
-            <Link
-              className="text-muted-foreground"
-              href="/workspace/chats/new"
-            >
+            <Link className="text-muted-foreground" href="/workspace/chats/new">
               <Headset />
               <span>{t.sidebar.chats}</span>
             </Link>

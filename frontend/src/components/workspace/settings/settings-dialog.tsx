@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  BellIcon,
-  PaletteIcon,
-  UserIcon,
-} from "lucide-react";
+import { BellIcon, PaletteIcon, UserIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import {
@@ -20,10 +16,7 @@ import { NotificationSettingsPage } from "@/components/workspace/settings/notifi
 import { useI18n } from "@/core/i18n/hooks";
 import { cn } from "@/lib/utils";
 
-type SettingsSection =
-  | "account"
-  | "appearance"
-  | "notification";
+type SettingsSection = "account" | "appearance" | "notification";
 
 type SettingsDialogProps = React.ComponentProps<typeof Dialog> & {
   defaultSection?: SettingsSection;

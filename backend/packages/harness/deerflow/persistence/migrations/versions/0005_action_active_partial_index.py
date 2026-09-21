@@ -21,11 +21,7 @@ depends_on: str | Sequence[str] | None = None
 def upgrade() -> None:
     if not sa.inspect(op.get_bind()).has_table("action_requests"):
         return
-    op.execute(
-        "CREATE UNIQUE INDEX IF NOT EXISTS uq_action_one_active_per_case "
-        "ON action_requests (case_id) "
-        "WHERE status IN ('pending_approval', 'approved')"
-    )
+    op.execute("CREATE UNIQUE INDEX IF NOT EXISTS uq_action_one_active_per_case ON action_requests (case_id) WHERE status IN ('pending_approval', 'approved')")
 
 
 def downgrade() -> None:
