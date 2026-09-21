@@ -68,6 +68,28 @@ skills:
 skill_scan:
   enabled: true
 
+tool_search:
+  # Defer MCP tool schemas out of the system prompt and expose them through
+  # the tool_search tool instead. Off by default: the after-sales tool set is
+  # small and loaded eagerly, so deferral only pays off once a deployment
+  # wires in enough MCP tools that the schemas dominate the prompt.
+  enabled: false
+  # Schemas auto-promoted from routing metadata per model call (clamped 1..5).
+  auto_promote_top_k: 3
+
+tool_output:
+  # Cap tool results before they reach the model. Anything over
+  # ``externalize_min_chars`` is written to disk and replaced with a preview
+  # plus a file reference; if that write is unavailable we fall back to
+  # head+tail truncation at ``fallback_max_chars``. Remaining keys
+  # (preview_head_chars, fallback_tail_chars, storage_subdir, ...) keep their
+  # defaults -- see config/tool_output_config.py.
+  enabled: true
+  externalize_min_chars: 12000
+  exempt_tools:
+    # Exempt so persist -> read_file -> persist cannot loop.
+    - read_file
+
 agents_api:
   enabled: false
 
