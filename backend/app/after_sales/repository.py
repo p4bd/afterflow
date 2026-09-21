@@ -1,7 +1,9 @@
 """SQL repository for AfterFlow cases, actions, and append-only audit events."""
 
+import asyncio
 import hashlib
 import json
+import random
 import uuid
 from datetime import UTC, datetime
 
@@ -12,6 +14,11 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from deerflow.persistence.after_sales.model import ActionRequestRow, CaseEventRow, ServiceCaseRow
 
 from .actions import ActionRequest, ActionStatus
+
+# Bounded retry budget for ``append_event``'s (case_id, seq) collision path.
+# Each attempt re-reads ``last`` and recomputes the seq, so the budget has to
+# cover the number of writers that can realistically collide in one burst.
+_MAX_APPEND_ATTEMPTS = 8
 
 
 class ConcurrentActionError(RuntimeError):
@@ -261,15 +268,16 @@ class AfterSalesRepository:
         Without it, two concurrent callers reading the same ``last`` row
         both compute ``last.seq + 1`` and both INSERT, forking the chain.
         With it, the second INSERT raises ``IntegrityError``; we re-read
-        ``last`` and retry. The retry is bounded (3 attempts) — beyond that
-        we surface the integrity failure to the caller rather than spin.
+        ``last`` and retry with jittered backoff. The retry is bounded
+        (``_MAX_APPEND_ATTEMPTS``) — beyond that we surface the integrity
+        failure to the caller rather than spin.
         """
         metadata = metadata or {}
         # Bounded retry on (case_id, seq) conflict. Each attempt re-reads
         # ``last`` inside its own transaction so a concurrent writer who
         # wins the race cannot leave us with a stale ``last`` and a doomed
         # computed seq.
-        for attempt in range(3):
+        for attempt in range(_MAX_APPEND_ATTEMPTS):
             async with self._sf() as session:
                 case_exists = await session.scalar(select(ServiceCaseRow.id).where(ServiceCaseRow.id == case_id, ServiceCaseRow.user_id == user_id))
                 if case_exists is None:
@@ -309,15 +317,24 @@ class AfterSalesRepository:
                     # case. Roll back, re-read last (a different writer
                     # has now committed), and try again with a fresh seq.
                     await session.rollback()
-                    if attempt == 2:
+                    if attempt == _MAX_APPEND_ATTEMPTS - 1:
                         # Out of retries: surface as a ConcurrentActionError
                         # rather than swallowing or letting an opaque
                         # IntegrityError leak into the API layer.
-                        raise ConcurrentActionError("case_event seq collision persisted across 3 append_event attempts") from None
+                        raise ConcurrentActionError(f"case_event seq collision persisted across {_MAX_APPEND_ATTEMPTS} append_event attempts") from None
+                    # Jittered exponential backoff before re-reading ``last``.
+                    # Retrying immediately leaves a burst of colliding writers
+                    # in lockstep: they all re-read on the same tick, all
+                    # recompute the same ``last.seq + 1``, and all lose again
+                    # -- so a budget of a few immediate retries can exhaust
+                    # under load even though each round has exactly one
+                    # winner. Spreading the retries decorrelates the burst, so
+                    # each round a loser observes a strictly larger ``last``.
+                    await asyncio.sleep(random.uniform(0, 0.001) * (2**attempt))
                     continue
                 await session.refresh(row)
                 return row.to_dict()
-        # Unreachable: the loop either returns or raises on attempt 2.
+        # Unreachable: the loop either returns or raises on the last attempt.
         raise ConcurrentActionError("append_event exhausted retry loop without committing")
 
     async def verify_event_chain(self, case_id: str) -> dict:
