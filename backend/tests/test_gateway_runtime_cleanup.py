@@ -124,47 +124,86 @@ def test_frontend_rewrites_langgraph_prefix_to_gateway():
     assert "langgraph-compat" not in api_client
 
 
-def test_smoke_test_docs_do_not_expect_standalone_langgraph_server():
-    smoke_files = {
-        ".agent/skills/smoke-test/SKILL.md": _read(".agent/skills/smoke-test/SKILL.md"),
-        ".agent/skills/smoke-test/references/SOP.md": _read(".agent/skills/smoke-test/references/SOP.md"),
-        ".agent/skills/smoke-test/references/troubleshooting.md": _read(".agent/skills/smoke-test/references/troubleshooting.md"),
-        ".agent/skills/smoke-test/scripts/check_local_env.sh": _read(".agent/skills/smoke-test/scripts/check_local_env.sh"),
-        ".agent/skills/smoke-test/scripts/deploy_local.sh": _read(".agent/skills/smoke-test/scripts/deploy_local.sh"),
-        ".agent/skills/smoke-test/scripts/health_check.sh": _read(".agent/skills/smoke-test/scripts/health_check.sh"),
-        ".agent/skills/smoke-test/templates/report.local.template.md": _read(".agent/skills/smoke-test/templates/report.local.template.md"),
-        ".agent/skills/smoke-test/templates/report.docker.template.md": _read(".agent/skills/smoke-test/templates/report.docker.template.md"),
-    }
+# ---------------------------------------------------------------------------
+# Docs / skills guards for the standalone-LangGraph-server removal.
+#
+# These three guards each pinned a hardcoded list of upstream DeerFlow paths
+# (``.agent/skills/smoke-test/**``, ``.github/copilot-instructions.md``,
+# ``backend/docs/AUTH_UPGRADE.md``, ...). This fork deleted every one of those
+# files, so the ``_read`` calls raised ``FileNotFoundError`` and the guards
+# stopped guarding anything at all.
+#
+# They now glob the doc / skill roots this fork actually ships. The intent is
+# unchanged -- no shipped doc may describe the standalone LangGraph service
+# (port 2024, ``langgraph dev``, ``langgraph.log``) now that the runtime is
+# Gateway-embedded -- but the guard follows the tree instead of a snapshot of
+# upstream's. Each guard asserts it matched at least one file, so removing an
+# entire doc root fails loudly rather than passing vacuously.
+# ---------------------------------------------------------------------------
 
-    for path, content in smoke_files.items():
-        assert "localhost:2024" not in content, path
-        assert "127.0.0.1:2024" not in content, path
-        assert "deer-flow-langgraph" not in content, path
-        assert "langgraph.log" not in content, path
-        assert "LangGraph service" not in content, path
-        assert "langgraph dev" not in content, path
+_TEXT_SUFFIXES = frozenset({".md", ".sh", ".yaml", ".yml", ".txt", ".py", ".json", ".js", ".ts", ".tsx"})
+
+_STANDALONE_SERVER_MARKERS = (
+    "localhost:2024",
+    "127.0.0.1:2024",
+    "deer-flow-langgraph",
+    "langgraph.log",
+    "LangGraph service",
+    "langgraph dev",
+    "Starts LangGraph",
+)
+
+_TRANSITION_MODE_MARKERS = (
+    "make dev-pro",
+    "./scripts/deploy.sh --gateway",
+    "docker compose --profile gateway",
+    "`/api/langgraph/*` → LangGraph",
+)
+
+
+def _glob_text_files(*patterns: str) -> dict[str, str]:
+    """Repo-relative path -> content for every text file matching *patterns*."""
+    found: dict[str, str] = {}
+    for pattern in patterns:
+        for path in sorted(REPO_ROOT.glob(pattern)):
+            if path.is_file() and path.suffix in _TEXT_SUFFIXES:
+                found[path.relative_to(REPO_ROOT).as_posix()] = path.read_text(encoding="utf-8")
+    return found
+
+
+def _named_text_files(*paths: str) -> dict[str, str]:
+    """Repo-relative path -> content for the named paths that exist."""
+    return {path: (REPO_ROOT / path).read_text(encoding="utf-8") for path in paths if (REPO_ROOT / path).is_file()}
+
+
+def _assert_markers_absent(files: dict[str, str], markers: tuple[str, ...], root: str) -> None:
+    assert files, f"guard matched no files under {root} -- that doc root was removed or renamed; update this test to point at where it moved"
+    for path, content in files.items():
+        for marker in markers:
+            assert marker not in content, f"{path} still references {marker!r}"
+
+
+def test_agent_skill_docs_do_not_expect_standalone_langgraph_server():
+    _assert_markers_absent(
+        _glob_text_files(".agent/skills/**/*", ".github/skills/**/*", "skills/**/*"),
+        _STANDALONE_SERVER_MARKERS,
+        ".agent/skills, .github/skills, skills",
+    )
 
 
 def test_gateway_runtime_docs_do_not_reference_transition_modes():
-    docs = {
-        "backend/docs/AUTH_UPGRADE.md": _read("backend/docs/AUTH_UPGRADE.md"),
-        "backend/docs/AUTH_TEST_DOCKER_GAP.md": _read("backend/docs/AUTH_TEST_DOCKER_GAP.md"),
-        "docs/CODE_CHANGE_SUMMARY_BY_FILE.md": _read("docs/CODE_CHANGE_SUMMARY_BY_FILE.md"),
-    }
-
-    for path, content in docs.items():
-        assert "make dev-pro" not in content, path
-        assert "./scripts/deploy.sh --gateway" not in content, path
-        assert "docker compose --profile gateway" not in content, path
-        assert "`/api/langgraph/*` → LangGraph" not in content, path
+    _assert_markers_absent(
+        _glob_text_files("docs/**/*", "backend/docs/**/*"),
+        _TRANSITION_MODE_MARKERS,
+        "docs, backend/docs",
+    )
 
 
 def test_agent_instruction_docs_do_not_reference_standalone_langgraph_server():
-    """Agent/Copilot instruction docs must describe only the Gateway-embedded
-    runtime — no standalone LangGraph service, port 2024, or langgraph.log."""
-    content = _read(".github/copilot-instructions.md")
-
-    assert "langgraph.log" not in content
-    assert "localhost:2024" not in content
-    assert "127.0.0.1:2024" not in content
-    assert "Starts LangGraph" not in content
+    """Agent instruction docs must describe only the Gateway-embedded runtime
+    -- no standalone LangGraph service, port 2024, or langgraph.log."""
+    _assert_markers_absent(
+        _named_text_files("AGENTS.md", "CLAUDE.md", "backend/AGENTS.md", "frontend/AGENTS.md"),
+        _STANDALONE_SERVER_MARKERS,
+        "AGENTS.md / CLAUDE.md",
+    )
