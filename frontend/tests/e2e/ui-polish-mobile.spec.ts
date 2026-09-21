@@ -13,8 +13,15 @@ test.describe("UI polish mobile regressions", () => {
 
     await page.getByRole("button", { name: /toggle sidebar/i }).click();
 
-    await expect(page.getByRole("link", { name: /new chat/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /agents/i })).toBeVisible();
+    // Labels follow the AfterFlow navigation: the header's new-case link and
+    // the workspace nav links. `exact` keeps "After-sales" from also matching
+    // the sibling "After-sales assistant" entry.
+    await expect(
+      page.getByRole("link", { name: "Start after-sales case" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "After-sales", exact: true }),
+    ).toBeVisible();
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth))
       .toBeLessThanOrEqual(375);

@@ -18,10 +18,15 @@ const THREADS = [
     updated_at: "2025-06-02T12:00:00Z",
   },
 ];
-const DEMO_THREAD_ID = "7cfa5f8f-a2f8-47ad-acbd-da7137baf990";
 const SVG_PROMPT_THREAD_ID = "00000000-0000-0000-0000-000000000777";
 const SVG_PROMPT_MARKER = "LEAK-STRICT-SVG-PROMPT-SHOULD-DISAPPEAR";
 const OPTIMISTIC_PROMPT_MARKER = "LEAK-OPTIMISTIC-SVG-PROMPT-SHOULD-DISAPPEAR";
+
+// Two sidebar links point at /workspace/chats/new ("Start after-sales case" in
+// the workspace header and "After-sales assistant" in the nav list), so an
+// href-only locator trips Playwright's strict mode. Target the header's
+// new-case link by accessible name instead.
+const NEW_CHAT_LINK_NAME = "Start after-sales case";
 
 test.describe("Thread history", () => {
   test("sidebar shows existing threads", async ({ page }) => {
@@ -223,9 +228,7 @@ test.describe("Thread history", () => {
       timeout: 15_000,
     });
 
-    await page
-      .locator("[data-sidebar='sidebar'] a[href='/workspace/chats/new']")
-      .click();
+    await page.getByRole("link", { name: NEW_CHAT_LINK_NAME }).click();
     await page.waitForURL("**/workspace/chats/new");
 
     await expect(page.getByText(SVG_PROMPT_MARKER)).toBeHidden();
@@ -286,9 +289,7 @@ test.describe("Thread history", () => {
     await page.waitForURL(`**/workspace/chats/${MOCK_THREAD_ID_2}`);
     await expect(page.getByText(OPTIMISTIC_PROMPT_MARKER)).toHaveCount(0);
 
-    await page
-      .locator("[data-sidebar='sidebar'] a[href='/workspace/chats/new']")
-      .click();
+    await page.getByRole("link", { name: NEW_CHAT_LINK_NAME }).click();
     await page.waitForURL("**/workspace/chats/new");
 
     await expect(page.getByText(OPTIMISTIC_PROMPT_MARKER)).toHaveCount(0);
@@ -316,9 +317,7 @@ test.describe("Thread history", () => {
       history.replaceState(null, "", `/workspace/chats/${threadId}`);
     }, MOCK_THREAD_ID);
 
-    const newChatLink = page.locator(
-      "[data-sidebar='sidebar'] a[href='/workspace/chats/new']",
-    );
+    const newChatLink = page.getByRole("link", { name: NEW_CHAT_LINK_NAME });
     await expect(page).toHaveURL(
       new RegExp(`/workspace/chats/${MOCK_THREAD_ID}$`),
     );
@@ -381,83 +380,13 @@ test.describe("Thread history", () => {
     await expect(page.getByPlaceholder(/how can i assist you/i)).toBeVisible();
   });
 
-  test("mock thread does not load real backend run history", async ({
-    page,
-  }) => {
-    mockLangGraphAPI(page, {
-      threads: [
-        {
-          thread_id: DEMO_THREAD_ID,
-          title: "Forecasting 2026 Trends and Opportunities",
-          updated_at: "2025-06-01T12:00:00Z",
-          messages: [
-            {
-              type: "human",
-              id: `run-human-${DEMO_THREAD_ID}`,
-              content: [
-                {
-                  type: "text",
-                  text: "This run-message endpoint should not be called.",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    });
-    const backendRunHistoryUrls: string[] = [];
-    await page.route(
-      /\/api\/langgraph\/threads\/[^/]+\/runs(?:\?|$)/,
-      (route) => {
-        if (
-          route.request().method() === "GET" &&
-          route
-            .request()
-            .url()
-            .includes(`/api/langgraph/threads/${DEMO_THREAD_ID}/runs`)
-        ) {
-          backendRunHistoryUrls.push(route.request().url());
-          return route.fulfill({
-            status: 500,
-            contentType: "application/json",
-            body: JSON.stringify({
-              error: "mock=true must not load real runs",
-            }),
-          });
-        }
-        return route.fallback();
-      },
-    );
-    await page.route(
-      /\/api\/threads\/[^/]+\/runs\/[^/]+\/messages(?:\?|$)/,
-      (route) => {
-        if (
-          route.request().method() === "GET" &&
-          route.request().url().includes(`/api/threads/${DEMO_THREAD_ID}/runs/`)
-        ) {
-          backendRunHistoryUrls.push(route.request().url());
-          return route.fulfill({
-            status: 500,
-            contentType: "application/json",
-            body: JSON.stringify({
-              error: "mock=true must not load real run messages",
-            }),
-          });
-        }
-        return route.fallback();
-      },
-    );
-
-    await page.goto(`/workspace/chats/${DEMO_THREAD_ID}?mock=true`);
-
-    await expect(
-      page.getByText("What might be the trends and opportunities in 2026?"),
-    ).toBeVisible({ timeout: 15_000 });
-    await expect(
-      page.getByText("I've created a modern, minimalist website"),
-    ).toBeVisible();
-    expect(backendRunHistoryUrls).toEqual([]);
-  });
+  // REMOVED: "mock thread does not load real backend run history".
+  // It drove the bundled demo-thread fixtures through
+  // ``/mock/api/threads/<id>/history``, which reads
+  // ``public/demo/threads/<id>/thread.json``. The whole ``public/demo/`` tree
+  // was deleted with the demo/gallery surfaces (see frontend/AGENTS.md: demo
+  // chat surfaces are not part of the product), so the scenario can no longer
+  // render and the guard has nothing left to exercise.
 
   test("chats list page shows all threads", async ({ page }) => {
     mockLangGraphAPI(page, { threads: THREADS });
@@ -472,42 +401,11 @@ test.describe("Thread history", () => {
     await expect(main.getByText("Second conversation")).toBeVisible();
   });
 
-  test("IM channel threads show their source in thread lists", async ({
-    page,
-  }) => {
-    mockLangGraphAPI(page, {
-      threads: [
-        {
-          thread_id: MOCK_THREAD_ID,
-          title: "Feishu conversation",
-          updated_at: "2025-06-03T12:00:00Z",
-          metadata: {
-            channel_source: {
-              type: "im_channel",
-              provider: "feishu",
-              chat_id: "oc_mock",
-            },
-          },
-        },
-      ],
-    });
-
-    await page.goto("/workspace/chats/new");
-
-    const sidebarThread = page.locator(
-      `a[href='/workspace/chats/${MOCK_THREAD_ID}']`,
-    );
-    await expect(sidebarThread).toBeVisible({ timeout: 15_000 });
-    await expect(sidebarThread.getByLabel("Feishu channel")).toBeVisible();
-
-    await page.goto("/workspace/chats");
-
-    const mainThread = page
-      .locator("main")
-      .locator(`a[href='/workspace/chats/${MOCK_THREAD_ID}']`);
-    await expect(mainThread.getByText("Feishu conversation")).toBeVisible({
-      timeout: 15_000,
-    });
-    await expect(mainThread.getByText("Feishu", { exact: true })).toBeVisible();
-  });
+  // REMOVED: "IM channel threads show their source in thread lists".
+  // The thread-list channel_source badge (``getByLabel("Feishu channel")`` /
+  // an exact "Feishu" label) no longer exists anywhere under ``src/``: IM
+  // channels are explicitly out of product scope per frontend/AGENTS.md
+  // ("通用 Landing、博客、产品文档、IM 渠道和通用 Agent Gallery 不属于面试版产品表面").
+  // Plain thread-list rendering is still covered by "sidebar shows existing
+  // threads" and "chats list page shows all threads".
 });

@@ -3,19 +3,17 @@ import { expect, test } from "@playwright/test";
 import { mockLangGraphAPI } from "./utils/mock-api";
 
 test.describe("Landing page", () => {
-  test("renders the header and hero section", async ({ page }) => {
+  // The marketing landing page (DeerFlow header, hero, "Get Started" CTA) was
+  // removed when the product was refocused on AfterFlow: ``/`` is now a
+  // server-side redirect straight into the after-sales workspace. These tests
+  // pin that redirect instead of a page that no longer exists.
+  test("root path redirects to the after-sales workspace", async ({ page }) => {
+    mockLangGraphAPI(page);
+
     await page.goto("/");
 
-    await expect(
-      page.locator("header").first().getByText("DeerFlow", { exact: true }),
-    ).toBeVisible();
-    await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.locator("h1")).toContainText("DeerFlow");
-
-    // "Get Started" call-to-action button in hero
-    await expect(
-      page.getByRole("link", { name: /get started/i }),
-    ).toBeVisible();
+    await page.waitForURL("**/workspace/after-sales");
+    await expect(page).toHaveURL(/\/workspace\/after-sales$/);
   });
 
   for (const width of [320, 375, 390]) {
@@ -30,16 +28,19 @@ test.describe("Landing page", () => {
     });
   }
 
-  test("Get Started link navigates to workspace", async ({ page }) => {
+  test("redirect lands inside the workspace shell, not a standalone page", async ({
+    page,
+  }) => {
     mockLangGraphAPI(page);
 
     await page.goto("/");
 
-    const getStarted = page.getByRole("link", { name: /get started/i });
-    await getStarted.click();
-
-    // Should redirect to /workspace/chats/new
-    await page.waitForURL("**/workspace/chats/new");
-    await expect(page).toHaveURL(/\/workspace\/chats\/new/);
+    // The redirect target is mounted inside the workspace shell (sidebar +
+    // main), so the workspace chrome is reachable from the root URL. This is
+    // what the old "Get Started" CTA test was really pinning.
+    await expect(page.locator("[data-sidebar='sidebar']").first()).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.locator("main").first()).toBeVisible();
   });
 });

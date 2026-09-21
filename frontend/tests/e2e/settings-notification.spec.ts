@@ -49,8 +49,9 @@ async function installNotificationMock(
 async function openNotificationSettings(page: Page) {
   await page.goto("/workspace/chats/new");
   const sidebar = page.locator("[data-sidebar='sidebar']");
+  // "Settings and more" opens the settings dialog directly -- there is no
+  // intermediate dropdown, so no "Settings" menu item to click through.
   await sidebar.getByRole("button", { name: /Settings and more/ }).click();
-  await page.getByRole("menuitem", { name: "Settings" }).click();
   const dialog = page.getByRole("dialog", { name: "Settings" });
   await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "Notification" }).click();
@@ -81,7 +82,7 @@ test.describe("Notification settings", () => {
       .poll(() => page.evaluate(() => window.__deerflowNotifications ?? []))
       .toEqual([
         {
-          title: "DeerFlow",
+          title: "AfterFlow",
           body: "This is a test notification.",
         },
       ]);

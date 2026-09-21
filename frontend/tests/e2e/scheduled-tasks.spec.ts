@@ -29,7 +29,8 @@ test("scheduled tasks page is reachable from sidebar", async ({ page }) => {
   });
 
   await page.goto("/workspace/chats/new");
-  await page.getByRole("link", { name: /scheduled tasks/i }).click();
+  // The nav entry is branded "Operations review"; the route is unchanged.
+  await page.getByRole("link", { name: "Operations review" }).click();
   await page.waitForURL("**/workspace/scheduled-tasks");
   await expect(page).toHaveURL(/workspace\/scheduled-tasks/);
   await expect(
@@ -69,9 +70,10 @@ test("thread page links to filtered scheduled tasks", async ({ page }) => {
   });
 
   await page.goto(`/workspace/chats/${MOCK_THREAD_ID}`);
+  // The thread header's schedule link is branded "Operations review".
   await page
     .locator("header")
-    .getByRole("link", { name: /scheduled tasks/i })
+    .getByRole("link", { name: "Operations review" })
     .click();
   await page.waitForURL(new RegExp(`thread_id=${MOCK_THREAD_ID}`));
 });
